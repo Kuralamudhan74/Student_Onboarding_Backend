@@ -44,9 +44,9 @@ Edit `appsettings.Development.json`:
   "SmtpSettings": {
     "Host": "smtp.gmail.com",
     "Port": 587,
-    "Username": "your-email@gmail.com",
-    "Password": "your-gmail-app-password",
-    "FromEmail": "your-email@gmail.com"
+    "Username": "kuralamu04@gmail.com",
+    "Password": "wmvc fkfy uwhr tuph",
+    "FromEmail": "kuralamu04@gmail.com"
   }
 }
 ```

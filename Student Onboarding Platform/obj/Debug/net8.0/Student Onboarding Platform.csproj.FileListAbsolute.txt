@@ -93,3 +93,4 @@ D:\Synora\Student Onboarding Platform\Student Onboarding Platform\Student Onboar
 D:\Synora\Student Onboarding Platform\Student Onboarding Platform\Student Onboarding Platform\obj\Debug\net8.0\Student Onboarding Platform.pdb
 D:\Synora\Student Onboarding Platform\Student Onboarding Platform\Student Onboarding Platform\obj\Debug\net8.0\Student Onboarding Platform.genruntimeconfig.cache
 D:\Synora\Student Onboarding Platform\Student Onboarding Platform\Student Onboarding Platform\obj\Debug\net8.0\ref\Student Onboarding Platform.dll
+D:\Synora\Student Onboarding Platform\Student Onboarding Platform\Student Onboarding Platform\obj\Debug\net8.0\staticwebassets.upToDateCheck.txt

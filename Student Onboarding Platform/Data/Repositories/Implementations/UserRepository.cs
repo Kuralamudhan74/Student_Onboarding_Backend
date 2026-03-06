@@ -1,3 +1,4 @@
+using System.Reflection.Metadata.Ecma335;
 using Dapper;
 using Student_Onboarding_Platform.Data.Repositories.Interfaces;
 using Student_Onboarding_Platform.Models.Entities;
@@ -23,10 +24,19 @@ public class UserRepository : IUserRepository
 
     public async Task<User?> GetByEmailAsync(string email)
     {
-        using var conn = _db.CreateConnection();
-        return await conn.QueryFirstOrDefaultAsync<User>(
-            "SELECT * FROM Users WHERE Email = @Email AND IsDeleted = @IsDeleted",
-            new { Email = email, IsDeleted = false });
+        try
+        {
+            using var conn = _db.CreateConnection();
+            return await conn.QueryFirstOrDefaultAsync<User>(
+                "SELECT * FROM Users WHERE Email = @Email AND IsDeleted = @IsDeleted",
+                new { Email = email, IsDeleted = false });
+        }
+        catch (Exception ex) 
+        {
+            Console.WriteLine(ex.Message);
+            return null;
+        }
+        
     }
 
     public async Task<User> CreateAsync(User user)
