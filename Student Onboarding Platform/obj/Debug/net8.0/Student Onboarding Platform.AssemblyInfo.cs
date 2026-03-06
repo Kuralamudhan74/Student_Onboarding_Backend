@@ -14,7 +14,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("Student Onboarding Platform")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+a0dd4a8c6ad68d154b470e28e1c06c6374f68598")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+ef3c8b34fc636dbbdab2f51a94f8997220f13615")]
 [assembly: System.Reflection.AssemblyProductAttribute("Student Onboarding Platform")]
 [assembly: System.Reflection.AssemblyTitleAttribute("Student Onboarding Platform")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]
