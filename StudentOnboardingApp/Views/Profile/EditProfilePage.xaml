@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:vm="clr-namespace:StudentOnboardingApp.ViewModels"
+             x:Class="StudentOnboardingApp.Views.Profile.EditProfilePage"
+             x:DataType="vm:EditProfileViewModel"
+             Title="Edit Profile"
+             BackgroundColor="{StaticResource LightBackground}">
+
+    <ScrollView>
+        <VerticalStackLayout Spacing="14" Padding="20">
+
+            <Label Text="{Binding ErrorMessage}"
+                   TextColor="{StaticResource ErrorRed}"
+                   IsVisible="{Binding ErrorMessage, Converter={StaticResource IsNotNullConverter}}"
+                   FontSize="13" />
+
+            <ActivityIndicator IsRunning="{Binding IsBusy}" IsVisible="{Binding IsBusy}" Color="{StaticResource Primary}" HorizontalOptions="Center" />
+
+            <Label Text="First Name" FontSize="13" TextColor="{StaticResource Gray500}" />
+            <Border Stroke="{StaticResource Gray200}" StrokeShape="RoundRectangle 12" Padding="12,4">
+                <Entry Text="{Binding FirstName}" ReturnType="Next" />
+            </Border>
+
+            <Label Text="Last Name" FontSize="13" TextColor="{StaticResource Gray500}" />
+            <Border Stroke="{StaticResource Gray200}" StrokeShape="RoundRectangle 12" Padding="12,4">
+                <Entry Text="{Binding LastName}" ReturnType="Next" />
+            </Border>
+
+            <Label Text="Phone Number" FontSize="13" TextColor="{StaticResource Gray500}" />
+            <Border Stroke="{StaticResource Gray200}" StrokeShape="RoundRectangle 12" Padding="12,4">
+                <Entry Text="{Binding PhoneNumber}" Keyboard="Telephone" ReturnType="Next" />
+            </Border>
+
+            <Label Text="Date of Birth" FontSize="13" TextColor="{StaticResource Gray500}" />
+            <Border Stroke="{StaticResource Gray200}" StrokeShape="RoundRectangle 12" Padding="12,4">
+                <DatePicker Date="{Binding DateOfBirth}" />
+            </Border>
+
+            <Label Text="Address" FontSize="13" TextColor="{StaticResource Gray500}" />
+            <Border Stroke="{StaticResource Gray200}" StrokeShape="RoundRectangle 12" Padding="12,4">
+                <Editor Text="{Binding Address}" HeightRequest="80" />
+            </Border>
+
+            <Label Text="Education" FontSize="13" TextColor="{StaticResource Gray500}" />
+            <Border Stroke="{StaticResource Gray200}" StrokeShape="RoundRectangle 12" Padding="12,4">
+                <Entry Text="{Binding Education}" ReturnType="Done" />
+            </Border>
+
+            <!-- Document Upload -->
+            <Button Text="Upload Document"
+                    Command="{Binding UploadDocumentCommand}"
+                    BackgroundColor="{StaticResource Tertiary}"
+                    TextColor="{StaticResource Primary}"
+                    CornerRadius="12"
+                    HeightRequest="44" />
+
+            <!-- Save Button -->
+            <Button Text="Save Profile"
+                    Command="{Binding SaveProfileCommand}"
+                    BackgroundColor="{StaticResource Primary}"
+                    TextColor="White"
+                    FontAttributes="Bold"
+                    CornerRadius="12"
+                    HeightRequest="50"
+                    Margin="0,10,0,20"
+                    IsEnabled="{Binding IsBusy, Converter={StaticResource InverseBoolConverter}}" />
+
+        </VerticalStackLayout>
+    </ScrollView>
+</ContentPage>

@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:vm="clr-namespace:StudentOnboardingApp.ViewModels"
+             xmlns:models="clr-namespace:StudentOnboardingApp.Models.Course"
+             x:Class="StudentOnboardingApp.Views.Courses.CourseListPage"
+             x:DataType="vm:CourseListViewModel"
+             Title="Courses"
+             BackgroundColor="{StaticResource LightBackground}">
+
+    <RefreshView IsRefreshing="{Binding IsRefreshing}"
+                 Command="{Binding LoadCoursesCommand}"
+                 RefreshColor="{StaticResource Primary}">
+        <CollectionView ItemsSource="{Binding Courses}"
+                        SelectionMode="None">
+            <CollectionView.Header>
+                <VerticalStackLayout Padding="20,20,20,10">
+                    <Label Text="Available Courses"
+                           FontSize="24"
+                           FontAttributes="Bold"
+                           TextColor="{StaticResource DarkText}" />
+
+                    <Label Text="{Binding ErrorMessage}"
+                           TextColor="{StaticResource ErrorRed}"
+                           IsVisible="{Binding ErrorMessage, Converter={StaticResource IsNotNullConverter}}"
+                           FontSize="13" />
+
+                    <ActivityIndicator IsRunning="{Binding IsBusy}"
+                                       IsVisible="{Binding IsBusy}"
+                                       Color="{StaticResource Primary}" />
+                </VerticalStackLayout>
+            </CollectionView.Header>
+            <CollectionView.ItemTemplate>
+                <DataTemplate x:DataType="models:CourseDto">
+                    <Border BackgroundColor="White"
+                            StrokeShape="RoundRectangle 14"
+                            Stroke="{StaticResource Gray100}"
+                            Padding="16"
+                            Margin="20,0,20,12">
+                        <Border.GestureRecognizers>
+                            <TapGestureRecognizer
+                                Command="{Binding Source={RelativeSource AncestorType={x:Type vm:CourseListViewModel}}, Path=GoToCourseDetailCommand}"
+                                CommandParameter="{Binding .}" />
+                        </Border.GestureRecognizers>
+                        <Grid ColumnDefinitions="*, Auto" RowDefinitions="Auto, Auto, Auto" RowSpacing="6">
+                            <Label Grid.Row="0" Grid.Column="0"
+                                   Text="{Binding Name}"
+                                   FontSize="17"
+                                   FontAttributes="Bold"
+                                   TextColor="{StaticResource DarkText}" />
+
+                            <Label Grid.Row="1" Grid.Column="0"
+                                   Text="{Binding Description}"
+                                   FontSize="13"
+                                   TextColor="{StaticResource Gray500}"
+                                   LineBreakMode="TailTruncation"
+                                   MaxLines="2" />
+
+                            <HorizontalStackLayout Grid.Row="2" Grid.Column="0" Spacing="16">
+                                <Label FontSize="13" TextColor="{StaticResource Secondary}">
+                                    <Label.FormattedText>
+                                        <FormattedString>
+                                            <Span Text="Rs. " />
+                                            <Span Text="{Binding Fees, StringFormat='{0:N0}'}" FontAttributes="Bold" />
+                                        </FormattedString>
+                                    </Label.FormattedText>
+                                </Label>
+                                <Label Text="{Binding Duration}"
+                                       FontSize="13"
+                                       TextColor="{StaticResource Gray400}" />
+                            </HorizontalStackLayout>
+
+                            <Label Grid.RowSpan="3" Grid.Column="1"
+                                   Text=">"
+                                   FontSize="20"
+                                   TextColor="{StaticResource Gray300}"
+                                   VerticalOptions="Center" />
+                        </Grid>
+                    </Border>
+                </DataTemplate>
+            </CollectionView.ItemTemplate>
+            <CollectionView.EmptyView>
+                <VerticalStackLayout VerticalOptions="Center" HorizontalOptions="Center" Padding="40">
+                    <Label Text="No courses available"
+                           FontSize="16"
+                           TextColor="{StaticResource Gray400}"
+                           HorizontalOptions="Center" />
+                </VerticalStackLayout>
+            </CollectionView.EmptyView>
+        </CollectionView>
+    </RefreshView>
+</ContentPage>

@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:vm="clr-namespace:StudentOnboardingApp.ViewModels"
+             xmlns:models="clr-namespace:StudentOnboardingApp.Models.Notification"
+             x:Class="StudentOnboardingApp.Views.Notifications.NotificationsPage"
+             x:DataType="vm:NotificationsViewModel"
+             Title="Notifications"
+             BackgroundColor="{StaticResource LightBackground}">
+
+    <RefreshView IsRefreshing="{Binding IsRefreshing}"
+                 Command="{Binding LoadNotificationsCommand}"
+                 RefreshColor="{StaticResource Primary}">
+        <CollectionView ItemsSource="{Binding Notifications}"
+                        SelectionMode="None">
+            <CollectionView.Header>
+                <VerticalStackLayout Padding="20,20,20,10">
+                    <Label Text="Notifications"
+                           FontSize="24"
+                           FontAttributes="Bold"
+                           TextColor="{StaticResource DarkText}" />
+
+                    <Label Text="{Binding ErrorMessage}"
+                           TextColor="{StaticResource ErrorRed}"
+                           IsVisible="{Binding ErrorMessage, Converter={StaticResource IsNotNullConverter}}"
+                           FontSize="13" />
+
+                    <ActivityIndicator IsRunning="{Binding IsBusy}"
+                                       IsVisible="{Binding IsBusy}"
+                                       Color="{StaticResource Primary}" />
+                </VerticalStackLayout>
+            </CollectionView.Header>
+            <CollectionView.ItemTemplate>
+                <DataTemplate x:DataType="models:NotificationDto">
+                    <Border BackgroundColor="{Binding IsRead, Converter={StaticResource ReadBgConverter}}"
+                            StrokeShape="RoundRectangle 12"
+                            Stroke="{StaticResource Gray100}"
+                            Padding="16"
+                            Margin="20,0,20,10">
+                        <Border.GestureRecognizers>
+                            <TapGestureRecognizer
+                                Command="{Binding Source={RelativeSource AncestorType={x:Type vm:NotificationsViewModel}}, Path=MarkAsReadCommand}"
+                                CommandParameter="{Binding .}" />
+                        </Border.GestureRecognizers>
+                        <VerticalStackLayout Spacing="6">
+                            <Grid ColumnDefinitions="*, Auto">
+                                <Label Text="{Binding Title}"
+                                       FontSize="15"
+                                       FontAttributes="Bold"
+                                       TextColor="{StaticResource DarkText}" />
+                                <Border Grid.Column="1"
+                                        BackgroundColor="{StaticResource Accent}"
+                                        StrokeShape="RoundRectangle 8"
+                                        Padding="8,2"
+                                        StrokeThickness="0"
+                                        IsVisible="{Binding IsRead, Converter={StaticResource InverseBoolConverter}}">
+                                    <Label Text="New"
+                                           FontSize="10"
+                                           TextColor="{StaticResource Primary}"
+                                           FontAttributes="Bold" />
+                                </Border>
+                            </Grid>
+                            <Label Text="{Binding Body}"
+                                   FontSize="13"
+                                   TextColor="{StaticResource Gray500}"
+                                   LineBreakMode="TailTruncation"
+                                   MaxLines="2" />
+                            <Label Text="{Binding CreatedAt, StringFormat='{0:MMM dd, yyyy HH:mm}'}"
+                                   FontSize="11"
+                                   TextColor="{StaticResource Gray300}" />
+                        </VerticalStackLayout>
+                    </Border>
+                </DataTemplate>
+            </CollectionView.ItemTemplate>
+            <CollectionView.EmptyView>
+                <VerticalStackLayout VerticalOptions="Center" HorizontalOptions="Center" Padding="40">
+                    <Label Text="No notifications yet"
+                           FontSize="16"
+                           TextColor="{StaticResource Gray400}"
+                           HorizontalOptions="Center" />
+                </VerticalStackLayout>
+            </CollectionView.EmptyView>
+        </CollectionView>
+    </RefreshView>
+</ContentPage>

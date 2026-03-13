@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:vm="clr-namespace:StudentOnboardingApp.ViewModels.Onboarding"
+             xmlns:models="clr-namespace:StudentOnboardingApp.Models.Onboarding"
+             x:Class="StudentOnboardingApp.Views.Onboarding.OnboardingInstructionsPage"
+             x:DataType="vm:OnboardingInstructionsViewModel"
+             Title="Onboarding"
+             BackgroundColor="{StaticResource LightBackground}">
+
+    <Grid RowDefinitions="*, Auto" Padding="20">
+
+        <!-- Instructions List -->
+        <CollectionView ItemsSource="{Binding Instructions}" Grid.Row="0">
+            <CollectionView.Header>
+                <VerticalStackLayout Spacing="8" Padding="0,10,0,20">
+                    <Label Text="Welcome!"
+                           FontSize="24"
+                           FontAttributes="Bold"
+                           TextColor="{StaticResource Primary}" />
+                    <Label Text="Please read the onboarding instructions carefully before proceeding."
+                           FontSize="14"
+                           TextColor="{StaticResource Gray500}" />
+                </VerticalStackLayout>
+            </CollectionView.Header>
+            <CollectionView.ItemTemplate>
+                <DataTemplate x:DataType="models:OnboardingInstructionDto">
+                    <Border BackgroundColor="White"
+                            StrokeShape="RoundRectangle 12"
+                            Stroke="{StaticResource Gray100}"
+                            Padding="16"
+                            Margin="0,0,0,12">
+                        <VerticalStackLayout Spacing="8">
+                            <HorizontalStackLayout Spacing="10">
+                                <Border BackgroundColor="{StaticResource Tertiary}"
+                                        StrokeShape="RoundRectangle 16"
+                                        HeightRequest="32"
+                                        WidthRequest="32"
+                                        StrokeThickness="0">
+                                    <Label Text="{Binding Order}"
+                                           FontAttributes="Bold"
+                                           TextColor="{StaticResource Primary}"
+                                           HorizontalOptions="Center"
+                                           VerticalOptions="Center"
+                                           FontSize="14" />
+                                </Border>
+                                <Label Text="{Binding Title}"
+                                       FontAttributes="Bold"
+                                       FontSize="16"
+                                       TextColor="{StaticResource DarkText}"
+                                       VerticalOptions="Center" />
+                            </HorizontalStackLayout>
+                            <Label Text="{Binding Content}"
+                                   FontSize="14"
+                                   TextColor="{StaticResource Gray500}"
+                                   Padding="42,0,0,0" />
+                        </VerticalStackLayout>
+                    </Border>
+                </DataTemplate>
+            </CollectionView.ItemTemplate>
+        </CollectionView>
+
+        <!-- Agree & Continue -->
+        <VerticalStackLayout Grid.Row="1" Spacing="12" Padding="0,12,0,0">
+            <HorizontalStackLayout Spacing="8">
+                <CheckBox IsChecked="{Binding IsAgreed}" Color="{StaticResource Primary}" />
+                <Label Text="I have read and agree to the onboarding instructions"
+                       FontSize="14"
+                       TextColor="{StaticResource DarkText}"
+                       VerticalOptions="Center" />
+            </HorizontalStackLayout>
+
+            <Button Text="Continue"
+                    Command="{Binding AcceptAndContinueCommand}"
+                    BackgroundColor="{StaticResource Primary}"
+                    TextColor="White"
+                    FontAttributes="Bold"
+                    CornerRadius="12"
+                    HeightRequest="50"
+                    IsEnabled="{Binding IsAgreed}" />
+        </VerticalStackLayout>
+
+    </Grid>
+</ContentPage>

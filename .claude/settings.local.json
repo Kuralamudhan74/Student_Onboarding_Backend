@@ -1,0 +1,13 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(ls -d d:/SOP/*/)",
+      "Bash(git -C \"d:/SOP/Student_Onboarding_Backend\" status)",
+      "Bash(git -C \"d:/SOP/Student_Onboarding_Backend\" remote -v)",
+      "Bash(git -C \"d:/SOP/Student_Onboarding_Backend\" log --oneline -5)"
+    ],
+    "additionalDirectories": [
+      "d:\\SOP\\Student_Onboarding_Backend\\.git"
+    ]
+  }
+}
