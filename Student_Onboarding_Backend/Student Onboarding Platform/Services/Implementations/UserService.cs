@@ -42,4 +42,34 @@ public class UserService : IUserService
     {
         await _userRepository.UpdateLastLoginAsync(userId, DateTime.UtcNow);
     }
+
+    public async Task UpdateApprovalStatusAsync(Guid userId, string status, Guid? approvedBy, string? denialReason)
+    {
+        await _userRepository.UpdateApprovalStatusAsync(userId, status, approvedBy, denialReason);
+    }
+
+    public async Task<IEnumerable<User>> GetStudentsAsync(int offset, int pageSize, string? approvalStatus, string? search)
+    {
+        return await _userRepository.GetStudentsAsync(offset, pageSize, approvalStatus, search);
+    }
+
+    public async Task<int> GetStudentsCountAsync(string? approvalStatus, string? search)
+    {
+        return await _userRepository.GetStudentsCountAsync(approvalStatus, search);
+    }
+
+    public async Task<IEnumerable<User>> GetAdminUsersAsync()
+    {
+        return await _userRepository.GetAdminUsersAsync();
+    }
+
+    public async Task UpdateProfileAsync(Guid userId, string firstName, string lastName, string? phoneNumber)
+    {
+        await _userRepository.UpdateProfileAsync(userId, firstName, lastName, phoneNumber);
+    }
+
+    public async Task UpdateIsActiveAsync(Guid userId, bool isActive)
+    {
+        await _userRepository.UpdateIsActiveAsync(userId, isActive);
+    }
 }

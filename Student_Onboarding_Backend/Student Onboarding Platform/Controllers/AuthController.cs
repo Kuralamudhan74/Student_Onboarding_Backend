@@ -87,4 +87,11 @@ public class AuthController : ControllerBase
         var result = await _authService.LogoutAsync(userId, request.RefreshToken);
         return Ok(result);
     }
+
+    [HttpPost("check-approval-status")]
+    public async Task<IActionResult> CheckApprovalStatus([FromBody] CheckApprovalStatusRequest request)
+    {
+        var result = await _authService.CheckApprovalStatusAsync(request);
+        return Ok(result);
+    }
 }

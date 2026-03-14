@@ -13,6 +13,10 @@ public class User
     public bool IsActive { get; set; } = true;
     public bool IsDeleted { get; set; }
     public string Role { get; set; } = "Student";
+    public string ApprovalStatus { get; set; } = "Pending";
+    public Guid? ApprovedBy { get; set; }
+    public DateTime? ApprovedAt { get; set; }
+    public string? DenialReason { get; set; }
     public DateTime? PasswordUpdatedAt { get; set; }
     public DateTime CreatedAt { get; set; }
     public DateTime? UpdatedAt { get; set; }

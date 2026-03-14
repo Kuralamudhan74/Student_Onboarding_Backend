@@ -17,6 +17,7 @@ public class AuthService : IAuthService
     private readonly ISessionService _sessionService;
     private readonly ILoginAttemptService _loginAttemptService;
     private readonly IPasswordHasher _passwordHasher;
+    private readonly INotificationService _notificationService;
     private readonly JwtSettings _jwtSettings;
     private readonly ILogger<AuthService> _logger;
 
@@ -31,6 +32,7 @@ public class AuthService : IAuthService
         ISessionService sessionService,
         ILoginAttemptService loginAttemptService,
         IPasswordHasher passwordHasher,
+        INotificationService notificationService,
         IOptions<JwtSettings> jwtSettings,
         ILogger<AuthService> logger)
     {
@@ -41,6 +43,7 @@ public class AuthService : IAuthService
         _sessionService = sessionService;
         _loginAttemptService = loginAttemptService;
         _passwordHasher = passwordHasher;
+        _notificationService = notificationService;
         _jwtSettings = jwtSettings.Value;
         _logger = logger;
     }
@@ -129,6 +132,19 @@ public class AuthService : IAuthService
             return ApiResponse<AuthResponse>.Fail("Email not verified. A new verification OTP has been sent to your email.");
         }
 
+        // Check approval status (Phase 2)
+        if (user.ApprovalStatus == nameof(ApprovalStatus.Pending))
+        {
+            await _loginAttemptService.LogAttemptAsync(email, ipAddress, userAgent, false, nameof(FailureReason.PendingApproval));
+            return ApiResponse<AuthResponse>.Fail("Your account is pending admin approval. You will be notified once approved.");
+        }
+
+        if (user.ApprovalStatus == nameof(ApprovalStatus.Denied))
+        {
+            await _loginAttemptService.LogAttemptAsync(email, ipAddress, userAgent, false, nameof(FailureReason.AccountDenied));
+            return ApiResponse<AuthResponse>.Fail("Your account registration was denied. Please contact support.");
+        }
+
         // Successful login
         await _loginAttemptService.LogAttemptAsync(email, ipAddress, userAgent, true, null);
 
@@ -169,12 +185,18 @@ public class AuthService : IAuthService
             if (user != null)
             {
                 await _userService.UpdateEmailVerifiedAsync(user.Id);
-                await _emailService.SendWelcomeEmailAsync(user.Email, user.FirstName);
-                _logger.LogInformation("Email verified for user {UserId}", user.Id);
+
+                // Send pending approval email instead of welcome email (Phase 2)
+                await _emailService.SendPendingApprovalEmailAsync(user.Email, user.FirstName);
+
+                // Notify admin users about new registration
+                await _notificationService.NotifyAdminsOfNewRegistrationAsync(user);
+
+                _logger.LogInformation("Email verified for user {UserId}. Pending admin approval.", user.Id);
             }
         }
 
-        return ApiResponse<string>.Ok("OTP verified successfully.");
+        return ApiResponse<string>.Ok("OTP verified successfully. Your account is now pending admin approval.");
     }
 
     public async Task<ApiResponse<string>> ResendOtpAsync(ResendOtpRequest request)
@@ -323,6 +345,37 @@ public class AuthService : IAuthService
         return ApiResponse<string>.Ok("Logged out successfully.");
     }
 
+    public async Task<ApiResponse<CheckApprovalStatusResponse>> CheckApprovalStatusAsync(CheckApprovalStatusRequest request)
+    {
+        _logger.LogInformation("Approval status check for {Email}", request.Email);
+        var email = request.Email.ToLowerInvariant();
+
+        var user = await _userService.GetByEmailAsync(email);
+
+        // Return "Pending" for unknown emails to prevent enumeration
+        if (user == null)
+        {
+            return ApiResponse<CheckApprovalStatusResponse>.Ok(new CheckApprovalStatusResponse
+            {
+                ApprovalStatus = nameof(ApprovalStatus.Pending),
+                Message = "Your account is pending admin approval."
+            });
+        }
+
+        var message = user.ApprovalStatus switch
+        {
+            "Approved" => "Your account has been approved. You can now log in.",
+            "Denied" => "Your account registration was denied. Please contact support.",
+            _ => "Your account is pending admin approval."
+        };
+
+        return ApiResponse<CheckApprovalStatusResponse>.Ok(new CheckApprovalStatusResponse
+        {
+            ApprovalStatus = user.ApprovalStatus,
+            Message = message
+        });
+    }
+
     private static UserDto MapToUserDto(User user)
     {
         return new UserDto
@@ -333,7 +386,8 @@ public class AuthService : IAuthService
             Email = user.Email,
             PhoneNumber = user.PhoneNumber,
             EmailVerified = user.EmailVerified,
-            Role = user.Role
+            Role = user.Role,
+            ApprovalStatus = user.ApprovalStatus
         };
     }
 }

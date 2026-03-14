@@ -30,6 +30,9 @@ public static class ServiceCollectionExtensions
         services.AddScoped<ISessionRepository, SessionRepository>();
         services.AddScoped<IOtpRepository, OtpRepository>();
         services.AddScoped<ILoginAttemptRepository, LoginAttemptRepository>();
+        services.AddScoped<ICourseRepository, CourseRepository>();
+        services.AddScoped<ICourseRegistrationRepository, CourseRegistrationRepository>();
+        services.AddScoped<INotificationRepository, NotificationRepository>();
 
         // Services
         services.AddScoped<IAuthService, AuthService>();
@@ -40,6 +43,10 @@ public static class ServiceCollectionExtensions
         services.AddScoped<ISessionService, SessionService>();
         services.AddScoped<ILoginAttemptService, LoginAttemptService>();
         services.AddSingleton<IPasswordHasher, BCryptPasswordHasher>();
+        services.AddScoped<IStudentService, StudentService>();
+        services.AddScoped<IAdminService, AdminService>();
+        services.AddScoped<ICourseService, CourseService>();
+        services.AddScoped<INotificationService, NotificationService>();
 
         return services;
     }
