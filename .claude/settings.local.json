@@ -1,0 +1,38 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(find /d/SOP/docs -type f -name *)",
+      "Bash(grep -E \"\\\\.\\(xaml|cs|csproj|json\\)$\")",
+      "Bash(git -C \"d:/SOP\" show HEAD -- \"StudentOnboardingApp/Constants.cs\")",
+      "Bash(git -C \"d:/SOP\" log --oneline --all)",
+      "Bash(git -C \"d:/SOP\" show HEAD --stat)",
+      "Bash(git -C \"d:/SOP\" ls-tree -r HEAD --name-only)",
+      "Bash(dotnet --version)",
+      "Bash(dotnet workload:*)",
+      "Bash(curl -sL \"https://github.com/nicholasgasior/gfonts/raw/main/fonts/plus-jakarta-sans/PlusJakartaSans-Regular.ttf\" -o PlusJakartaSans-Regular.ttf)",
+      "Bash(curl -sL \"https://github.com/nicholasgasior/gfonts/raw/main/fonts/plus-jakarta-sans/PlusJakartaSans-Medium.ttf\" -o PlusJakartaSans-Medium.ttf)",
+      "Bash(curl -sL \"https://github.com/nicholasgasior/gfonts/raw/main/fonts/plus-jakarta-sans/PlusJakartaSans-SemiBold.ttf\" -o PlusJakartaSans-SemiBold.ttf)",
+      "Bash(curl -sL \"https://github.com/nicholasgasior/gfonts/raw/main/fonts/plus-jakarta-sans/PlusJakartaSans-Bold.ttf\" -o PlusJakartaSans-Bold.ttf)",
+      "Bash(curl -sL \"https://github.com/nicholasgasior/gfonts/raw/main/fonts/plus-jakarta-sans/PlusJakartaSans-ExtraBold.ttf\" -o PlusJakartaSans-ExtraBold.ttf)",
+      "Bash(curl -sL \"https://github.com/nicholasgasior/gfonts/raw/main/fonts/dm-sans/DMSans-Regular.ttf\" -o DMSans-Regular.ttf)",
+      "Bash(curl -sL \"https://github.com/nicholasgasior/gfonts/raw/main/fonts/dm-sans/DMSans-Medium.ttf\" -o DMSans-Medium.ttf)",
+      "Bash(curl -sL https://fonts.google.com/download?family=Plus+Jakarta+Sans -o jakarta.zip)",
+      "Bash(unzip -jo jakarta.zip static/*.ttf -d .)",
+      "Bash(rm -f jakarta.zip)",
+      "Bash(ls *.ttf)",
+      "Bash(python3 -c \":*)",
+      "Bash(powershell -Command \"Expand-Archive -Path jakarta.zip -DestinationPath jakarta_tmp -Force; Get-ChildItem jakarta_tmp -Recurse -Filter ''*.ttf'' | Where-Object { $_.DirectoryName -like ''*static*'' } | ForEach-Object { Copy-Item $_.FullName -Destination . -Force; Write-Host \\(''Extracted: '' + $_.Name\\) }; Remove-Item jakarta_tmp -Recurse -Force; Remove-Item jakarta.zip -Force\")",
+      "Bash(curl -sI \"https://fonts.google.com/download?family=Plus+Jakarta+Sans\")",
+      "Bash(curl -sL -H \"User-Agent: Mozilla/5.0\" \"https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap\")",
+      "Bash(curl -sL -H \"User-Agent: Mozilla/5.0\" \"https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500&display=swap\")",
+      "Bash(curl -sL \"https://fonts.gstatic.com/s/dmsans/v17/rP2tp2ywxg089UriI5-g4vlH9VoD8CmcqZG40F9JadbnoEwAopxhTg.ttf\" -o DMSans-Regular.ttf)",
+      "Bash(curl -sL \"https://fonts.gstatic.com/s/dmsans/v17/rP2tp2ywxg089UriI5-g4vlH9VoD8CmcqZG40F9JadbnoEwAkJxhTg.ttf\" -o DMSans-Medium.ttf)",
+      "Bash(file *.ttf)",
+      "Bash(find d:/SOP/StudentOnboardingApp -name *.cs -o -name *.xaml -o -name *.xml -o -name *.plist -o -name *.manifest -o -name *.csproj)",
+      "Bash(dotnet build:*)",
+      "Bash(dotnet restore:*)",
+      "Bash(dotnet package:*)",
+      "Bash(powershell -Command \"checknetisolation loopbackexempt -a -p=''S-1-15-2-2999739969-477831195-2497786377-4166171526-2985710958-2271667541-2179365762''\")"
+    ]
+  }
+}
