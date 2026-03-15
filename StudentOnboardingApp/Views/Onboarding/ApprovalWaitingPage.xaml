@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:vm="clr-namespace:StudentOnboardingApp.ViewModels.Onboarding"
+             x:Class="StudentOnboardingApp.Views.Onboarding.ApprovalWaitingPage"
+             x:DataType="vm:ApprovalWaitingViewModel"
+             Shell.NavBarIsVisible="False"
+             BackgroundColor="{StaticResource LightBackground}">
+
+    <VerticalStackLayout Spacing="30" Padding="30" VerticalOptions="Center">
+
+        <!-- Status Icon -->
+        <Border BackgroundColor="{StaticResource Accent}"
+                StrokeShape="RoundRectangle 60"
+                HeightRequest="120"
+                WidthRequest="120"
+                HorizontalOptions="Center"
+                StrokeThickness="0">
+            <Label Text="&#x23F3;"
+                   FontSize="48"
+                   HorizontalOptions="Center"
+                   VerticalOptions="Center" />
+        </Border>
+
+        <Label Text="Application Submitted"
+               FontSize="24"
+               FontAttributes="Bold"
+               TextColor="{StaticResource Primary}"
+               HorizontalOptions="Center" />
+
+        <Label Text="{Binding StatusMessage}"
+               FontSize="15"
+               TextColor="{StaticResource Gray500}"
+               HorizontalOptions="Center"
+               HorizontalTextAlignment="Center"
+               LineBreakMode="WordWrap" />
+
+        <ActivityIndicator IsRunning="{Binding IsBlocked, Converter={StaticResource InverseBoolConverter}}"
+                           IsVisible="{Binding IsBlocked, Converter={StaticResource InverseBoolConverter}}"
+                           Color="{StaticResource Primary}"
+                           HorizontalOptions="Center" />
+
+        <!-- Blocked state message -->
+        <Border BackgroundColor="#FFF0F0"
+                StrokeShape="RoundRectangle 12"
+                Padding="16"
+                IsVisible="{Binding IsBlocked}"
+                StrokeThickness="0">
+            <Label Text="Please contact the administrator for more information."
+                   TextColor="{StaticResource ErrorRed}"
+                   FontSize="14"
+                   HorizontalTextAlignment="Center" />
+        </Border>
+
+    </VerticalStackLayout>
+</ContentPage>

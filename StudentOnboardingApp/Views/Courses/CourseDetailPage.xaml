@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:vm="clr-namespace:StudentOnboardingApp.ViewModels"
+             x:Class="StudentOnboardingApp.Views.Courses.CourseDetailPage"
+             x:DataType="vm:CourseDetailViewModel"
+             Title="{Binding Title}"
+             BackgroundColor="{StaticResource LightBackground}">
+
+    <ScrollView>
+        <VerticalStackLayout Spacing="16" Padding="20">
+
+            <ActivityIndicator IsRunning="{Binding IsBusy}" IsVisible="{Binding IsBusy}" Color="{StaticResource Primary}" HorizontalOptions="Center" />
+
+            <Label Text="{Binding ErrorMessage}"
+                   TextColor="{StaticResource ErrorRed}"
+                   IsVisible="{Binding ErrorMessage, Converter={StaticResource IsNotNullConverter}}"
+                   FontSize="13" />
+
+            <!-- Course Header -->
+            <Border BackgroundColor="{StaticResource Primary}"
+                    StrokeShape="RoundRectangle 16"
+                    Padding="20"
+                    StrokeThickness="0">
+                <VerticalStackLayout Spacing="8">
+                    <Label Text="{Binding Course.Name}"
+                           FontSize="24"
+                           FontAttributes="Bold"
+                           TextColor="White" />
+                    <Label Text="{Binding Course.Description}"
+                           FontSize="14"
+                           TextColor="{StaticResource Accent}" />
+                </VerticalStackLayout>
+            </Border>
+
+            <!-- Info Cards -->
+            <Grid ColumnDefinitions="*, *" RowSpacing="12" ColumnSpacing="12">
+                <Border Grid.Column="0" BackgroundColor="White" StrokeShape="RoundRectangle 12" Stroke="{StaticResource Gray100}" Padding="16" StrokeThickness="1">
+                    <VerticalStackLayout Spacing="4">
+                        <Label Text="Fees" FontSize="12" TextColor="{StaticResource Gray400}" />
+                        <Label Text="{Binding Course.Fees, StringFormat='Rs. {0:N0}'}" FontSize="20" FontAttributes="Bold" TextColor="{StaticResource Primary}" />
+                    </VerticalStackLayout>
+                </Border>
+                <Border Grid.Column="1" BackgroundColor="White" StrokeShape="RoundRectangle 12" Stroke="{StaticResource Gray100}" Padding="16" StrokeThickness="1">
+                    <VerticalStackLayout Spacing="4">
+                        <Label Text="Duration" FontSize="12" TextColor="{StaticResource Gray400}" />
+                        <Label Text="{Binding Course.Duration}" FontSize="20" FontAttributes="Bold" TextColor="{StaticResource Primary}" />
+                    </VerticalStackLayout>
+                </Border>
+            </Grid>
+
+            <!-- Syllabus -->
+            <Border BackgroundColor="White" StrokeShape="RoundRectangle 12" Stroke="{StaticResource Gray100}" Padding="16">
+                <VerticalStackLayout Spacing="8">
+                    <Label Text="Syllabus" FontSize="16" FontAttributes="Bold" TextColor="{StaticResource DarkText}" />
+                    <Label Text="{Binding Course.Syllabus}" FontSize="14" TextColor="{StaticResource Gray500}" />
+                </VerticalStackLayout>
+            </Border>
+
+            <!-- Batch Timings -->
+            <Border BackgroundColor="White" StrokeShape="RoundRectangle 12" Stroke="{StaticResource Gray100}" Padding="16">
+                <VerticalStackLayout Spacing="8">
+                    <Label Text="Batch Timings" FontSize="16" FontAttributes="Bold" TextColor="{StaticResource DarkText}" />
+                    <CollectionView ItemsSource="{Binding Course.BatchTimings}">
+                        <CollectionView.ItemTemplate>
+                            <DataTemplate x:DataType="x:String">
+                                <HorizontalStackLayout Spacing="8" Padding="0,4">
+                                    <Border BackgroundColor="{StaticResource Tertiary}" StrokeShape="RoundRectangle 4" HeightRequest="8" WidthRequest="8" StrokeThickness="0" VerticalOptions="Center" />
+                                    <Label Text="{Binding .}" FontSize="14" TextColor="{StaticResource Gray600}" />
+                                </HorizontalStackLayout>
+                            </DataTemplate>
+                        </CollectionView.ItemTemplate>
+                    </CollectionView>
+                </VerticalStackLayout>
+            </Border>
+
+            <!-- Apply Button -->
+            <Button Text="Apply for this Course"
+                    Command="{Binding ApplyCommand}"
+                    BackgroundColor="{StaticResource Primary}"
+                    TextColor="White"
+                    FontAttributes="Bold"
+                    CornerRadius="12"
+                    HeightRequest="50"
+                    Margin="0,10"
+                    IsEnabled="{Binding IsBusy, Converter={StaticResource InverseBoolConverter}}" />
+
+        </VerticalStackLayout>
+    </ScrollView>
+</ContentPage>

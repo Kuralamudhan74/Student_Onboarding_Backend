@@ -1,6 +1,15 @@
 {
   "permissions": {
     "allow": [
+<<<<<<< HEAD
+      "Bash(ls -d d:/SOP/*/)",
+      "Bash(git -C \"d:/SOP/Student_Onboarding_Backend\" status)",
+      "Bash(git -C \"d:/SOP/Student_Onboarding_Backend\" remote -v)",
+      "Bash(git -C \"d:/SOP/Student_Onboarding_Backend\" log --oneline -5)"
+    ],
+    "additionalDirectories": [
+      "d:\\SOP\\Student_Onboarding_Backend\\.git"
+=======
       "Bash(find /d/SOP/docs -type f -name *)",
       "Bash(grep -E \"\\\\.\\(xaml|cs|csproj|json\\)$\")",
       "Bash(git -C \"d:/SOP\" show HEAD -- \"StudentOnboardingApp/Constants.cs\")",
@@ -33,6 +42,7 @@
       "Bash(dotnet restore:*)",
       "Bash(dotnet package:*)",
       "Bash(powershell -Command \"checknetisolation loopbackexempt -a -p=''S-1-15-2-2999739969-477831195-2497786377-4166171526-2985710958-2271667541-2179365762''\")"
+>>>>>>> b21a7ff56f4c42af96a63212093eb3710ea26fd8
     ]
   }
 }

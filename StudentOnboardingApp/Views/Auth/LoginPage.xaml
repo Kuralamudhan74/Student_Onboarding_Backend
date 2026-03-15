@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:vm="clr-namespace:StudentOnboardingApp.ViewModels.Auth"
+             x:Class="StudentOnboardingApp.Views.Auth.LoginPage"
+             x:DataType="vm:LoginViewModel"
+             Shell.NavBarIsVisible="False"
+             BackgroundColor="{StaticResource LightBackground}">
+
+    <ScrollView>
+        <VerticalStackLayout Spacing="20" Padding="30" VerticalOptions="Center">
+
+            <!-- Logo / Header -->
+            <Label Text="Student Onboarding"
+                   FontSize="28"
+                   FontAttributes="Bold"
+                   TextColor="{StaticResource Primary}"
+                   HorizontalOptions="Center" />
+
+            <Label Text="Welcome back! Please login to continue."
+                   FontSize="14"
+                   TextColor="{StaticResource Gray500}"
+                   HorizontalOptions="Center" />
+
+            <!-- Error Message -->
+            <Label Text="{Binding ErrorMessage}"
+                   TextColor="{StaticResource ErrorRed}"
+                   IsVisible="{Binding ErrorMessage, Converter={StaticResource IsNotNullConverter}}"
+                   HorizontalOptions="Center"
+                   FontSize="13" />
+
+            <!-- Email -->
+            <Border Stroke="{StaticResource Gray200}" StrokeShape="RoundRectangle 12" Padding="12,4">
+                <Entry Placeholder="Email Address"
+                       Text="{Binding Email}"
+                       Keyboard="Email"
+                       ReturnType="Next" />
+            </Border>
+
+            <!-- Password -->
+            <Border Stroke="{StaticResource Gray200}" StrokeShape="RoundRectangle 12" Padding="12,4">
+                <Grid ColumnDefinitions="*, Auto">
+                    <Entry Placeholder="Password"
+                           Text="{Binding Password}"
+                           IsPassword="{Binding IsPasswordVisible, Converter={StaticResource InverseBoolConverter}}"
+                           ReturnType="Done" />
+                    <Button Grid.Column="1"
+                            Text="{Binding IsPasswordVisible, Converter={StaticResource BoolToStringConverter}}"
+                            Command="{Binding TogglePasswordVisibilityCommand}"
+                            BackgroundColor="Transparent"
+                            TextColor="{StaticResource Gray500}"
+                            FontSize="12"
+                            Padding="8,0" />
+                </Grid>
+            </Border>
+
+            <!-- Forgot Password -->
+            <Label Text="Forgot Password?"
+                   TextColor="{StaticResource Primary}"
+                   FontSize="13"
+                   HorizontalOptions="End">
+                <Label.GestureRecognizers>
+                    <TapGestureRecognizer Command="{Binding GoToForgotPasswordCommand}" />
+                </Label.GestureRecognizers>
+            </Label>
+
+            <!-- Login Button -->
+            <Button Text="Login"
+                    Command="{Binding LoginCommand}"
+                    BackgroundColor="{StaticResource Primary}"
+                    TextColor="White"
+                    FontAttributes="Bold"
+                    CornerRadius="12"
+                    HeightRequest="50"
+                    IsEnabled="{Binding IsBusy, Converter={StaticResource InverseBoolConverter}}" />
+
+            <!-- Loading -->
+            <ActivityIndicator IsRunning="{Binding IsBusy}"
+                               IsVisible="{Binding IsBusy}"
+                               Color="{StaticResource Primary}"
+                               HorizontalOptions="Center" />
+
+            <!-- Sign Up Link -->
+            <HorizontalStackLayout HorizontalOptions="Center" Spacing="4">
+                <Label Text="Don't have an account?"
+                       TextColor="{StaticResource Gray500}"
+                       FontSize="13" />
+                <Label Text="Sign Up"
+                       TextColor="{StaticResource Primary}"
+                       FontAttributes="Bold"
+                       FontSize="13">
+                    <Label.GestureRecognizers>
+                        <TapGestureRecognizer Command="{Binding GoToSignupCommand}" />
+                    </Label.GestureRecognizers>
+                </Label>
+            </HorizontalStackLayout>
+
+        </VerticalStackLayout>
+    </ScrollView>
+</ContentPage>

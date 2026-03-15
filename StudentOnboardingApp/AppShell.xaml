@@ -1,4 +1,43 @@
 <?xml version="1.0" encoding="UTF-8" ?>
+<<<<<<< HEAD
+<Shell
+    x:Class="StudentOnboardingApp.AppShell"
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:auth="clr-namespace:StudentOnboardingApp.Views.Auth"
+    xmlns:onboarding="clr-namespace:StudentOnboardingApp.Views.Onboarding"
+    xmlns:dashboard="clr-namespace:StudentOnboardingApp.Views.Dashboard"
+    xmlns:courses="clr-namespace:StudentOnboardingApp.Views.Courses"
+    xmlns:profile="clr-namespace:StudentOnboardingApp.Views.Profile"
+    xmlns:notifications="clr-namespace:StudentOnboardingApp.Views.Notifications"
+    Title="Student Onboarding"
+    Shell.FlyoutBehavior="Disabled">
+
+    <!-- Auth Flow - Login as initial page -->
+    <ShellContent Route="login"
+                  ContentTemplate="{DataTemplate auth:LoginPage}"
+                  Shell.NavBarIsVisible="False"
+                  Shell.TabBarIsVisible="False" />
+
+    <!-- Main App with Tab Bar -->
+    <TabBar Route="main">
+        <ShellContent Title="Dashboard"
+                      Icon="dashboard.png"
+                      Route="dashboard"
+                      ContentTemplate="{DataTemplate dashboard:DashboardPage}" />
+        <ShellContent Title="Courses"
+                      Icon="courses.png"
+                      Route="courses"
+                      ContentTemplate="{DataTemplate courses:CourseListPage}" />
+        <ShellContent Title="Profile"
+                      Icon="profile.png"
+                      Route="profile"
+                      ContentTemplate="{DataTemplate profile:ProfilePage}" />
+        <ShellContent Title="Alerts"
+                      Icon="notifications.png"
+                      Route="notifications"
+                      ContentTemplate="{DataTemplate notifications:NotificationsPage}" />
+=======
 <Shell xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
        xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
        xmlns:views="clr-namespace:StudentOnboardingApp.Views"
@@ -13,6 +52,7 @@
     <TabBar Route="main">
         <ShellContent Route="dashboard" Title="Home" ContentTemplate="{DataTemplate views:DashboardPage}" />
         <ShellContent Route="profile" Title="Profile" ContentTemplate="{DataTemplate views:ProfilePage}" />
+>>>>>>> b21a7ff56f4c42af96a63212093eb3710ea26fd8
     </TabBar>
 
 </Shell>

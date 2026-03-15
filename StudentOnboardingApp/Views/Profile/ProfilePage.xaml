@@ -1,0 +1,129 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:vm="clr-namespace:StudentOnboardingApp.ViewModels"
+             x:Class="StudentOnboardingApp.Views.Profile.ProfilePage"
+             x:DataType="vm:ProfileViewModel"
+             Title="Profile"
+             BackgroundColor="{StaticResource LightBackground}">
+
+    <ScrollView>
+        <VerticalStackLayout Spacing="16" Padding="20">
+
+            <ActivityIndicator IsRunning="{Binding IsBusy}" IsVisible="{Binding IsBusy}" Color="{StaticResource Primary}" HorizontalOptions="Center" />
+
+            <Label Text="{Binding ErrorMessage}"
+                   TextColor="{StaticResource ErrorRed}"
+                   IsVisible="{Binding ErrorMessage, Converter={StaticResource IsNotNullConverter}}"
+                   FontSize="13" />
+
+            <!-- Profile Photo -->
+            <Border BackgroundColor="{StaticResource Tertiary}"
+                    StrokeShape="RoundRectangle 60"
+                    HeightRequest="120"
+                    WidthRequest="120"
+                    HorizontalOptions="Center"
+                    StrokeThickness="0">
+                <Border.GestureRecognizers>
+                    <TapGestureRecognizer Command="{Binding UploadPhotoCommand}" />
+                </Border.GestureRecognizers>
+                <Label Text="Tap to upload photo"
+                       FontSize="11"
+                       TextColor="{StaticResource Primary}"
+                       HorizontalOptions="Center"
+                       VerticalOptions="Center"
+                       HorizontalTextAlignment="Center" />
+            </Border>
+
+            <!-- Name -->
+            <Label HorizontalOptions="Center" FontSize="22" FontAttributes="Bold" TextColor="{StaticResource DarkText}">
+                <Label.FormattedText>
+                    <FormattedString>
+                        <Span Text="{Binding Profile.FirstName}" />
+                        <Span Text=" " />
+                        <Span Text="{Binding Profile.LastName}" />
+                    </FormattedString>
+                </Label.FormattedText>
+            </Label>
+
+            <Label Text="{Binding Profile.Email}"
+                   FontSize="14"
+                   TextColor="{StaticResource Gray500}"
+                   HorizontalOptions="Center" />
+
+            <!-- Info Cards -->
+            <Border BackgroundColor="White" StrokeShape="RoundRectangle 14" Stroke="{StaticResource Gray100}" Padding="16">
+                <VerticalStackLayout Spacing="14">
+                    <!-- Phone -->
+                    <Grid ColumnDefinitions="100, *">
+                        <Label Text="Phone" FontSize="13" TextColor="{StaticResource Gray400}" VerticalOptions="Center" />
+                        <Label Grid.Column="1" Text="{Binding Profile.PhoneNumber}" FontSize="14" TextColor="{StaticResource DarkText}" />
+                    </Grid>
+                    <BoxView HeightRequest="1" Color="{StaticResource Gray100}" />
+
+                    <!-- DOB -->
+                    <Grid ColumnDefinitions="100, *">
+                        <Label Text="Date of Birth" FontSize="13" TextColor="{StaticResource Gray400}" VerticalOptions="Center" />
+                        <Label Grid.Column="1" Text="{Binding Profile.DateOfBirth, StringFormat='{0:MMM dd, yyyy}'}" FontSize="14" TextColor="{StaticResource DarkText}" />
+                    </Grid>
+                    <BoxView HeightRequest="1" Color="{StaticResource Gray100}" />
+
+                    <!-- Address -->
+                    <Grid ColumnDefinitions="100, *">
+                        <Label Text="Address" FontSize="13" TextColor="{StaticResource Gray400}" VerticalOptions="Center" />
+                        <Label Grid.Column="1" Text="{Binding Profile.Address}" FontSize="14" TextColor="{StaticResource DarkText}" />
+                    </Grid>
+                    <BoxView HeightRequest="1" Color="{StaticResource Gray100}" />
+
+                    <!-- Education -->
+                    <Grid ColumnDefinitions="100, *">
+                        <Label Text="Education" FontSize="13" TextColor="{StaticResource Gray400}" VerticalOptions="Center" />
+                        <Label Grid.Column="1" Text="{Binding Profile.Education}" FontSize="14" TextColor="{StaticResource DarkText}" />
+                    </Grid>
+                </VerticalStackLayout>
+            </Border>
+
+            <!-- Documents -->
+            <Label Text="Documents" FontSize="16" FontAttributes="Bold" TextColor="{StaticResource DarkText}" Margin="0,8,0,0" />
+            <CollectionView ItemsSource="{Binding Profile.Documents}">
+                <CollectionView.ItemTemplate>
+                    <DataTemplate x:DataType="x:Object">
+                        <Border BackgroundColor="White" StrokeShape="RoundRectangle 10" Stroke="{StaticResource Gray100}" Padding="12" Margin="0,0,0,8">
+                            <Label Text="Document" FontSize="14" TextColor="{StaticResource DarkText}" />
+                        </Border>
+                    </DataTemplate>
+                </CollectionView.ItemTemplate>
+                <CollectionView.EmptyView>
+                    <Label Text="No documents uploaded yet"
+                           FontSize="13"
+                           TextColor="{StaticResource Gray400}"
+                           HorizontalOptions="Center" />
+                </CollectionView.EmptyView>
+            </CollectionView>
+
+            <!-- Action Buttons -->
+            <Button Text="Edit Profile"
+                    Command="{Binding GoToEditProfileCommand}"
+                    BackgroundColor="{StaticResource Primary}"
+                    TextColor="White"
+                    CornerRadius="12"
+                    HeightRequest="48" />
+
+            <Button Text="Change Password"
+                    Command="{Binding GoToChangePasswordCommand}"
+                    BackgroundColor="{StaticResource Secondary}"
+                    TextColor="White"
+                    CornerRadius="12"
+                    HeightRequest="48" />
+
+            <Button Text="Logout"
+                    Command="{Binding LogoutCommand}"
+                    BackgroundColor="{StaticResource ErrorRed}"
+                    TextColor="White"
+                    CornerRadius="12"
+                    HeightRequest="48"
+                    Margin="0,10,0,20" />
+
+        </VerticalStackLayout>
+    </ScrollView>
+</ContentPage>
