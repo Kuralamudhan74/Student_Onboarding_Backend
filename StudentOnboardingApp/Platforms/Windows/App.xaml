@@ -1,8 +1,15 @@
+<<<<<<< HEAD
 ﻿<maui:MauiWinUIApplication
+=======
+<maui:MauiWinUIApplication
+>>>>>>> b21a7ff56f4c42af96a63212093eb3710ea26fd8
     x:Class="StudentOnboardingApp.WinUI.App"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:maui="using:Microsoft.Maui"
     xmlns:local="using:StudentOnboardingApp.WinUI">
+<<<<<<< HEAD
 
+=======
+>>>>>>> b21a7ff56f4c42af96a63212093eb3710ea26fd8
 </maui:MauiWinUIApplication>

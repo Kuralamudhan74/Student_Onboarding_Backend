@@ -1,4 +1,8 @@
+<<<<<<< HEAD
 ﻿<?xml version="1.0" encoding="utf-8"?>
+=======
+<?xml version="1.0" encoding="utf-8"?>
+>>>>>>> b21a7ff56f4c42af96a63212093eb3710ea26fd8
 <Package
   xmlns="http://schemas.microsoft.com/appx/manifest/foundation/windows10"
   xmlns:uap="http://schemas.microsoft.com/appx/manifest/uap/windows10"
@@ -7,24 +11,37 @@
   IgnorableNamespaces="uap rescap">
 
   <Identity Name="maui-package-name-placeholder" Publisher="CN=User Name" Version="0.0.0.0" />
+<<<<<<< HEAD
 
   <mp:PhoneIdentity PhoneProductId="4AFCD7BE-FA0F-4079-9F5C-7A0F190AA867" PhonePublisherId="00000000-0000-0000-0000-000000000000"/>
 
+=======
+  <mp:PhoneIdentity PhoneProductId="A1B2C3D4-E5F6-7890-ABCD-EF1234567890" PhonePublisherId="00000000-0000-0000-0000-000000000000"/>
+>>>>>>> b21a7ff56f4c42af96a63212093eb3710ea26fd8
   <Properties>
     <DisplayName>$placeholder$</DisplayName>
     <PublisherDisplayName>User Name</PublisherDisplayName>
     <Logo>$placeholder$.png</Logo>
   </Properties>
+<<<<<<< HEAD
 
+=======
+>>>>>>> b21a7ff56f4c42af96a63212093eb3710ea26fd8
   <Dependencies>
     <TargetDeviceFamily Name="Windows.Universal" MinVersion="10.0.17763.0" MaxVersionTested="10.0.19041.0" />
     <TargetDeviceFamily Name="Windows.Desktop" MinVersion="10.0.17763.0" MaxVersionTested="10.0.19041.0" />
   </Dependencies>
+<<<<<<< HEAD
 
   <Resources>
     <Resource Language="x-generate" />
   </Resources>
 
+=======
+  <Resources>
+    <Resource Language="x-generate" />
+  </Resources>
+>>>>>>> b21a7ff56f4c42af96a63212093eb3710ea26fd8
   <Applications>
     <Application Id="App" Executable="$targetnametoken$.exe" EntryPoint="$targetentrypoint$">
       <uap:VisualElements
@@ -38,9 +55,15 @@
       </uap:VisualElements>
     </Application>
   </Applications>
+<<<<<<< HEAD
 
   <Capabilities>
     <rescap:Capability Name="runFullTrust" />
   </Capabilities>
 
+=======
+  <Capabilities>
+    <rescap:Capability Name="runFullTrust" />
+  </Capabilities>
+>>>>>>> b21a7ff56f4c42af96a63212093eb3710ea26fd8
 </Package>

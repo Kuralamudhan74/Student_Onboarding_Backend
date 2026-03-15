@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <assembly manifestVersion="1.0" xmlns="urn:schemas-microsoft-com:asm.v1">
+<<<<<<< HEAD
   <assemblyIdentity version="1.0.0.0" name="StudentOnboardingApp.WinUI.app"/>
 
   <application xmlns="urn:schemas-microsoft-com:asm.v3">
@@ -12,6 +13,12 @@
       <dpiAwareness xmlns="http://schemas.microsoft.com/SMI/2016/WindowsSettings">PerMonitorV2, PerMonitor</dpiAwareness>
 
       <longPathAware xmlns="http://schemas.microsoft.com/SMI/2016/WindowsSettings">true</longPathAware>
+=======
+  <assemblyIdentity version="1.0.0.0" name="StudentOnboardingApp.app"/>
+  <application xmlns="urn:schemas-microsoft-com:asm.v3">
+    <windowsSettings>
+      <dpiAwareness xmlns="http://schemas.microsoft.com/SMI/2016/WindowsSettings">PerMonitorV2, PerMonitor</dpiAwareness>
+>>>>>>> b21a7ff56f4c42af96a63212093eb3710ea26fd8
     </windowsSettings>
   </application>
 </assembly>

@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 ﻿using Microsoft.UI.Xaml;
 
 // To learn more about WinUI, the WinUI project structure,
@@ -22,3 +23,18 @@ public partial class App : MauiWinUIApplication
 	protected override MauiApp CreateMauiApp() => MauiProgram.CreateMauiApp();
 }
 
+=======
+using Microsoft.UI.Xaml;
+
+namespace StudentOnboardingApp.WinUI;
+
+public partial class App : MauiWinUIApplication
+{
+    public App()
+    {
+        this.InitializeComponent();
+    }
+
+    protected override MauiApp CreateMauiApp() => MauiProgram.CreateMauiApp();
+}
+>>>>>>> b21a7ff56f4c42af96a63212093eb3710ea26fd8
