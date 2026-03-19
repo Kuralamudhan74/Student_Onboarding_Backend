@@ -10,6 +10,6 @@ public class StudentProfileDto
     public DateTime? DateOfBirth { get; set; }
     public string? Address { get; set; }
     public string? Education { get; set; }
-    public string? PhotoUrl { get; set; }
+    public string? ProfilePhotoUrl { get; set; }
     public List<DocumentDto> Documents { get; set; } = [];
 }

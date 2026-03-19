@@ -76,4 +76,47 @@ public class NotificationService : INotificationService
         _logger.LogInformation("Notification {NotificationId} marked as read by admin {AdminId}", notificationId, adminId);
         return ApiResponse<string>.Ok("Notification marked as read.");
     }
+
+    // Student notification methods
+
+    public async Task CreateStudentNotificationAsync(Guid studentId, string type, string title, string message, Guid? referenceId = null)
+    {
+        var notification = new Notification
+        {
+            UserId = studentId,
+            Type = type,
+            Title = title,
+            Message = message,
+            ReferenceId = referenceId,
+            IsRead = false
+        };
+
+        await _notificationRepository.CreateAsync(notification);
+        _logger.LogInformation("Student notification created for user {StudentId}: {Title}", studentId, title);
+    }
+
+    public async Task<ApiResponse<List<NotificationResponse>>> GetStudentNotificationsAsync(Guid studentId)
+    {
+        var notifications = await _notificationRepository.GetByUserIdAsync(studentId);
+
+        var response = notifications.Select(n => new NotificationResponse
+        {
+            Id = n.Id,
+            Type = n.Type,
+            Title = n.Title,
+            Message = n.Message,
+            ReferenceId = n.ReferenceId,
+            IsRead = n.IsRead,
+            CreatedAt = n.CreatedAt
+        }).ToList();
+
+        return ApiResponse<List<NotificationResponse>>.Ok(response);
+    }
+
+    public async Task<ApiResponse<string>> MarkStudentNotificationAsReadAsync(Guid notificationId, Guid studentId)
+    {
+        await _notificationRepository.MarkAsReadAsync(notificationId);
+        _logger.LogInformation("Notification {NotificationId} marked as read by student {StudentId}", notificationId, studentId);
+        return ApiResponse<string>.Ok("Notification marked as read.");
+    }
 }

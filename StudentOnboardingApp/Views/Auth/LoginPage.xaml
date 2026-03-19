@@ -4,97 +4,174 @@
              xmlns:vm="clr-namespace:StudentOnboardingApp.ViewModels.Auth"
              x:Class="StudentOnboardingApp.Views.Auth.LoginPage"
              x:DataType="vm:LoginViewModel"
-             Shell.NavBarIsVisible="False"
-             BackgroundColor="{StaticResource LightBackground}">
+             Shell.NavBarIsVisible="False">
+
+    <!-- Gradient Background -->
+    <ContentPage.Background>
+        <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
+            <GradientStop Color="{StaticResource GradientStart}" Offset="0.0" />
+            <GradientStop Color="{StaticResource GradientMid}" Offset="0.4" />
+            <GradientStop Color="{StaticResource GradientEnd}" Offset="1.0" />
+        </LinearGradientBrush>
+    </ContentPage.Background>
 
     <ScrollView>
-        <VerticalStackLayout Spacing="20" Padding="30" VerticalOptions="Center">
+        <VerticalStackLayout Spacing="16" Padding="24" VerticalOptions="Center">
 
-            <!-- Logo / Header -->
-            <Label Text="Student Onboarding"
+            <!-- Logo Icon -->
+            <Border BackgroundColor="#FFFFFF88"
+                    StrokeThickness="0"
+                    StrokeShape="RoundRectangle 22"
+                    HeightRequest="60" WidthRequest="60"
+                    HorizontalOptions="Center"
+                    Margin="0,20,0,0"
+                    x:Name="LogoIcon">
+                <Label Text="&#x1F393;"
+                       FontSize="28"
+                       HorizontalOptions="Center"
+                       VerticalOptions="Center" />
+            </Border>
+
+            <!-- Header Text -->
+            <Label Text="Welcome Back"
                    FontSize="28"
+                   FontFamily="OpenSansSemibold"
                    FontAttributes="Bold"
-                   TextColor="{StaticResource Primary}"
-                   HorizontalOptions="Center" />
-
-            <Label Text="Welcome back! Please login to continue."
-                   FontSize="14"
-                   TextColor="{StaticResource Gray500}"
-                   HorizontalOptions="Center" />
-
-            <!-- Error Message -->
-            <Label Text="{Binding ErrorMessage}"
-                   TextColor="{StaticResource ErrorRed}"
-                   IsVisible="{Binding ErrorMessage, Converter={StaticResource IsNotNullConverter}}"
+                   TextColor="{StaticResource DarkText}"
                    HorizontalOptions="Center"
-                   FontSize="13" />
+                   x:Name="HeaderLabel" />
 
-            <!-- Email -->
-            <Border Stroke="{StaticResource Gray200}" StrokeShape="RoundRectangle 12" Padding="12,4">
-                <Entry Placeholder="Email Address"
-                       Text="{Binding Email}"
-                       Keyboard="Email"
-                       ReturnType="Next" />
+            <Label Text="Sign in to continue your learning journey"
+                   FontSize="14"
+                   TextColor="{StaticResource TextSecondary}"
+                   HorizontalOptions="Center"
+                   HorizontalTextAlignment="Center"
+                   Margin="0,0,0,8" />
+
+            <!-- Form Card -->
+            <Border BackgroundColor="#E8FFFFFF"
+                    StrokeShape="RoundRectangle 24"
+                    Stroke="#60FFFFFF"
+                    StrokeThickness="1"
+                    Padding="24,28"
+                    x:Name="FormCard">
+                <Border.Shadow>
+                    <Shadow Brush="#205B5BD6" Offset="0,8" Radius="32" Opacity="0.2" />
+                </Border.Shadow>
+                <VerticalStackLayout Spacing="18">
+
+                    <Label Text="Sign In"
+                           FontSize="22"
+                           FontFamily="OpenSansSemibold"
+                           FontAttributes="Bold"
+                           TextColor="{StaticResource DarkText}"
+                           HorizontalOptions="Center" />
+
+                    <!-- Error -->
+                    <Border BackgroundColor="{StaticResource ErrorLight}"
+                            StrokeShape="RoundRectangle 10"
+                            Stroke="{StaticResource ErrorRed}"
+                            StrokeThickness="1"
+                            Padding="12,8"
+                            IsVisible="{Binding ErrorMessage, Converter={StaticResource IsNotNullConverter}}">
+                        <Label Text="{Binding ErrorMessage}"
+                               TextColor="{StaticResource ErrorText}"
+                               FontSize="13"
+                               HorizontalTextAlignment="Center" />
+                    </Border>
+
+                    <!-- Email -->
+                    <VerticalStackLayout Spacing="6">
+                        <Label Text="EMAIL" FontSize="11" FontFamily="OpenSansSemibold"
+                               TextColor="Black" CharacterSpacing="1" />
+                        <Border BackgroundColor="White"
+                                Stroke="{StaticResource BorderColor}"
+                                StrokeShape="RoundRectangle 12"
+                                Padding="14,2" StrokeThickness="1.5">
+                            <Entry Placeholder="Enter your email"
+                                   Text="{Binding Email}"
+                                   Keyboard="Email"
+                                   TextColor="Black"
+                                   PlaceholderColor="{StaticResource TextMuted}"
+                                   ReturnType="Next" />
+                        </Border>
+                    </VerticalStackLayout>
+
+                    <!-- Password -->
+                    <VerticalStackLayout Spacing="6">
+                        <Label Text="PASSWORD" FontSize="11" FontFamily="OpenSansSemibold"
+                               TextColor="Black" CharacterSpacing="1" />
+                        <Border BackgroundColor="White"
+                                Stroke="{StaticResource BorderColor}"
+                                StrokeShape="RoundRectangle 12"
+                                Padding="14,2" StrokeThickness="1.5">
+                            <Grid ColumnDefinitions="*, Auto">
+                                <Entry Placeholder="Enter your password"
+                                       Text="{Binding Password}"
+                                       IsPassword="{Binding IsPasswordVisible, Converter={StaticResource InverseBoolConverter}}"
+                                       TextColor="Black"
+                                       PlaceholderColor="{StaticResource TextMuted}"
+                                       ReturnType="Done" />
+                                <Button Grid.Column="1"
+                                        Text="{Binding IsPasswordVisible, Converter={StaticResource BoolToStringConverter}}"
+                                        Command="{Binding TogglePasswordVisibilityCommand}"
+                                        BackgroundColor="Transparent"
+                                        TextColor="{StaticResource Primary}"
+                                        FontSize="12"
+                                        FontFamily="OpenSansSemibold"
+                                        Padding="8,0"
+                                        Shadow="{x:Null}" />
+                            </Grid>
+                        </Border>
+                    </VerticalStackLayout>
+
+                    <!-- Forgot Password -->
+                    <Label Text="Forgot Password?"
+                           TextColor="{StaticResource Primary}"
+                           FontSize="13"
+                           FontFamily="OpenSansSemibold"
+                           HorizontalOptions="End">
+                        <Label.GestureRecognizers>
+                            <TapGestureRecognizer Command="{Binding GoToForgotPasswordCommand}" />
+                        </Label.GestureRecognizers>
+                    </Label>
+
+                    <!-- Login Button -->
+                    <Button Text="Sign In"
+                            Command="{Binding LoginCommand}"
+                            BackgroundColor="{StaticResource Primary}"
+                            TextColor="White"
+                            FontAttributes="Bold"
+                            FontFamily="OpenSansSemibold"
+                            CornerRadius="14"
+                            HeightRequest="52"
+                            FontSize="16"
+                            IsEnabled="{Binding IsBusy, Converter={StaticResource InverseBoolConverter}}" />
+
+                    <ActivityIndicator IsRunning="{Binding IsBusy}"
+                                       IsVisible="{Binding IsBusy}"
+                                       Color="{StaticResource Primary}"
+                                       HorizontalOptions="Center" />
+
+                    <!-- Sign Up Link -->
+                    <HorizontalStackLayout HorizontalOptions="Center" Spacing="4" Margin="0,4,0,0">
+                        <Label Text="Don't have an account?"
+                               TextColor="{StaticResource TextMuted}"
+                               FontSize="14" />
+                        <Label Text="Sign Up"
+                               TextColor="{StaticResource Primary}"
+                               FontAttributes="Bold"
+                               FontFamily="OpenSansSemibold"
+                               FontSize="14"
+                               TextDecorations="Underline">
+                            <Label.GestureRecognizers>
+                                <TapGestureRecognizer Command="{Binding GoToSignupCommand}" />
+                            </Label.GestureRecognizers>
+                        </Label>
+                    </HorizontalStackLayout>
+
+                </VerticalStackLayout>
             </Border>
-
-            <!-- Password -->
-            <Border Stroke="{StaticResource Gray200}" StrokeShape="RoundRectangle 12" Padding="12,4">
-                <Grid ColumnDefinitions="*, Auto">
-                    <Entry Placeholder="Password"
-                           Text="{Binding Password}"
-                           IsPassword="{Binding IsPasswordVisible, Converter={StaticResource InverseBoolConverter}}"
-                           ReturnType="Done" />
-                    <Button Grid.Column="1"
-                            Text="{Binding IsPasswordVisible, Converter={StaticResource BoolToStringConverter}}"
-                            Command="{Binding TogglePasswordVisibilityCommand}"
-                            BackgroundColor="Transparent"
-                            TextColor="{StaticResource Gray500}"
-                            FontSize="12"
-                            Padding="8,0" />
-                </Grid>
-            </Border>
-
-            <!-- Forgot Password -->
-            <Label Text="Forgot Password?"
-                   TextColor="{StaticResource Primary}"
-                   FontSize="13"
-                   HorizontalOptions="End">
-                <Label.GestureRecognizers>
-                    <TapGestureRecognizer Command="{Binding GoToForgotPasswordCommand}" />
-                </Label.GestureRecognizers>
-            </Label>
-
-            <!-- Login Button -->
-            <Button Text="Login"
-                    Command="{Binding LoginCommand}"
-                    BackgroundColor="{StaticResource Primary}"
-                    TextColor="White"
-                    FontAttributes="Bold"
-                    CornerRadius="12"
-                    HeightRequest="50"
-                    IsEnabled="{Binding IsBusy, Converter={StaticResource InverseBoolConverter}}" />
-
-            <!-- Loading -->
-            <ActivityIndicator IsRunning="{Binding IsBusy}"
-                               IsVisible="{Binding IsBusy}"
-                               Color="{StaticResource Primary}"
-                               HorizontalOptions="Center" />
-
-            <!-- Sign Up Link -->
-            <HorizontalStackLayout HorizontalOptions="Center" Spacing="4">
-                <Label Text="Don't have an account?"
-                       TextColor="{StaticResource Gray500}"
-                       FontSize="13" />
-                <Label Text="Sign Up"
-                       TextColor="{StaticResource Primary}"
-                       FontAttributes="Bold"
-                       FontSize="13">
-                    <Label.GestureRecognizers>
-                        <TapGestureRecognizer Command="{Binding GoToSignupCommand}" />
-                    </Label.GestureRecognizers>
-                </Label>
-            </HorizontalStackLayout>
-
         </VerticalStackLayout>
     </ScrollView>
 </ContentPage>

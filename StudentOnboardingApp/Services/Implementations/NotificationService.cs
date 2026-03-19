@@ -18,7 +18,7 @@ public class NotificationService : INotificationService
     {
         try
         {
-            var response = await _client.GetAsync("notification");
+            var response = await _client.GetAsync("student/notifications");
             var result = await response.Content.ReadFromJsonAsync<ApiResponse<List<NotificationDto>>>();
             return result ?? new ApiResponse<List<NotificationDto>> { Success = false, Message = "Failed to parse response" };
         }
@@ -32,7 +32,7 @@ public class NotificationService : INotificationService
     {
         try
         {
-            var response = await _client.PutAsync($"notification/{notificationId}/read", null);
+            var response = await _client.PutAsync($"student/notifications/{notificationId}/read", null);
             var result = await response.Content.ReadFromJsonAsync<ApiResponse<string>>();
             return result ?? new ApiResponse<string> { Success = false, Message = "Failed to parse response" };
         }
@@ -46,7 +46,7 @@ public class NotificationService : INotificationService
     {
         try
         {
-            var response = await _client.PostAsJsonAsync("notification/register-device", new { Token = fcmToken });
+            var response = await _client.PostAsJsonAsync("student/notifications/register-device", new { Token = fcmToken });
             var result = await response.Content.ReadFromJsonAsync<ApiResponse<string>>();
             return result ?? new ApiResponse<string> { Success = false, Message = "Failed to parse response" };
         }

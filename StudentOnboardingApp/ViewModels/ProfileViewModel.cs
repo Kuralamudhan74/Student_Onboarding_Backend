@@ -1,8 +1,8 @@
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
-<<<<<<< HEAD
 using StudentOnboardingApp.Models.Profile;
 using StudentOnboardingApp.Services.Interfaces;
+using System.Net.Http;
 
 namespace StudentOnboardingApp.ViewModels;
 
@@ -25,84 +25,162 @@ public partial class ProfileViewModel : BaseViewModel
 
     [ObservableProperty]
     private StudentProfileDto? _profile;
-=======
-using StudentOnboardingApp.Models;
-using StudentOnboardingApp.Services;
 
-namespace StudentOnboardingApp.ViewModels;
+    // Editable fields
+    [ObservableProperty]
+    private string _firstName = string.Empty;
 
-public partial class ProfileViewModel : ObservableObject
-{
-    private readonly IAuthService _authService;
+    [ObservableProperty]
+    private string _lastName = string.Empty;
 
-    public ProfileViewModel(IAuthService authService)
+    [ObservableProperty]
+    private string? _phoneNumber;
+
+    [ObservableProperty]
+    private DateTime _dateOfBirth = DateTime.Today.AddYears(-18);
+
+    [ObservableProperty]
+    private string? _address;
+
+    [ObservableProperty]
+    private string? _education;
+
+    [ObservableProperty]
+    private bool _isEditing;
+
+    [ObservableProperty]
+    private string? _successMessage;
+
+    [ObservableProperty]
+    private ImageSource? _profileImage;
+
+    public bool HasPhoto => ProfileImage != null;
+
+    partial void OnProfileChanged(StudentProfileDto? value)
     {
-        _authService = authService;
+        OnPropertyChanged(nameof(HasPhoto));
+        if (value != null && !string.IsNullOrEmpty(value.ProfilePhotoUrl))
+        {
+            _ = LoadProfileImageAsync(value.ProfilePhotoUrl);
+        }
+        else
+        {
+            ProfileImage = null;
+        }
     }
 
-    [ObservableProperty]
-    private string fullName = string.Empty;
+    partial void OnProfileImageChanged(ImageSource? value)
+    {
+        OnPropertyChanged(nameof(HasPhoto));
+    }
 
-    [ObservableProperty]
-    private string email = string.Empty;
+    private async Task LoadProfileImageAsync(string photoPath)
+    {
+        try
+        {
+            var url = $"{Constants.ApiBaseUrl.Replace("/api/", "")}{photoPath}";
+            // Use HttpClientHandler that bypasses SSL for localhost
+            using var handler = new HttpClientHandler();
+#if DEBUG
+            handler.ServerCertificateCustomValidationCallback = (_, _, _, _) => true;
+#endif
+            using var client = new HttpClient(handler);
+            var bytes = await client.GetByteArrayAsync(url);
+            ProfileImage = ImageSource.FromStream(() => new MemoryStream(bytes));
+        }
+        catch
+        {
+            ProfileImage = null;
+        }
+    }
 
-    [ObservableProperty]
-    private string phoneNumber = string.Empty;
-
-    [ObservableProperty]
-    private string initials = string.Empty;
-
-    [ObservableProperty]
-    private string role = string.Empty;
-
-    [ObservableProperty]
-    private bool emailVerified;
-
-    [ObservableProperty]
-    private bool phoneVerified;
-
-    [ObservableProperty]
-    private bool isLoading = true;
-
-    // Change password fields
-    [ObservableProperty]
-    private string currentPassword = string.Empty;
-
-    [ObservableProperty]
-    private string newPassword = string.Empty;
-
-    [ObservableProperty]
-    private string confirmNewPassword = string.Empty;
-
-    [ObservableProperty]
-    private bool isChangingPassword;
-
-    [ObservableProperty]
-    private bool showChangePassword;
-
-    [ObservableProperty]
-    private string? passwordMessage;
-
-    [ObservableProperty]
-    private bool isPasswordMessageError;
->>>>>>> b21a7ff56f4c42af96a63212093eb3710ea26fd8
+    private void PopulateFieldsFromProfile()
+    {
+        if (Profile == null) return;
+        FirstName = Profile.FirstName;
+        LastName = Profile.LastName;
+        PhoneNumber = Profile.PhoneNumber;
+        DateOfBirth = Profile.DateOfBirth ?? DateTime.Today.AddYears(-18);
+        Address = Profile.Address;
+        Education = Profile.Education;
+    }
 
     [RelayCommand]
     private async Task LoadProfileAsync()
     {
-<<<<<<< HEAD
         await ExecuteAsync(async () =>
         {
             var result = await _profileService.GetProfileAsync();
             if (result.Success && result.Data != null)
             {
                 Profile = result.Data;
+                PopulateFieldsFromProfile();
             }
             else
             {
                 ErrorMessage = result.Message;
             }
         });
+    }
+
+    [RelayCommand]
+    private void ToggleEdit()
+    {
+        if (!IsEditing)
+        {
+            // Entering edit mode — auto-fill fields from current profile
+            PopulateFieldsFromProfile();
+        }
+        IsEditing = !IsEditing;
+        SuccessMessage = null;
+        ErrorMessage = null;
+    }
+
+    [RelayCommand]
+    private async Task SaveProfileAsync()
+    {
+        if (string.IsNullOrWhiteSpace(FirstName) || string.IsNullOrWhiteSpace(LastName))
+        {
+            ErrorMessage = "First name and last name are required.";
+            return;
+        }
+
+        await ExecuteAsync(async () =>
+        {
+            var request = new UpdateProfileRequest
+            {
+                FirstName = FirstName.Trim(),
+                LastName = LastName.Trim(),
+                PhoneNumber = PhoneNumber?.Trim(),
+                DateOfBirth = DateOfBirth,
+                Address = Address?.Trim(),
+                Education = Education?.Trim()
+            };
+
+            var result = await _profileService.UpdateProfileAsync(request);
+            if (result.Success)
+            {
+                IsEditing = false;
+                SuccessMessage = "Profile updated successfully!";
+                ErrorMessage = null;
+                // Reload profile to get fresh data from server
+                await LoadProfileInternalAsync();
+            }
+            else
+            {
+                ErrorMessage = result.Message ?? "Failed to update profile.";
+            }
+        });
+    }
+
+    private async Task LoadProfileInternalAsync()
+    {
+        var result = await _profileService.GetProfileAsync();
+        if (result.Success && result.Data != null)
+        {
+            Profile = result.Data;
+            PopulateFieldsFromProfile();
+        }
     }
 
     [RelayCommand]
@@ -118,12 +196,14 @@ public partial class ProfileViewModel : ObservableObject
             if (result != null)
             {
                 IsBusy = true;
+                ErrorMessage = null;
                 using var stream = await result.OpenReadAsync();
                 var uploadResult = await _profileService.UploadPhotoAsync(stream, result.FileName);
 
                 if (uploadResult.Success)
                 {
-                    await LoadProfileAsync();
+                    SuccessMessage = "Photo uploaded!";
+                    await LoadProfileInternalAsync();
                 }
                 else
                 {
@@ -135,132 +215,23 @@ public partial class ProfileViewModel : ObservableObject
         catch (Exception ex)
         {
             ErrorMessage = ex.Message;
+            IsBusy = false;
         }
-    }
-
-    [RelayCommand]
-    private async Task GoToEditProfileAsync()
-    {
-        await Shell.Current.GoToAsync(Constants.Routes.EditProfile);
     }
 
     [RelayCommand]
     private async Task GoToChangePasswordAsync()
     {
         await Shell.Current.GoToAsync(Constants.Routes.ChangePassword);
-=======
-        IsLoading = true;
-        try
-        {
-            var user = await _authService.GetCurrentUserAsync();
-            if (user != null)
-            {
-                FullName = user.FullName;
-                Email = user.Email;
-                PhoneNumber = user.PhoneNumber;
-                Initials = user.Initials;
-                Role = user.Role;
-                EmailVerified = user.EmailVerified;
-                PhoneVerified = user.PhoneVerified;
-            }
-        }
-        finally
-        {
-            IsLoading = false;
-        }
-    }
-
-    [RelayCommand]
-    private void ToggleChangePassword()
-    {
-        ShowChangePassword = !ShowChangePassword;
-        if (!ShowChangePassword)
-        {
-            CurrentPassword = string.Empty;
-            NewPassword = string.Empty;
-            ConfirmNewPassword = string.Empty;
-            PasswordMessage = null;
-        }
-    }
-
-    [RelayCommand]
-    private async Task ChangePasswordAsync()
-    {
-        if (string.IsNullOrWhiteSpace(CurrentPassword) || string.IsNullOrWhiteSpace(NewPassword))
-        {
-            PasswordMessage = "Please fill in all fields";
-            IsPasswordMessageError = true;
-            return;
-        }
-        if (NewPassword != ConfirmNewPassword)
-        {
-            PasswordMessage = "New passwords do not match";
-            IsPasswordMessageError = true;
-            return;
-        }
-        if (NewPassword.Length < 8)
-        {
-            PasswordMessage = "Password must be at least 8 characters";
-            IsPasswordMessageError = true;
-            return;
-        }
-
-        IsChangingPassword = true;
-        PasswordMessage = null;
-
-        try
-        {
-            var response = await _authService.ChangePasswordAsync(new ChangePasswordRequest
-            {
-                CurrentPassword = CurrentPassword,
-                NewPassword = NewPassword,
-                ConfirmPassword = ConfirmNewPassword
-            });
-
-            if (response?.Success == true)
-            {
-                PasswordMessage = "Password changed successfully. Please log in again.";
-                IsPasswordMessageError = false;
-                await Task.Delay(2000);
-                await _authService.LogoutAsync();
-                await Shell.Current.GoToAsync("//login");
-            }
-            else
-            {
-                PasswordMessage = response?.Message ?? "Failed to change password";
-                IsPasswordMessageError = true;
-            }
-        }
-        catch (Exception)
-        {
-            PasswordMessage = "Unable to change password. Please try again.";
-            IsPasswordMessageError = true;
-        }
-        finally
-        {
-            IsChangingPassword = false;
-        }
->>>>>>> b21a7ff56f4c42af96a63212093eb3710ea26fd8
     }
 
     [RelayCommand]
     private async Task LogoutAsync()
     {
-<<<<<<< HEAD
         var confirm = await Shell.Current.DisplayAlert("Logout", "Are you sure you want to logout?", "Yes", "No");
         if (!confirm) return;
 
         await _authService.LogoutAsync();
         await Shell.Current.GoToAsync($"///{Constants.Routes.Login}");
-=======
-        try
-        {
-            await _authService.LogoutAsync();
-        }
-        finally
-        {
-            await Shell.Current.GoToAsync("//login");
-        }
->>>>>>> b21a7ff56f4c42af96a63212093eb3710ea26fd8
     }
 }

@@ -46,7 +46,7 @@ public class CourseService : ICourseService
     {
         try
         {
-            var response = await _client.PostAsJsonAsync("course/apply", request);
+            var response = await _client.PostAsJsonAsync("student/courses/register", request);
             var result = await response.Content.ReadFromJsonAsync<ApiResponse<string>>();
             return result ?? new ApiResponse<string> { Success = false, Message = "Failed to parse response" };
         }

@@ -18,6 +18,11 @@ public class UserService : IUserService
         return await _userRepository.GetByEmailAsync(email);
     }
 
+    public async Task<User?> GetByPhoneNumberAsync(string phoneNumber)
+    {
+        return await _userRepository.GetByPhoneNumberAsync(phoneNumber);
+    }
+
     public async Task<User?> GetByIdAsync(Guid id)
     {
         return await _userRepository.GetByIdAsync(id);
@@ -63,9 +68,15 @@ public class UserService : IUserService
         return await _userRepository.GetAdminUsersAsync();
     }
 
-    public async Task UpdateProfileAsync(Guid userId, string firstName, string lastName, string? phoneNumber)
+    public async Task UpdateProfileAsync(Guid userId, string firstName, string lastName, string? phoneNumber,
+        DateTime? dateOfBirth, string? address, string? education)
     {
-        await _userRepository.UpdateProfileAsync(userId, firstName, lastName, phoneNumber);
+        await _userRepository.UpdateProfileAsync(userId, firstName, lastName, phoneNumber, dateOfBirth, address, education);
+    }
+
+    public async Task UpdateProfilePhotoAsync(Guid userId, string photoUrl)
+    {
+        await _userRepository.UpdateProfilePhotoAsync(userId, photoUrl);
     }
 
     public async Task UpdateIsActiveAsync(Guid userId, bool isActive)

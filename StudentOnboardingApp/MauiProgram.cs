@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 using CommunityToolkit.Maui;
 using Microsoft.Extensions.Logging;
 using StudentOnboardingApp.Handlers;
@@ -13,12 +12,6 @@ using StudentOnboardingApp.Views.Dashboard;
 using StudentOnboardingApp.Views.Notifications;
 using StudentOnboardingApp.Views.Onboarding;
 using StudentOnboardingApp.Views.Profile;
-=======
-using Microsoft.Extensions.Logging;
-using StudentOnboardingApp.Services;
-using StudentOnboardingApp.ViewModels;
-using StudentOnboardingApp.Views;
->>>>>>> b21a7ff56f4c42af96a63212093eb3710ea26fd8
 
 namespace StudentOnboardingApp;
 
@@ -29,7 +22,6 @@ public static class MauiProgram
         var builder = MauiApp.CreateBuilder();
         builder
             .UseMauiApp<App>()
-<<<<<<< HEAD
             .UseMauiCommunityToolkit()
             .ConfigureFonts(fonts =>
             {
@@ -69,23 +61,6 @@ public static class MauiProgram
         builder.Services.AddSingleton<IDashboardService, DashboardService>();
         builder.Services.AddSingleton<INotificationService, NotificationService>();
         builder.Services.AddSingleton<IOnboardingService, OnboardingService>();
-=======
-            .ConfigureFonts(fonts =>
-            {
-                fonts.AddFont("PlusJakartaSans-Regular.ttf", "JakartaRegular");
-                fonts.AddFont("PlusJakartaSans-Medium.ttf", "JakartaMedium");
-                fonts.AddFont("PlusJakartaSans-SemiBold.ttf", "JakartaSemiBold");
-                fonts.AddFont("PlusJakartaSans-Bold.ttf", "JakartaBold");
-                fonts.AddFont("PlusJakartaSans-ExtraBold.ttf", "JakartaExtraBold");
-                fonts.AddFont("DMSans-Regular.ttf", "DMSansRegular");
-                fonts.AddFont("DMSans-Medium.ttf", "DMSansMedium");
-            });
-
-        // Services
-        builder.Services.AddSingleton<ITokenStorageService, TokenStorageService>();
-        builder.Services.AddSingleton<IApiService, ApiService>();
-        builder.Services.AddSingleton<IAuthService, AuthService>();
->>>>>>> b21a7ff56f4c42af96a63212093eb3710ea26fd8
 
         // ViewModels
         builder.Services.AddTransient<LoginViewModel>();
@@ -93,7 +68,6 @@ public static class MauiProgram
         builder.Services.AddTransient<OtpVerificationViewModel>();
         builder.Services.AddTransient<ForgotPasswordViewModel>();
         builder.Services.AddTransient<ResetPasswordViewModel>();
-<<<<<<< HEAD
         builder.Services.AddTransient<ApprovalWaitingViewModel>();
         builder.Services.AddTransient<OnboardingInstructionsViewModel>();
         builder.Services.AddTransient<DashboardViewModel>();
@@ -103,10 +77,6 @@ public static class MauiProgram
         builder.Services.AddTransient<EditProfileViewModel>();
         builder.Services.AddTransient<ChangePasswordViewModel>();
         builder.Services.AddTransient<NotificationsViewModel>();
-=======
-        builder.Services.AddTransient<DashboardViewModel>();
-        builder.Services.AddTransient<ProfileViewModel>();
->>>>>>> b21a7ff56f4c42af96a63212093eb3710ea26fd8
 
         // Pages
         builder.Services.AddTransient<LoginPage>();
@@ -114,7 +84,6 @@ public static class MauiProgram
         builder.Services.AddTransient<OtpVerificationPage>();
         builder.Services.AddTransient<ForgotPasswordPage>();
         builder.Services.AddTransient<ResetPasswordPage>();
-<<<<<<< HEAD
         builder.Services.AddTransient<ApprovalWaitingPage>();
         builder.Services.AddTransient<OnboardingInstructionsPage>();
         builder.Services.AddTransient<DashboardPage>();
@@ -124,10 +93,6 @@ public static class MauiProgram
         builder.Services.AddTransient<EditProfilePage>();
         builder.Services.AddTransient<ChangePasswordPage>();
         builder.Services.AddTransient<NotificationsPage>();
-=======
-        builder.Services.AddTransient<DashboardPage>();
-        builder.Services.AddTransient<ProfilePage>();
->>>>>>> b21a7ff56f4c42af96a63212093eb3710ea26fd8
 
 #if DEBUG
         builder.Logging.AddDebug();
@@ -135,7 +100,6 @@ public static class MauiProgram
 
         return builder.Build();
     }
-<<<<<<< HEAD
 
     /// <summary>
     /// Returns an HttpMessageHandler that bypasses SSL validation in DEBUG mode.
@@ -153,6 +117,4 @@ public static class MauiProgram
         return new HttpClientHandler();
 #endif
     }
-=======
->>>>>>> b21a7ff56f4c42af96a63212093eb3710ea26fd8
 }

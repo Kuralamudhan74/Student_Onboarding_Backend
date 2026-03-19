@@ -61,8 +61,8 @@ public partial class CourseDetailViewModel : BaseViewModel
 
             if (result.Success)
             {
-                await Shell.Current.DisplayAlert("Success", "Course application submitted successfully!", "OK");
-                await Shell.Current.GoToAsync("..");
+                // Navigate to approval waiting page after course registration
+                await Shell.Current.GoToAsync(Constants.Routes.ApprovalWaiting);
             }
             else
             {

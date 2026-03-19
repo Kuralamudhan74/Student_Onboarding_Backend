@@ -10,6 +10,7 @@ public partial class ProfilePage : ContentPage
     {
         InitializeComponent();
         BindingContext = _viewModel = viewModel;
+        DobPicker.MaximumDate = DateTime.Today;
     }
 
     protected override async void OnAppearing()

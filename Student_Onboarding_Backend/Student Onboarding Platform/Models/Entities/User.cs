@@ -17,6 +17,10 @@ public class User
     public Guid? ApprovedBy { get; set; }
     public DateTime? ApprovedAt { get; set; }
     public string? DenialReason { get; set; }
+    public DateTime? DateOfBirth { get; set; }
+    public string? Address { get; set; }
+    public string? Education { get; set; }
+    public string? ProfilePhotoUrl { get; set; }
     public DateTime? PasswordUpdatedAt { get; set; }
     public DateTime CreatedAt { get; set; }
     public DateTime? UpdatedAt { get; set; }

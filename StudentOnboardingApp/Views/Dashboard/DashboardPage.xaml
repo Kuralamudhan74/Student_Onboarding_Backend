@@ -12,84 +12,179 @@
                  Command="{Binding LoadDashboardCommand}"
                  RefreshColor="{StaticResource Primary}">
         <ScrollView>
-            <VerticalStackLayout Spacing="20" Padding="20">
+            <VerticalStackLayout Spacing="20" Padding="20" x:Name="PageContent">
 
-                <!-- Welcome Header -->
-                <Label Text="My Dashboard"
-                       FontSize="24"
-                       FontAttributes="Bold"
-                       TextColor="{StaticResource DarkText}" />
+                <!-- Welcome Header Card -->
+                <Border StrokeThickness="0" StrokeShape="RoundRectangle 20"
+                        Padding="22,20" Margin="0,4,0,0">
+                    <Border.Background>
+                        <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
+                            <GradientStop Color="{StaticResource Primary}" Offset="0.0" />
+                            <GradientStop Color="{StaticResource Secondary}" Offset="1.0" />
+                        </LinearGradientBrush>
+                    </Border.Background>
+                    <Border.Shadow>
+                        <Shadow Brush="#405B5BD6" Offset="0,6" Radius="20" Opacity="0.3" />
+                    </Border.Shadow>
+                    <Grid ColumnDefinitions="*, Auto">
+                        <VerticalStackLayout Spacing="6">
+                            <Label Text="{Binding Greeting}"
+                                   FontSize="22" FontFamily="OpenSansSemibold"
+                                   FontAttributes="Bold" TextColor="White" />
+                            <Label Text="Track your enrollment and course details"
+                                   FontSize="13" TextColor="#FFFFFFBB" />
+                        </VerticalStackLayout>
+                        <!-- Avatar circle -->
+                        <Border Grid.Column="1" BackgroundColor="#FFFFFF30"
+                                StrokeThickness="0" StrokeShape="RoundRectangle 24"
+                                HeightRequest="48" WidthRequest="48" VerticalOptions="Center">
+                            <Label Text="&#x1F393;" FontSize="24"
+                                   HorizontalOptions="Center" VerticalOptions="Center" />
+                        </Border>
+                    </Grid>
+                </Border>
 
                 <!-- Error -->
-                <Label Text="{Binding ErrorMessage}"
-                       TextColor="{StaticResource ErrorRed}"
-                       IsVisible="{Binding ErrorMessage, Converter={StaticResource IsNotNullConverter}}"
-                       FontSize="13" />
+                <Border BackgroundColor="{StaticResource ErrorLight}"
+                        StrokeShape="RoundRectangle 10" StrokeThickness="0" Padding="14,10"
+                        IsVisible="{Binding ErrorMessage, Converter={StaticResource IsNotNullConverter}}">
+                    <Label Text="{Binding ErrorMessage}" TextColor="{StaticResource ErrorText}"
+                           FontSize="13" HorizontalTextAlignment="Center" />
+                </Border>
 
                 <!-- Loading -->
-                <ActivityIndicator IsRunning="{Binding IsBusy}"
-                                   IsVisible="{Binding IsBusy}"
-                                   Color="{StaticResource Primary}"
-                                   HorizontalOptions="Center" />
+                <ActivityIndicator IsRunning="{Binding IsBusy}" IsVisible="{Binding IsBusy}"
+                                   Color="{StaticResource Primary}" HorizontalOptions="Center" />
 
-                <!-- Course Card -->
+                <!-- No Course Registered State -->
                 <Border BackgroundColor="White"
-                        StrokeShape="RoundRectangle 16"
-                        Stroke="{StaticResource Gray100}"
-                        Padding="20"
-                        Shadow="{StaticResource Shadow}">
-                    <VerticalStackLayout Spacing="16">
-                        <Label Text="Enrolled Course"
-                               FontSize="13"
-                               TextColor="{StaticResource Gray500}"
-                               FontAttributes="Bold" />
-                        <Label Text="{Binding Dashboard.CourseName}"
-                               FontSize="20"
-                               FontAttributes="Bold"
-                               TextColor="{StaticResource Primary}" />
+                        StrokeShape="RoundRectangle 20"
+                        Stroke="{StaticResource BorderColor}"
+                        Padding="28,40" StrokeThickness="1"
+                        IsVisible="{Binding HasCourse, Converter={StaticResource InverseBoolConverter}}">
+                    <Border.Shadow>
+                        <Shadow Brush="#145B5BD6" Offset="0,4" Radius="20" Opacity="0.12" />
+                    </Border.Shadow>
+                    <VerticalStackLayout Spacing="16" HorizontalOptions="Center">
+                        <Border BackgroundColor="{StaticResource Surface3}"
+                                StrokeThickness="0" StrokeShape="RoundRectangle 36"
+                                HeightRequest="80" WidthRequest="80" HorizontalOptions="Center">
+                            <Label Text="&#x1F4DA;" FontSize="36"
+                                   HorizontalOptions="Center" VerticalOptions="Center" />
+                        </Border>
+                        <Label Text="No Registered Course"
+                               FontSize="20" FontFamily="OpenSansSemibold"
+                               FontAttributes="Bold" TextColor="{StaticResource DarkText}"
+                               HorizontalOptions="Center" />
+                        <Label Text="You haven't enrolled in any course yet. Browse our catalog to find the perfect course for you."
+                               FontSize="14" TextColor="{StaticResource TextMuted}"
+                               HorizontalOptions="Center" HorizontalTextAlignment="Center"
+                               LineHeight="1.4" Margin="0,0,0,8" />
+                        <Button Text="Browse Courses"
+                                Command="{Binding GoToCoursesCommand}"
+                                BackgroundColor="{StaticResource Primary}"
+                                TextColor="White" FontAttributes="Bold"
+                                FontFamily="OpenSansSemibold"
+                                CornerRadius="14" HeightRequest="52"
+                                FontSize="16" Padding="32,0" />
+                    </VerticalStackLayout>
+                </Border>
 
-                        <BoxView HeightRequest="1" Color="{StaticResource Gray100}" />
+                <!-- Course Card (when enrolled) -->
+                <Border BackgroundColor="White"
+                        StrokeShape="RoundRectangle 20"
+                        Stroke="{StaticResource BorderColor}"
+                        Padding="0" StrokeThickness="1"
+                        IsVisible="{Binding HasCourse}">
+                    <Border.Shadow>
+                        <Shadow Brush="#145B5BD6" Offset="0,4" Radius="20" Opacity="0.12" />
+                    </Border.Shadow>
+                    <VerticalStackLayout Spacing="0">
+
+                        <!-- Course Name Header -->
+                        <Border StrokeThickness="0" StrokeShape="RoundRectangle 20,20,0,0" Padding="22,20">
+                            <Border.Background>
+                                <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
+                                    <GradientStop Color="{StaticResource Primary}" Offset="0.0" />
+                                    <GradientStop Color="{StaticResource Secondary}" Offset="1.0" />
+                                </LinearGradientBrush>
+                            </Border.Background>
+                            <VerticalStackLayout Spacing="4">
+                                <Label Text="ENROLLED COURSE" FontSize="10" FontFamily="OpenSansSemibold"
+                                       TextColor="#FFFFFF99" CharacterSpacing="1" />
+                                <Label Text="{Binding Dashboard.CourseName}"
+                                       FontSize="22" FontAttributes="Bold"
+                                       FontFamily="OpenSansSemibold" TextColor="White" />
+                            </VerticalStackLayout>
+                        </Border>
 
                         <!-- Details Grid -->
-                        <Grid ColumnDefinitions="*, *" RowDefinitions="Auto, Auto" RowSpacing="16" ColumnSpacing="16">
-                            <!-- Amount -->
-                            <VerticalStackLayout Grid.Row="0" Grid.Column="0">
-                                <Label Text="Amount Due" FontSize="12" TextColor="{StaticResource Gray400}" />
-                                <Label Text="{Binding Dashboard.AmountDue, StringFormat='Rs. {0:N2}'}"
-                                       FontSize="18" FontAttributes="Bold" TextColor="{StaticResource DarkText}" />
-                            </VerticalStackLayout>
+                        <Grid ColumnDefinitions="*, *" RowDefinitions="Auto, Auto"
+                              RowSpacing="0" ColumnSpacing="0">
 
-                            <!-- Duration -->
-                            <VerticalStackLayout Grid.Row="0" Grid.Column="1">
-                                <Label Text="Duration" FontSize="12" TextColor="{StaticResource Gray400}" />
-                                <Label Text="{Binding Dashboard.Duration}"
-                                       FontSize="18" FontAttributes="Bold" TextColor="{StaticResource DarkText}" />
-                            </VerticalStackLayout>
+                            <Border Grid.Row="0" Grid.Column="0"
+                                    BackgroundColor="White" StrokeThickness="0" Padding="18,16">
+                                <VerticalStackLayout Spacing="4">
+                                    <Label Text="AMOUNT DUE" FontSize="10" FontFamily="OpenSansSemibold"
+                                           TextColor="{StaticResource TextMuted}" CharacterSpacing="0.8" />
+                                    <Label Text="{Binding Dashboard.AmountDue, StringFormat='Rs. {0:N2}'}"
+                                           FontSize="18" FontAttributes="Bold"
+                                           FontFamily="OpenSansSemibold" TextColor="{StaticResource DarkText}" />
+                                </VerticalStackLayout>
+                            </Border>
 
-                            <!-- Status -->
-                            <VerticalStackLayout Grid.Row="1" Grid.Column="0">
-                                <Label Text="Status" FontSize="12" TextColor="{StaticResource Gray400}" />
-                                <Label Text="{Binding Dashboard.ApprovalStatus}"
-                                       FontSize="16" FontAttributes="Bold" TextColor="{StaticResource SuccessGreen}" />
-                            </VerticalStackLayout>
+                            <Border Grid.Row="0" Grid.Column="1"
+                                    BackgroundColor="White" StrokeThickness="0" Padding="18,16">
+                                <VerticalStackLayout Spacing="4">
+                                    <Label Text="DURATION" FontSize="10" FontFamily="OpenSansSemibold"
+                                           TextColor="{StaticResource TextMuted}" CharacterSpacing="0.8" />
+                                    <Label Text="{Binding Dashboard.Duration}"
+                                           FontSize="18" FontAttributes="Bold"
+                                           FontFamily="OpenSansSemibold" TextColor="{StaticResource DarkText}" />
+                                </VerticalStackLayout>
+                            </Border>
 
-                            <!-- Batch Timing -->
-                            <VerticalStackLayout Grid.Row="1" Grid.Column="1">
-                                <Label Text="Batch" FontSize="12" TextColor="{StaticResource Gray400}" />
-                                <Label Text="{Binding Dashboard.BatchTiming}"
-                                       FontSize="16" FontAttributes="Bold" TextColor="{StaticResource DarkText}" />
-                            </VerticalStackLayout>
+                            <Border Grid.Row="1" Grid.Column="0"
+                                    BackgroundColor="{StaticResource Surface3}" StrokeThickness="0" Padding="18,16">
+                                <VerticalStackLayout Spacing="4">
+                                    <Label Text="STATUS" FontSize="10" FontFamily="OpenSansSemibold"
+                                           TextColor="{StaticResource TextMuted}" CharacterSpacing="0.8" />
+                                    <Border BackgroundColor="{StaticResource SuccessLight}"
+                                            StrokeThickness="0" StrokeShape="RoundRectangle 12"
+                                            Padding="10,4" HorizontalOptions="Start">
+                                        <Label Text="{Binding Dashboard.ApprovalStatus}"
+                                               FontSize="13" FontAttributes="Bold"
+                                               FontFamily="OpenSansSemibold" TextColor="{StaticResource SuccessText}" />
+                                    </Border>
+                                </VerticalStackLayout>
+                            </Border>
+
+                            <Border Grid.Row="1" Grid.Column="1"
+                                    BackgroundColor="{StaticResource Surface3}" StrokeThickness="0" Padding="18,16">
+                                <VerticalStackLayout Spacing="4">
+                                    <Label Text="BATCH" FontSize="10" FontFamily="OpenSansSemibold"
+                                           TextColor="{StaticResource TextMuted}" CharacterSpacing="0.8" />
+                                    <Label Text="{Binding Dashboard.BatchTiming}"
+                                           FontSize="16" FontAttributes="Bold"
+                                           FontFamily="OpenSansSemibold" TextColor="{StaticResource DarkText}" />
+                                </VerticalStackLayout>
+                            </Border>
                         </Grid>
 
-                        <!-- Enrolled Date -->
-                        <Label FontSize="12" TextColor="{StaticResource Gray400}">
-                            <Label.FormattedText>
-                                <FormattedString>
-                                    <Span Text="Enrolled on: " />
-                                    <Span Text="{Binding Dashboard.EnrolledDate, StringFormat='{0:MMM dd, yyyy}'}" />
-                                </FormattedString>
-                            </Label.FormattedText>
-                        </Label>
+                        <!-- Enrolled Date Footer -->
+                        <Border BackgroundColor="{StaticResource Surface3}"
+                                StrokeThickness="0" StrokeShape="RoundRectangle 0,0,20,20" Padding="22,14">
+                            <Label FontSize="13" TextColor="{StaticResource TextMuted}">
+                                <Label.FormattedText>
+                                    <FormattedString>
+                                        <Span Text="Enrolled on: " />
+                                        <Span Text="{Binding Dashboard.EnrolledDate, StringFormat='{0:MMM dd, yyyy}'}"
+                                              FontAttributes="Bold" TextColor="{StaticResource TextSecondary}" />
+                                    </FormattedString>
+                                </Label.FormattedText>
+                            </Label>
+                        </Border>
+
                     </VerticalStackLayout>
                 </Border>
 

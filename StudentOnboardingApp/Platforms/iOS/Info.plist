@@ -2,11 +2,8 @@
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
-<<<<<<< HEAD
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
-=======
->>>>>>> b21a7ff56f4c42af96a63212093eb3710ea26fd8
 	<key>UIDeviceFamily</key>
 	<array>
 		<integer>1</integer>

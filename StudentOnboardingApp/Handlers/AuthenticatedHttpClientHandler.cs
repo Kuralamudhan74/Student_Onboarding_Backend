@@ -63,7 +63,7 @@ public class AuthenticatedHttpClientHandler : DelegatingHandler
             if (string.IsNullOrEmpty(refreshToken))
             {
                 await ForceLogoutAsync();
-                return new HttpResponseMessage(HttpStatusCode.Unauthorized);
+                return CreateUnauthorizedResponse("Session expired. Please log in again.");
             }
 
             // Use the public API client to avoid recursion
@@ -93,7 +93,7 @@ public class AuthenticatedHttpClientHandler : DelegatingHandler
             }
 
             await ForceLogoutAsync();
-            return new HttpResponseMessage(HttpStatusCode.Unauthorized);
+            return CreateUnauthorizedResponse("Session expired. Please log in again.");
         }
         finally
         {
@@ -108,6 +108,15 @@ public class AuthenticatedHttpClientHandler : DelegatingHandler
         {
             WeakReferenceMessenger.Default.Send(new LogoutMessage());
         });
+    }
+
+    private static HttpResponseMessage CreateUnauthorizedResponse(string message)
+    {
+        var json = System.Text.Json.JsonSerializer.Serialize(new { success = false, message });
+        return new HttpResponseMessage(HttpStatusCode.Unauthorized)
+        {
+            Content = new StringContent(json, System.Text.Encoding.UTF8, "application/json")
+        };
     }
 
     private static async Task<HttpRequestMessage> CloneRequestAsync(HttpRequestMessage request)

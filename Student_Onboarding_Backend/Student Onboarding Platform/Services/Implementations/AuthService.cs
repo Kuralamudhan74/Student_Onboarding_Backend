@@ -59,6 +59,16 @@ public class AuthService : IAuthService
             return ApiResponse<string>.Fail("An account with this email already exists.");
         }
 
+        if (!string.IsNullOrEmpty(request.PhoneNumber))
+        {
+            var existingPhone = await _userService.GetByPhoneNumberAsync(request.PhoneNumber);
+            if (existingPhone != null)
+            {
+                _logger.LogWarning("Signup failed: phone {Phone} already registered", request.PhoneNumber);
+                return ApiResponse<string>.Fail("An account with this phone number already exists.");
+            }
+        }
+
         var user = new User
         {
             FirstName = request.FirstName,

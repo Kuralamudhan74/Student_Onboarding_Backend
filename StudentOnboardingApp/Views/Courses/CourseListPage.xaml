@@ -11,79 +11,151 @@
     <RefreshView IsRefreshing="{Binding IsRefreshing}"
                  Command="{Binding LoadCoursesCommand}"
                  RefreshColor="{StaticResource Primary}">
-        <CollectionView ItemsSource="{Binding Courses}"
-                        SelectionMode="None">
+        <CollectionView ItemsSource="{Binding Courses}" SelectionMode="None"
+                        x:Name="CoursesCollection">
+            <!-- 3 columns grid layout -->
+            <CollectionView.ItemsLayout>
+                <GridItemsLayout Orientation="Vertical"
+                                 Span="3"
+                                 HorizontalItemSpacing="12"
+                                 VerticalItemSpacing="14" />
+            </CollectionView.ItemsLayout>
+
             <CollectionView.Header>
-                <VerticalStackLayout Padding="20,20,20,10">
-                    <Label Text="Available Courses"
-                           FontSize="24"
-                           FontAttributes="Bold"
-                           TextColor="{StaticResource DarkText}" />
+                <VerticalStackLayout Padding="20,20,20,16" Spacing="4"
+                                     x:Name="HeaderSection">
+                    <Label Text="Explore Courses"
+                           FontSize="26" FontFamily="OpenSansSemibold"
+                           FontAttributes="Bold" TextColor="Black"
+                           x:Name="HeaderTitle" />
+                    <Label Text="Find the perfect course for your career"
+                           FontSize="14" TextColor="{StaticResource TextMuted}"
+                           x:Name="HeaderSubtitle" />
 
-                    <Label Text="{Binding ErrorMessage}"
-                           TextColor="{StaticResource ErrorRed}"
-                           IsVisible="{Binding ErrorMessage, Converter={StaticResource IsNotNullConverter}}"
-                           FontSize="13" />
+                    <Border BackgroundColor="{StaticResource ErrorLight}"
+                            StrokeShape="RoundRectangle 10" StrokeThickness="0" Padding="14,10"
+                            Margin="0,8,0,0"
+                            IsVisible="{Binding ErrorMessage, Converter={StaticResource IsNotNullConverter}}">
+                        <Label Text="{Binding ErrorMessage}" TextColor="{StaticResource ErrorText}"
+                               FontSize="13" HorizontalTextAlignment="Center" />
+                    </Border>
 
-                    <ActivityIndicator IsRunning="{Binding IsBusy}"
-                                       IsVisible="{Binding IsBusy}"
+                    <ActivityIndicator IsRunning="{Binding IsBusy}" IsVisible="{Binding IsBusy}"
                                        Color="{StaticResource Primary}" />
                 </VerticalStackLayout>
             </CollectionView.Header>
+
             <CollectionView.ItemTemplate>
                 <DataTemplate x:DataType="models:CourseDto">
+                    <!-- Card with equal sizing for 3-column grid -->
                     <Border BackgroundColor="White"
-                            StrokeShape="RoundRectangle 14"
-                            Stroke="{StaticResource Gray100}"
-                            Padding="16"
-                            Margin="20,0,20,12">
+                            StrokeShape="RoundRectangle 16"
+                            Stroke="{StaticResource BorderLight}"
+                            Padding="16,14" Margin="0" StrokeThickness="1"
+                            MinimumHeightRequest="220">
+                        <Border.Shadow>
+                            <Shadow Brush="#0A000000" Offset="0,3" Radius="12" Opacity="0.08" />
+                        </Border.Shadow>
                         <Border.GestureRecognizers>
                             <TapGestureRecognizer
                                 Command="{Binding Source={RelativeSource AncestorType={x:Type vm:CourseListViewModel}}, Path=GoToCourseDetailCommand}"
                                 CommandParameter="{Binding .}" />
                         </Border.GestureRecognizers>
-                        <Grid ColumnDefinitions="*, Auto" RowDefinitions="Auto, Auto, Auto" RowSpacing="6">
-                            <Label Grid.Row="0" Grid.Column="0"
-                                   Text="{Binding Name}"
-                                   FontSize="17"
-                                   FontAttributes="Bold"
-                                   TextColor="{StaticResource DarkText}" />
+                        <VerticalStackLayout Spacing="10">
 
-                            <Label Grid.Row="1" Grid.Column="0"
-                                   Text="{Binding Description}"
-                                   FontSize="13"
-                                   TextColor="{StaticResource Gray500}"
-                                   LineBreakMode="TailTruncation"
-                                   MaxLines="2" />
+                            <!-- Title + Duration badge -->
+                            <Grid ColumnDefinitions="*, Auto" RowDefinitions="Auto">
+                                <Label Text="{Binding Name}"
+                                       FontSize="16" FontFamily="OpenSansSemibold"
+                                       FontAttributes="Bold" TextColor="Black"
+                                       LineBreakMode="TailTruncation" MaxLines="2"
+                                       VerticalOptions="Start" />
+                                <Border Grid.Column="1"
+                                        BackgroundColor="{StaticResource Primary}"
+                                        StrokeThickness="0"
+                                        StrokeShape="RoundRectangle 10"
+                                        Padding="8,4"
+                                        VerticalOptions="Start">
+                                    <Label Text="{Binding Duration}"
+                                           FontSize="10" FontFamily="OpenSansSemibold"
+                                           TextColor="White" />
+                                </Border>
+                            </Grid>
 
-                            <HorizontalStackLayout Grid.Row="2" Grid.Column="0" Spacing="16">
-                                <Label FontSize="13" TextColor="{StaticResource Secondary}">
-                                    <Label.FormattedText>
-                                        <FormattedString>
-                                            <Span Text="Rs. " />
-                                            <Span Text="{Binding Fees, StringFormat='{0:N0}'}" FontAttributes="Bold" />
-                                        </FormattedString>
-                                    </Label.FormattedText>
-                                </Label>
-                                <Label Text="{Binding Duration}"
-                                       FontSize="13"
-                                       TextColor="{StaticResource Gray400}" />
-                            </HorizontalStackLayout>
+                            <!-- Description -->
+                            <Label Text="{Binding Description}"
+                                   FontSize="12" TextColor="{StaticResource TextSecondary}"
+                                   LineBreakMode="TailTruncation" MaxLines="3" LineHeight="1.3" />
 
-                            <Label Grid.RowSpan="3" Grid.Column="1"
-                                   Text=">"
-                                   FontSize="20"
-                                   TextColor="{StaticResource Gray300}"
-                                   VerticalOptions="Center" />
-                        </Grid>
+                            <!-- Tags: Fees + Offer -->
+                            <FlexLayout Wrap="Wrap" Direction="Row" AlignItems="Start"
+                                        JustifyContent="Start">
+                                <Border BackgroundColor="{StaticResource Surface3}"
+                                        StrokeThickness="0" StrokeShape="RoundRectangle 8"
+                                        Padding="8,4" Margin="0,0,6,4">
+                                    <Label FontSize="11" TextColor="Black"
+                                           FontFamily="OpenSansSemibold">
+                                        <Label.FormattedText>
+                                            <FormattedString>
+                                                <Span Text="Rs. " />
+                                                <Span Text="{Binding Fees, StringFormat='{0:N0}'}" />
+                                            </FormattedString>
+                                        </Label.FormattedText>
+                                    </Label>
+                                </Border>
+                                <Border BackgroundColor="{StaticResource SuccessLight}"
+                                        StrokeThickness="0" StrokeShape="RoundRectangle 8"
+                                        Padding="8,4" Margin="0,0,6,4"
+                                        IsVisible="{Binding OfferPrice, Converter={StaticResource IsNotNullConverter}}">
+                                    <Label FontSize="11" TextColor="{StaticResource SuccessText}"
+                                           FontFamily="OpenSansSemibold">
+                                        <Label.FormattedText>
+                                            <FormattedString>
+                                                <Span Text="Offer: Rs. " />
+                                                <Span Text="{Binding OfferPrice, StringFormat='{0:N0}'}" FontAttributes="Bold" />
+                                            </FormattedString>
+                                        </Label.FormattedText>
+                                    </Label>
+                                </Border>
+                            </FlexLayout>
+
+                            <!-- Spacer to push footer to bottom -->
+                            <BoxView HeightRequest="0" VerticalOptions="FillAndExpand" Color="Transparent" />
+
+                            <!-- Divider -->
+                            <BoxView HeightRequest="1" Color="{StaticResource BorderLight}" />
+
+                            <!-- Footer: View Details + arrow -->
+                            <Grid ColumnDefinitions="*, Auto">
+                                <Label Text="View Details"
+                                       FontSize="12" TextColor="{StaticResource Primary}"
+                                       FontFamily="OpenSansSemibold"
+                                       VerticalOptions="Center" />
+                                <Border Grid.Column="1" BackgroundColor="{StaticResource Surface3}"
+                                        StrokeThickness="0" StrokeShape="RoundRectangle 12"
+                                        HeightRequest="24" WidthRequest="24">
+                                    <Label Text="&#x203A;" FontSize="14" TextColor="{StaticResource Primary}"
+                                           HorizontalOptions="Center" VerticalOptions="Center" />
+                                </Border>
+                            </Grid>
+                        </VerticalStackLayout>
                     </Border>
                 </DataTemplate>
             </CollectionView.ItemTemplate>
+
             <CollectionView.EmptyView>
-                <VerticalStackLayout VerticalOptions="Center" HorizontalOptions="Center" Padding="40">
+                <VerticalStackLayout VerticalOptions="Center" HorizontalOptions="Center" Padding="40" Spacing="14">
+                    <Border BackgroundColor="{StaticResource Surface3}"
+                            StrokeThickness="0" StrokeShape="RoundRectangle 30"
+                            HeightRequest="70" WidthRequest="70" HorizontalOptions="Center">
+                        <Label Text="&#x1F4DA;" FontSize="32"
+                               HorizontalOptions="Center" VerticalOptions="Center" />
+                    </Border>
                     <Label Text="No courses available"
-                           FontSize="16"
-                           TextColor="{StaticResource Gray400}"
+                           FontSize="16" FontFamily="OpenSansSemibold"
+                           TextColor="{StaticResource TextMuted}" HorizontalOptions="Center" />
+                    <Label Text="Check back later for new courses"
+                           FontSize="14" TextColor="{StaticResource TextMuted}"
                            HorizontalOptions="Center" />
                 </VerticalStackLayout>
             </CollectionView.EmptyView>

@@ -1,11 +1,8 @@
 <?xml version = "1.0" encoding = "UTF-8" ?>
 <Application xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-<<<<<<< HEAD
              xmlns:local="clr-namespace:StudentOnboardingApp"
              xmlns:converters="clr-namespace:StudentOnboardingApp.Converters"
-=======
->>>>>>> b21a7ff56f4c42af96a63212093eb3710ea26fd8
              x:Class="StudentOnboardingApp.App">
     <Application.Resources>
         <ResourceDictionary>
@@ -13,7 +10,6 @@
                 <ResourceDictionary Source="Resources/Styles/Colors.xaml" />
                 <ResourceDictionary Source="Resources/Styles/Styles.xaml" />
             </ResourceDictionary.MergedDictionaries>
-<<<<<<< HEAD
 
             <!-- Converters -->
             <converters:InverseBoolConverter x:Key="InverseBoolConverter" />
@@ -32,8 +28,10 @@
             <converters:BoolToStringConverter x:Key="BoolToStringConverter"
                                              TrueValue="Hide"
                                              FalseValue="Show" />
-=======
->>>>>>> b21a7ff56f4c42af96a63212093eb3710ea26fd8
+            <!-- BoolToString for edit toggle -->
+            <converters:BoolToStringConverter x:Key="EditToggleConverter"
+                                             TrueValue="Cancel"
+                                             FalseValue="Edit" />
         </ResourceDictionary>
     </Application.Resources>
 </Application>

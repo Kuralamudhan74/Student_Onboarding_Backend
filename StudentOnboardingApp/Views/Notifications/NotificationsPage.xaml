@@ -14,16 +14,23 @@
         <CollectionView ItemsSource="{Binding Notifications}"
                         SelectionMode="None">
             <CollectionView.Header>
-                <VerticalStackLayout Padding="20,20,20,10">
+                <VerticalStackLayout Padding="20,20,20,12" Spacing="4">
                     <Label Text="Notifications"
-                           FontSize="24"
+                           FontSize="26"
+                           FontFamily="OpenSansSemibold"
                            FontAttributes="Bold"
                            TextColor="{StaticResource DarkText}" />
+                    <Label Text="Stay updated with your latest alerts"
+                           FontSize="14"
+                           TextColor="{StaticResource TextMuted}" />
 
-                    <Label Text="{Binding ErrorMessage}"
-                           TextColor="{StaticResource ErrorRed}"
-                           IsVisible="{Binding ErrorMessage, Converter={StaticResource IsNotNullConverter}}"
-                           FontSize="13" />
+                    <Border BackgroundColor="{StaticResource ErrorLight}"
+                            StrokeShape="RoundRectangle 10" StrokeThickness="0" Padding="14,10"
+                            Margin="0,8,0,0"
+                            IsVisible="{Binding ErrorMessage, Converter={StaticResource IsNotNullConverter}}">
+                        <Label Text="{Binding ErrorMessage}" TextColor="{StaticResource ErrorText}"
+                               FontSize="13" HorizontalTextAlignment="Center" />
+                    </Border>
 
                     <ActivityIndicator IsRunning="{Binding IsBusy}"
                                        IsVisible="{Binding IsBusy}"
@@ -33,50 +40,74 @@
             <CollectionView.ItemTemplate>
                 <DataTemplate x:DataType="models:NotificationDto">
                     <Border BackgroundColor="{Binding IsRead, Converter={StaticResource ReadBgConverter}}"
-                            StrokeShape="RoundRectangle 12"
-                            Stroke="{StaticResource Gray100}"
-                            Padding="16"
-                            Margin="20,0,20,10">
+                            StrokeShape="RoundRectangle 16"
+                            Stroke="{StaticResource BorderColor}"
+                            Padding="18"
+                            Margin="20,0,20,12"
+                            StrokeThickness="1">
+                        <Border.Shadow>
+                            <Shadow Brush="#0A5B5BD6" Offset="0,2" Radius="10" Opacity="0.06" />
+                        </Border.Shadow>
                         <Border.GestureRecognizers>
                             <TapGestureRecognizer
                                 Command="{Binding Source={RelativeSource AncestorType={x:Type vm:NotificationsViewModel}}, Path=MarkAsReadCommand}"
                                 CommandParameter="{Binding .}" />
                         </Border.GestureRecognizers>
-                        <VerticalStackLayout Spacing="6">
-                            <Grid ColumnDefinitions="*, Auto">
-                                <Label Text="{Binding Title}"
-                                       FontSize="15"
-                                       FontAttributes="Bold"
-                                       TextColor="{StaticResource DarkText}" />
-                                <Border Grid.Column="1"
-                                        BackgroundColor="{StaticResource Accent}"
-                                        StrokeShape="RoundRectangle 8"
-                                        Padding="8,2"
-                                        StrokeThickness="0"
-                                        IsVisible="{Binding IsRead, Converter={StaticResource InverseBoolConverter}}">
-                                    <Label Text="New"
-                                           FontSize="10"
-                                           TextColor="{StaticResource Primary}"
-                                           FontAttributes="Bold" />
-                                </Border>
-                            </Grid>
-                            <Label Text="{Binding Body}"
-                                   FontSize="13"
-                                   TextColor="{StaticResource Gray500}"
-                                   LineBreakMode="TailTruncation"
-                                   MaxLines="2" />
-                            <Label Text="{Binding CreatedAt, StringFormat='{0:MMM dd, yyyy HH:mm}'}"
-                                   FontSize="11"
-                                   TextColor="{StaticResource Gray300}" />
-                        </VerticalStackLayout>
+                        <Grid ColumnDefinitions="Auto, *" ColumnSpacing="14">
+                            <!-- Icon -->
+                            <Border BackgroundColor="{StaticResource Surface3}"
+                                    StrokeThickness="0"
+                                    StrokeShape="RoundRectangle 20"
+                                    HeightRequest="40" WidthRequest="40"
+                                    VerticalOptions="Start">
+                                <Label Text="&#x1F514;" FontSize="18"
+                                       HorizontalOptions="Center" VerticalOptions="Center" />
+                            </Border>
+
+                            <VerticalStackLayout Grid.Column="1" Spacing="6">
+                                <Grid ColumnDefinitions="*, Auto">
+                                    <Label Text="{Binding Title}"
+                                           FontSize="15"
+                                           FontFamily="OpenSansSemibold"
+                                           FontAttributes="Bold"
+                                           TextColor="{StaticResource DarkText}" />
+                                    <Border Grid.Column="1"
+                                            BackgroundColor="{StaticResource Primary}"
+                                            StrokeShape="RoundRectangle 10"
+                                            Padding="10,3"
+                                            StrokeThickness="0"
+                                            IsVisible="{Binding IsRead, Converter={StaticResource InverseBoolConverter}}">
+                                        <Label Text="New"
+                                               FontSize="10"
+                                               FontFamily="OpenSansSemibold"
+                                               TextColor="White"
+                                               FontAttributes="Bold" />
+                                    </Border>
+                                </Grid>
+                                <Label Text="{Binding Body}"
+                                       FontSize="13"
+                                       TextColor="{StaticResource TextSecondary}"
+                                       LineBreakMode="TailTruncation"
+                                       MaxLines="2" />
+                                <Label Text="{Binding CreatedAt, StringFormat='{0:MMM dd, yyyy HH:mm}'}"
+                                       FontSize="11"
+                                       TextColor="{StaticResource TextMuted}" />
+                            </VerticalStackLayout>
+                        </Grid>
                     </Border>
                 </DataTemplate>
             </CollectionView.ItemTemplate>
             <CollectionView.EmptyView>
-                <VerticalStackLayout VerticalOptions="Center" HorizontalOptions="Center" Padding="40">
+                <VerticalStackLayout VerticalOptions="Center" HorizontalOptions="Center" Padding="40" Spacing="12">
+                    <Border BackgroundColor="{StaticResource Surface3}"
+                            StrokeThickness="0" StrokeShape="RoundRectangle 30"
+                            HeightRequest="60" WidthRequest="60" HorizontalOptions="Center">
+                        <Label Text="&#x1F514;" FontSize="28"
+                               HorizontalOptions="Center" VerticalOptions="Center" />
+                    </Border>
                     <Label Text="No notifications yet"
-                           FontSize="16"
-                           TextColor="{StaticResource Gray400}"
+                           FontSize="16" FontFamily="OpenSansSemibold"
+                           TextColor="{StaticResource TextMuted}"
                            HorizontalOptions="Center" />
                 </VerticalStackLayout>
             </CollectionView.EmptyView>

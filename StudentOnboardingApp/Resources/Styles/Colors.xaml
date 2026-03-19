@@ -1,37 +1,64 @@
 <?xml version="1.0" encoding="UTF-8" ?>
-<<<<<<< HEAD
 <ResourceDictionary
     xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml">
 
-    <!-- App Theme Colors -->
-    <Color x:Key="Primary">#6366FF</Color>
-    <Color x:Key="PrimaryDark">#4F52CC</Color>
+    <!-- Primary Purple Palette (matches EduAdmin Portal) -->
+    <Color x:Key="Primary">#5B5BD6</Color>
+    <Color x:Key="PrimaryDark">#4747C2</Color>
+    <Color x:Key="PrimaryLight">#7B7DE0</Color>
     <Color x:Key="PrimaryDarkText">#242424</Color>
-    <Color x:Key="Secondary">#8394FE</Color>
-    <Color x:Key="SecondaryDarkText">#8394FE</Color>
-    <Color x:Key="Tertiary">#C9BEFF</Color>
-    <Color x:Key="Accent">#FFDCFD</Color>
+    <Color x:Key="Secondary">#8B8FD4</Color>
+    <Color x:Key="SecondaryDarkText">#8B8FD4</Color>
+    <Color x:Key="Tertiary">#C4C3E8</Color>
+    <Color x:Key="Accent">#F5D7F0</Color>
+    <Color x:Key="BlushDeep">#EBBFE5</Color>
 
+    <!-- Surface / Background Colors -->
     <Color x:Key="White">White</Color>
     <Color x:Key="Black">Black</Color>
     <Color x:Key="OffBlack">#1f1f1f</Color>
-    <Color x:Key="MidnightBlue">#1A1A2E</Color>
-    <Color x:Key="DarkText">#1A1A2E</Color>
-    <Color x:Key="ErrorRed">#FF4444</Color>
-    <Color x:Key="SuccessGreen">#00C853</Color>
-    <Color x:Key="WarningOrange">#FF9800</Color>
+    <Color x:Key="MidnightBlue">#1A1A3E</Color>
+    <Color x:Key="DarkText">#1A1A3E</Color>
+    <Color x:Key="TextSecondary">#5A5A82</Color>
+    <Color x:Key="TextMuted">#9898B8</Color>
     <Color x:Key="LightBackground">#F8F7FF</Color>
+    <Color x:Key="Surface2">#F8F7FF</Color>
+    <Color x:Key="Surface3">#F0EFFE</Color>
 
-    <Color x:Key="Gray100">#E1E1E1</Color>
-    <Color x:Key="Gray200">#C8C8C8</Color>
-    <Color x:Key="Gray300">#ACACAC</Color>
-    <Color x:Key="Gray400">#919191</Color>
-    <Color x:Key="Gray500">#6E6E6E</Color>
-    <Color x:Key="Gray600">#404040</Color>
-    <Color x:Key="Gray900">#212121</Color>
-    <Color x:Key="Gray950">#141414</Color>
+    <!-- Status Colors -->
+    <Color x:Key="SuccessGreen">#22C55E</Color>
+    <Color x:Key="SuccessLight">#DCFCE7</Color>
+    <Color x:Key="SuccessText">#15803D</Color>
+    <Color x:Key="ErrorRed">#EF4444</Color>
+    <Color x:Key="ErrorLight">#FEE2E2</Color>
+    <Color x:Key="ErrorText">#B91C1C</Color>
+    <Color x:Key="WarningOrange">#F59E0B</Color>
+    <Color x:Key="WarningLight">#FEF3C7</Color>
+    <Color x:Key="WarningText">#B45309</Color>
+    <Color x:Key="InfoBlue">#3B82F6</Color>
 
+    <!-- Borders -->
+    <Color x:Key="BorderColor">#E4E2F8</Color>
+    <Color x:Key="BorderLight">#EEEDFA</Color>
+
+    <!-- Gray Scale -->
+    <Color x:Key="Gray100">#E4E2F8</Color>
+    <Color x:Key="Gray200">#D4D2EC</Color>
+    <Color x:Key="Gray300">#B8B6D8</Color>
+    <Color x:Key="Gray400">#9898B8</Color>
+    <Color x:Key="Gray500">#5A5A82</Color>
+    <Color x:Key="Gray600">#404060</Color>
+    <Color x:Key="Gray900">#1A1A3E</Color>
+    <Color x:Key="Gray950">#141432</Color>
+
+    <!-- Gradient Brush (matches website: linear-gradient(135deg, #F5D7F0, #C4C3E8, #8B8FD4)) -->
+    <Color x:Key="GradientStart">#F5D7F0</Color>
+    <Color x:Key="GradientMid">#C4C3E8</Color>
+    <Color x:Key="GradientEnd">#8B8FD4</Color>
+    <Color x:Key="CardOverlay">#DDFFFFFF</Color>
+
+    <!-- Brushes -->
     <SolidColorBrush x:Key="PrimaryBrush" Color="{StaticResource Primary}"/>
     <SolidColorBrush x:Key="SecondaryBrush" Color="{StaticResource Secondary}"/>
     <SolidColorBrush x:Key="TertiaryBrush" Color="{StaticResource Tertiary}"/>
@@ -47,53 +74,4 @@
     <SolidColorBrush x:Key="Gray600Brush" Color="{StaticResource Gray600}"/>
     <SolidColorBrush x:Key="Gray900Brush" Color="{StaticResource Gray900}"/>
     <SolidColorBrush x:Key="Gray950Brush" Color="{StaticResource Gray950}"/>
-=======
-<?xaml-comp compile="true" ?>
-<ResourceDictionary xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
-                    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml">
-
-    <!-- Primary Brand Colors (matching student_onboard website) -->
-    <Color x:Key="Primary">#5B5BD6</Color>
-    <Color x:Key="PrimaryDark">#4747C2</Color>
-    <Color x:Key="PrimaryLight">#7B7DE0</Color>
-    <Color x:Key="Secondary">#8B8FD4</Color>
-    <Color x:Key="Tertiary">#C4C3E8</Color>
-
-    <!-- Accent Colors -->
-    <Color x:Key="Blush">#F5D7F0</Color>
-    <Color x:Key="BlushDeep">#EBBFE5</Color>
-
-    <!-- Surface Colors -->
-    <Color x:Key="Surface">#FFFFFF</Color>
-    <Color x:Key="Surface2">#F8F7FF</Color>
-    <Color x:Key="Surface3">#F0EFFE</Color>
-    <Color x:Key="BackgroundGradientStart">#F5D7F0</Color>
-    <Color x:Key="BackgroundGradientMid">#C4C3E8</Color>
-    <Color x:Key="BackgroundGradientEnd">#8B8FD4</Color>
-
-    <!-- Text Colors -->
-    <Color x:Key="TextPrimary">#1A1A3E</Color>
-    <Color x:Key="TextSecondary">#5A5A82</Color>
-    <Color x:Key="TextMuted">#9898B8</Color>
-    <Color x:Key="TextOnPrimary">#FFFFFF</Color>
-
-    <!-- Border Colors -->
-    <Color x:Key="Border">#E4E2F8</Color>
-    <Color x:Key="BorderLight">#EEEDFB</Color>
-
-    <!-- Status Colors -->
-    <Color x:Key="Success">#22C55E</Color>
-    <Color x:Key="SuccessLight">#DCFCE7</Color>
-    <Color x:Key="Warning">#F59E0B</Color>
-    <Color x:Key="WarningLight">#FEF3C7</Color>
-    <Color x:Key="Danger">#EF4444</Color>
-    <Color x:Key="DangerLight">#FEE2E2</Color>
-    <Color x:Key="Info">#3B82F6</Color>
-    <Color x:Key="InfoLight">#DBEAFE</Color>
-
-    <!-- Transparent overlays -->
-    <Color x:Key="Overlay">#40000000</Color>
-    <Color x:Key="CardShadow">#145B5BD6</Color>
-
->>>>>>> b21a7ff56f4c42af96a63212093eb3710ea26fd8
 </ResourceDictionary>

@@ -1,6 +1,5 @@
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
-<<<<<<< HEAD
 using StudentOnboardingApp.Models.Dashboard;
 using StudentOnboardingApp.Services.Interfaces;
 
@@ -9,10 +8,12 @@ namespace StudentOnboardingApp.ViewModels;
 public partial class DashboardViewModel : BaseViewModel
 {
     private readonly IDashboardService _dashboardService;
+    private readonly ITokenStorageService _tokenStorage;
 
-    public DashboardViewModel(IDashboardService dashboardService)
+    public DashboardViewModel(IDashboardService dashboardService, ITokenStorageService tokenStorage)
     {
         _dashboardService = dashboardService;
+        _tokenStorage = tokenStorage;
         Title = "Dashboard";
     }
 
@@ -22,87 +23,48 @@ public partial class DashboardViewModel : BaseViewModel
     [ObservableProperty]
     private bool _isRefreshing;
 
+    [ObservableProperty]
+    private bool _hasCourse;
+
+    [ObservableProperty]
+    private string _greeting = "Welcome!";
+
+    [ObservableProperty]
+    private string _userName = "Student";
+
     [RelayCommand]
     private async Task LoadDashboardAsync()
     {
         await ExecuteAsync(async () =>
         {
+            // Load user info for greeting
+            var user = await _tokenStorage.GetUserAsync();
+            if (user != null)
+            {
+                UserName = user.FirstName;
+                var hour = DateTime.Now.Hour;
+                var timeGreeting = hour < 12 ? "Good Morning" : hour < 17 ? "Good Afternoon" : "Good Evening";
+                Greeting = $"{timeGreeting}, {user.FirstName}!";
+            }
+
             var result = await _dashboardService.GetDashboardAsync();
             if (result.Success && result.Data != null)
             {
                 Dashboard = result.Data;
+                HasCourse = !string.IsNullOrEmpty(result.Data.CourseName);
             }
             else
             {
-                ErrorMessage = result.Message;
+                Dashboard = null;
+                HasCourse = false;
             }
         });
         IsRefreshing = false;
-=======
-using StudentOnboardingApp.Models;
-using StudentOnboardingApp.Services;
-
-namespace StudentOnboardingApp.ViewModels;
-
-public partial class DashboardViewModel : ObservableObject
-{
-    private readonly IAuthService _authService;
-
-    public DashboardViewModel(IAuthService authService)
-    {
-        _authService = authService;
-    }
-
-    [ObservableProperty]
-    private string userName = string.Empty;
-
-    [ObservableProperty]
-    private string userInitials = string.Empty;
-
-    [ObservableProperty]
-    private string greeting = string.Empty;
-
-    [ObservableProperty]
-    private bool isLoading = true;
-
-    [RelayCommand]
-    private async Task LoadDataAsync()
-    {
-        IsLoading = true;
-        try
-        {
-            var user = await _authService.GetCurrentUserAsync();
-            if (user != null)
-            {
-                UserName = user.FirstName;
-                UserInitials = user.Initials;
-            }
-
-            var hour = DateTime.Now.Hour;
-            Greeting = hour switch
-            {
-                < 12 => "Good Morning",
-                < 17 => "Good Afternoon",
-                _ => "Good Evening"
-            };
-        }
-        finally
-        {
-            IsLoading = false;
-        }
     }
 
     [RelayCommand]
-    private async Task LogoutAsync()
+    private async Task GoToCoursesAsync()
     {
-        try
-        {
-            await _authService.LogoutAsync();
-        }
-        finally
-        {
-            await Shell.Current.GoToAsync("//login");
-        }
->>>>>>> b21a7ff56f4c42af96a63212093eb3710ea26fd8
+        await Shell.Current.GoToAsync("//main/courses");
     }
 }

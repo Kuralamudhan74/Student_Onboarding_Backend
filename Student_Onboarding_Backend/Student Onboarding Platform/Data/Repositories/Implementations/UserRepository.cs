@@ -37,6 +37,14 @@ public class UserRepository : IUserRepository
         }
     }
 
+    public async Task<User?> GetByPhoneNumberAsync(string phoneNumber)
+    {
+        using var conn = _db.CreateConnection();
+        return await conn.QueryFirstOrDefaultAsync<User>(
+            "SELECT * FROM Users WHERE PhoneNumber = @PhoneNumber AND IsDeleted = @IsDeleted",
+            new { PhoneNumber = phoneNumber, IsDeleted = false });
+    }
+
     public async Task<User> CreateAsync(User user)
     {
         user.Id = Guid.NewGuid();
@@ -147,14 +155,25 @@ public class UserRepository : IUserRepository
             new { Role = "Admin", IsDeleted = false, IsActive = true });
     }
 
-    public async Task UpdateProfileAsync(Guid userId, string firstName, string lastName, string? phoneNumber)
+    public async Task UpdateProfileAsync(Guid userId, string firstName, string lastName, string? phoneNumber,
+        DateTime? dateOfBirth, string? address, string? education)
     {
         using var conn = _db.CreateConnection();
         await conn.ExecuteAsync(@"
             UPDATE Users SET FirstName = @FirstName, LastName = @LastName,
-                PhoneNumber = @PhoneNumber, UpdatedAt = @UpdatedAt
+                PhoneNumber = @PhoneNumber, DateOfBirth = @DateOfBirth,
+                Address = @Address, Education = @Education, UpdatedAt = @UpdatedAt
             WHERE Id = @Id",
-            new { Id = userId, FirstName = firstName, LastName = lastName, PhoneNumber = phoneNumber, UpdatedAt = DateTime.UtcNow });
+            new { Id = userId, FirstName = firstName, LastName = lastName, PhoneNumber = phoneNumber,
+                DateOfBirth = dateOfBirth, Address = address, Education = education, UpdatedAt = DateTime.UtcNow });
+    }
+
+    public async Task UpdateProfilePhotoAsync(Guid userId, string photoUrl)
+    {
+        using var conn = _db.CreateConnection();
+        await conn.ExecuteAsync(
+            "UPDATE Users SET ProfilePhotoUrl = @PhotoUrl, UpdatedAt = @UpdatedAt WHERE Id = @Id",
+            new { Id = userId, PhotoUrl = photoUrl, UpdatedAt = DateTime.UtcNow });
     }
 
     public async Task UpdateIsActiveAsync(Guid userId, bool isActive)

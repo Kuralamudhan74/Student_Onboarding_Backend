@@ -7,6 +7,10 @@ public class StudentProfileResponse
     public string LastName { get; set; } = string.Empty;
     public string Email { get; set; } = string.Empty;
     public string? PhoneNumber { get; set; }
+    public DateTime? DateOfBirth { get; set; }
+    public string? Address { get; set; }
+    public string? Education { get; set; }
+    public string? ProfilePhotoUrl { get; set; }
     public string Role { get; set; } = string.Empty;
     public string ApprovalStatus { get; set; } = string.Empty;
     public bool EmailVerified { get; set; }

@@ -1,15 +1,11 @@
-<<<<<<< HEAD
 using CommunityToolkit.Mvvm.Messaging;
 using StudentOnboardingApp.Handlers;
 using StudentOnboardingApp.Services.Interfaces;
 
-=======
->>>>>>> b21a7ff56f4c42af96a63212093eb3710ea26fd8
 namespace StudentOnboardingApp;
 
 public partial class App : Application
 {
-<<<<<<< HEAD
     private readonly ITokenStorageService _tokenStorage;
 
     public App(ITokenStorageService tokenStorage)
@@ -22,16 +18,10 @@ public partial class App : Application
         {
             await Shell.Current.GoToAsync($"///{Constants.Routes.Login}");
         });
-=======
-    public App()
-    {
-        InitializeComponent();
->>>>>>> b21a7ff56f4c42af96a63212093eb3710ea26fd8
     }
 
     protected override Window CreateWindow(IActivationState? activationState)
     {
-<<<<<<< HEAD
         var window = new Window(new AppShell());
 
         window.Created += async (_, _) =>
@@ -59,8 +49,5 @@ public partial class App : Application
         {
             // If any error, stay on login
         }
-=======
-        return new Window(new AppShell());
->>>>>>> b21a7ff56f4c42af96a63212093eb3710ea26fd8
     }
 }

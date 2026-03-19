@@ -18,7 +18,7 @@ public class DashboardService : IDashboardService
     {
         try
         {
-            var response = await _client.GetAsync("dashboard");
+            var response = await _client.GetAsync("student/dashboard");
             var result = await response.Content.ReadFromJsonAsync<ApiResponse<DashboardDto>>();
             return result ?? new ApiResponse<DashboardDto> { Success = false, Message = "Failed to parse response" };
         }

@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Http;
 using Student_Onboarding_Platform.Data.Repositories.Interfaces;
 using Student_Onboarding_Platform.Models.DTOs.Common;
 using Student_Onboarding_Platform.Models.DTOs.Student;
@@ -43,14 +44,44 @@ public class StudentService : IStudentService
         if (user == null)
             return ApiResponse<StudentProfileResponse>.Fail("User not found.");
 
-        await _userService.UpdateProfileAsync(userId, request.FirstName, request.LastName, request.PhoneNumber);
+        await _userService.UpdateProfileAsync(userId, request.FirstName, request.LastName, request.PhoneNumber,
+            request.DateOfBirth, request.Address, request.Education);
         _logger.LogInformation("Profile updated for user {UserId}", userId);
 
         user.FirstName = request.FirstName;
         user.LastName = request.LastName;
         user.PhoneNumber = request.PhoneNumber;
+        user.DateOfBirth = request.DateOfBirth;
+        user.Address = request.Address;
+        user.Education = request.Education;
 
         return ApiResponse<StudentProfileResponse>.Ok(MapToProfile(user), "Profile updated successfully.");
+    }
+
+    public async Task<ApiResponse<StudentProfileResponse>> UploadProfilePhotoAsync(Guid userId, IFormFile photo)
+    {
+        var user = await _userService.GetByIdAsync(userId);
+        if (user == null)
+            return ApiResponse<StudentProfileResponse>.Fail("User not found.");
+
+        // Save photo to wwwroot/uploads/photos
+        var uploadsDir = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "uploads", "photos");
+        Directory.CreateDirectory(uploadsDir);
+
+        var fileName = $"{userId}_{DateTime.UtcNow.Ticks}{Path.GetExtension(photo.FileName)}";
+        var filePath = Path.Combine(uploadsDir, fileName);
+
+        using (var stream = new FileStream(filePath, FileMode.Create))
+        {
+            await photo.CopyToAsync(stream);
+        }
+
+        var photoUrl = $"/uploads/photos/{fileName}";
+        await _userService.UpdateProfilePhotoAsync(userId, photoUrl);
+        user.ProfilePhotoUrl = photoUrl;
+
+        _logger.LogInformation("Profile photo uploaded for user {UserId}", userId);
+        return ApiResponse<StudentProfileResponse>.Ok(MapToProfile(user), "Photo uploaded successfully.");
     }
 
     public async Task<ApiResponse<StudentDashboardResponse>> GetDashboardAsync(Guid userId)
@@ -146,6 +177,10 @@ public class StudentService : IStudentService
             LastName = user.LastName,
             Email = user.Email,
             PhoneNumber = user.PhoneNumber,
+            DateOfBirth = user.DateOfBirth,
+            Address = user.Address,
+            Education = user.Education,
+            ProfilePhotoUrl = user.ProfilePhotoUrl,
             Role = user.Role,
             ApprovalStatus = user.ApprovalStatus,
             EmailVerified = user.EmailVerified,
