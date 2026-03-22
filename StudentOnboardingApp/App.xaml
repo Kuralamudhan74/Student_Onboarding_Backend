@@ -24,6 +24,9 @@
             <!-- IsNotNull Converter (for error message visibility) -->
             <converters:IsNotNullConverter x:Key="IsNotNullConverter" />
 
+            <!-- Notification type icon converter -->
+            <converters:NotificationIconConverter x:Key="NotificationIconConverter" />
+
             <!-- BoolToString for password toggle -->
             <converters:BoolToStringConverter x:Key="BoolToStringConverter"
                                              TrueValue="Hide"

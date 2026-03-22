@@ -9,6 +9,9 @@ public class Course
     public decimal? OfferPrice { get; set; }
     public string? Syllabus { get; set; }
     public string? Duration { get; set; }
+    public string? Instructor { get; set; }
+    public string? Category { get; set; }
+    public string? Thumbnail { get; set; }
     public bool IsActive { get; set; } = true;
     public bool IsDeleted { get; set; }
     public Guid CreatedBy { get; set; }

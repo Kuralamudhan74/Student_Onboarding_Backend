@@ -13,7 +13,10 @@
       "Bash(curl -sk https://localhost:7292/api/health)",
       "Bash(grep -E \"\\\\.cs$\")",
       "Bash(curl -sk https://localhost:7292/api/course)",
-      "Bash(curl -sk -X POST https://localhost:7292/api/auth/signup -H \"Content-Type: application/json\" -d '{\"\"firstName\"\":\"\"Test\"\",\"\"lastName\"\":\"\"User\"\",\"\"email\"\":\"\"test@test.com\"\",\"\"phoneNumber\"\":\"\"1234567890\"\",\"\"password\"\":\"\"Test@123\"\",\"\"confirmPassword\"\":\"\"Test@123\"\"}')"
+      "Bash(curl -sk -X POST https://localhost:7292/api/auth/signup -H \"Content-Type: application/json\" -d '{\"\"firstName\"\":\"\"Test\"\",\"\"lastName\"\":\"\"User\"\",\"\"email\"\":\"\"test@test.com\"\",\"\"phoneNumber\"\":\"\"1234567890\"\",\"\"password\"\":\"\"Test@123\"\",\"\"confirmPassword\"\":\"\"Test@123\"\"}')",
+      "Bash(find /d/SOP/student_onboard -maxdepth 3 -type f \\\\\\(-name .env* -o -name *.env \\\\\\))",
+      "Bash(xargs ls:*)",
+      "Bash(findstr \"error CS\")"
     ],
     "additionalDirectories": [
       "d:\\SOP\\Student_Onboarding_Backend\\.git"

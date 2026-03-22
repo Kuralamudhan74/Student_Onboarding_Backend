@@ -30,6 +30,9 @@ public class CourseService : ICourseService
             Fees = c.Fees,
             OfferPrice = c.OfferPrice,
             Duration = c.Duration,
+            Instructor = c.Instructor,
+            Category = c.Category,
+            Thumbnail = c.Thumbnail,
             IsActive = c.IsActive
         }).ToList();
 
@@ -57,6 +60,9 @@ public class CourseService : ICourseService
             OfferPrice = request.OfferPrice,
             Syllabus = request.Syllabus,
             Duration = request.Duration,
+            Instructor = request.Instructor,
+            Category = request.Category,
+            Thumbnail = request.Thumbnail,
             IsActive = true,
             IsDeleted = false,
             CreatedBy = createdBy
@@ -80,6 +86,9 @@ public class CourseService : ICourseService
         course.OfferPrice = request.OfferPrice;
         course.Syllabus = request.Syllabus;
         course.Duration = request.Duration;
+        course.Instructor = request.Instructor;
+        course.Category = request.Category;
+        course.Thumbnail = request.Thumbnail;
         course.IsActive = request.IsActive;
 
         await _courseRepository.UpdateAsync(course);
@@ -111,6 +120,9 @@ public class CourseService : ICourseService
             OfferPrice = course.OfferPrice,
             Syllabus = course.Syllabus,
             Duration = course.Duration,
+            Instructor = course.Instructor,
+            Category = course.Category,
+            Thumbnail = course.Thumbnail,
             IsActive = course.IsActive,
             CreatedAt = course.CreatedAt,
             UpdatedAt = course.UpdatedAt

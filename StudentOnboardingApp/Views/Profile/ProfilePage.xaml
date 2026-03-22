@@ -8,10 +8,24 @@
              BackgroundColor="{StaticResource LightBackground}">
 
     <ScrollView>
-        <VerticalStackLayout Spacing="16" Padding="20">
+        <VerticalStackLayout Spacing="16" Padding="20" x:Name="ProfileContent">
 
-            <ActivityIndicator IsRunning="{Binding IsBusy}" IsVisible="{Binding IsBusy}"
-                               Color="{StaticResource Primary}" HorizontalOptions="Center" />
+            <!-- Loading — properly spaced in its own card -->
+            <Border BackgroundColor="White" StrokeShape="RoundRectangle 14"
+                    StrokeThickness="0" Padding="16,12" HorizontalOptions="Center"
+                    IsVisible="{Binding IsBusy}">
+                <Border.Shadow>
+                    <Shadow Brush="#145B5BD6" Offset="0,2" Radius="8" Opacity="0.1" />
+                </Border.Shadow>
+                <HorizontalStackLayout Spacing="10" HorizontalOptions="Center">
+                    <ActivityIndicator IsRunning="{Binding IsBusy}"
+                                       Color="{StaticResource Primary}"
+                                       HeightRequest="20" WidthRequest="20" />
+                    <Label Text="Loading profile..."
+                           FontSize="13" TextColor="{StaticResource TextMuted}"
+                           VerticalOptions="Center" />
+                </HorizontalStackLayout>
+            </Border>
 
             <!-- Error Message -->
             <Border BackgroundColor="{StaticResource ErrorLight}"

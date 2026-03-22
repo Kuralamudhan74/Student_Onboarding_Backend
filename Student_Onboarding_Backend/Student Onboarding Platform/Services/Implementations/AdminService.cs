@@ -13,6 +13,7 @@ public class AdminService : IAdminService
     private readonly ICourseRepository _courseRepository;
     private readonly ICourseRegistrationRepository _registrationRepository;
     private readonly IEmailService _emailService;
+    private readonly INotificationService _notificationService;
     private readonly ILogger<AdminService> _logger;
 
     public AdminService(
@@ -20,12 +21,14 @@ public class AdminService : IAdminService
         ICourseRepository courseRepository,
         ICourseRegistrationRepository registrationRepository,
         IEmailService emailService,
+        INotificationService notificationService,
         ILogger<AdminService> logger)
     {
         _userService = userService;
         _courseRepository = courseRepository;
         _registrationRepository = registrationRepository;
         _emailService = emailService;
+        _notificationService = notificationService;
         _logger = logger;
     }
 
@@ -157,6 +160,12 @@ public class AdminService : IAdminService
 
         await _emailService.SendApprovalEmailAsync(student.Email, student.FirstName);
 
+        await _notificationService.CreateStudentNotificationAsync(
+            studentId,
+            "StudentApproved",
+            "Account Approved!",
+            $"Congratulations {student.FirstName}! Your account has been approved. You can now access all platform features and register for courses.");
+
         _logger.LogInformation("Student {StudentId} approved by admin {AdminId}", studentId, adminId);
         return ApiResponse<string>.Ok("Student approved successfully.");
     }
@@ -175,6 +184,12 @@ public class AdminService : IAdminService
         await _userService.UpdateApprovalStatusAsync(studentId, nameof(ApprovalStatus.Denied), adminId, request.Reason);
 
         await _emailService.SendDenialEmailAsync(student.Email, student.FirstName, request.Reason);
+
+        await _notificationService.CreateStudentNotificationAsync(
+            studentId,
+            "StudentDenied",
+            "Account Application Update",
+            $"Hi {student.FirstName}, your account application has been reviewed. Reason: {request.Reason ?? "Not specified"}. Please contact support for assistance.");
 
         _logger.LogInformation("Student {StudentId} denied by admin {AdminId}", studentId, adminId);
         return ApiResponse<string>.Ok("Student denied successfully.");
@@ -229,6 +244,14 @@ public class AdminService : IAdminService
 
         await _registrationRepository.UpdatePaymentAsync(
             registrationId, request.PaymentStatus, request.PaymentAmount, request.Notes);
+
+        var course = await _courseRepository.GetByIdAsync(registration.CourseId);
+        await _notificationService.CreateStudentNotificationAsync(
+            registration.UserId,
+            "PaymentUpdate",
+            "Payment Status Updated",
+            $"Your payment for {course?.Name ?? "your course"} has been updated to: {request.PaymentStatus}.",
+            registrationId);
 
         _logger.LogInformation("Payment updated for registration {RegistrationId}: {Status}", registrationId, request.PaymentStatus);
         return ApiResponse<string>.Ok("Payment updated successfully.");

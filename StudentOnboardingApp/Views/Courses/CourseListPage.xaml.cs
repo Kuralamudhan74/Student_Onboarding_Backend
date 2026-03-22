@@ -17,68 +17,62 @@ public partial class CourseListPage : ContentPage
     {
         base.OnAppearing();
 
-        // Animate header on first load
-        if (!_hasAnimated)
-        {
-            HeaderTitle.Opacity = 0;
-            HeaderTitle.TranslationY = -20;
-            HeaderSubtitle.Opacity = 0;
-            HeaderSubtitle.TranslationY = -10;
-
-            await Task.WhenAll(
-                HeaderTitle.FadeTo(1, 350, Easing.CubicOut),
-                HeaderTitle.TranslateTo(0, 0, 400, Easing.CubicOut)
-            );
-            await Task.WhenAll(
-                HeaderSubtitle.FadeTo(1, 300, Easing.CubicOut),
-                HeaderSubtitle.TranslateTo(0, 0, 350, Easing.CubicOut)
-            );
-        }
-
         if (_viewModel.Courses.Count == 0)
-        {
             await _viewModel.LoadCoursesCommand.ExecuteAsync(null);
-        }
 
-        // Staggered card animation after courses load
         if (!_hasAnimated)
         {
             _hasAnimated = true;
-            await AnimateCardsAsync();
+            await Task.Delay(50);
+            await RunEntranceAnimationsAsync();
         }
+    }
+
+    private async Task RunEntranceAnimationsAsync()
+    {
+        // Header slide in from left
+        HeaderSection.Opacity = 0;
+        HeaderSection.TranslationX = -30;
+
+        await Task.WhenAll(
+            HeaderSection.FadeTo(1, 500, Easing.CubicOut),
+            HeaderSection.TranslateTo(0, 0, 550, Easing.CubicOut)
+        );
+
+        await Task.Delay(100);
+
+        // Staggered card animation
+        await AnimateCardsAsync();
     }
 
     private async Task AnimateCardsAsync()
     {
-        // Small delay to let CollectionView render
-        await Task.Delay(150);
+        await Task.Delay(100);
 
-        // Get all visible card borders from the visual tree
         var cards = GetVisualTreeChildren<Border>(CoursesCollection)
-            .Where(b => b.BackgroundColor == Colors.White && b.StrokeShape != null)
+            .Where(b => b.BackgroundColor == Colors.White && b.StrokeShape != null
+                        && b.MinimumHeightRequest >= 200)
             .ToList();
 
-        // Set initial state
         foreach (var card in cards)
         {
             card.Opacity = 0;
-            card.TranslationY = 30;
-            card.Scale = 0.95;
+            card.TranslationY = 40;
+            card.Scale = 0.9;
         }
 
-        // Staggered fade-in
         for (int i = 0; i < cards.Count; i++)
         {
             var card = cards[i];
-            var delay = i * 80; // 80ms stagger between each card
+            var delay = i * 100;
 
 #pragma warning disable CS4014
             Task.Delay(delay).ContinueWith(_ => MainThread.BeginInvokeOnMainThread(async () =>
             {
                 await Task.WhenAll(
-                    card.FadeTo(1, 400, Easing.CubicOut),
-                    card.TranslateTo(0, 0, 450, Easing.CubicOut),
-                    card.ScaleTo(1, 400, Easing.CubicOut)
+                    card.FadeTo(1, 500, Easing.CubicOut),
+                    card.TranslateTo(0, 0, 550, Easing.CubicOut),
+                    card.ScaleTo(1, 500, Easing.SpringOut)
                 );
             }));
 #pragma warning restore CS4014
@@ -100,21 +94,13 @@ public partial class CourseListPage : ContentPage
             }
         }
         else if (parent is ContentView contentView && contentView.Content is IView content)
-        {
             results.AddRange(GetVisualTreeChildren<T>(content));
-        }
         else if (parent is Border border && border.Content is IView borderContent)
-        {
             results.AddRange(GetVisualTreeChildren<T>(borderContent));
-        }
         else if (parent is ScrollView scrollView && scrollView.Content is IView scrollContent)
-        {
             results.AddRange(GetVisualTreeChildren<T>(scrollContent));
-        }
         else if (parent is RefreshView refreshView && refreshView.Content is IView refreshContent)
-        {
             results.AddRange(GetVisualTreeChildren<T>(refreshContent));
-        }
 
         return results;
     }

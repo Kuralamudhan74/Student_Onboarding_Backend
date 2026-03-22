@@ -55,4 +55,19 @@ public class NotificationService : INotificationService
             return new ApiResponse<string> { Success = false, Message = ex.Message };
         }
     }
+
+    public async Task<int> GetUnreadCountAsync()
+    {
+        try
+        {
+            var result = await GetNotificationsAsync();
+            if (result.Success && result.Data != null)
+                return result.Data.Count(n => !n.IsRead);
+            return 0;
+        }
+        catch
+        {
+            return 0;
+        }
+    }
 }

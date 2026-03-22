@@ -32,7 +32,8 @@
                       Icon="profile.png"
                       Route="profile"
                       ContentTemplate="{DataTemplate profile:ProfilePage}" />
-        <ShellContent Title="Alerts"
+        <ShellContent x:Name="alertsTab"
+                      Title="Alerts"
                       Icon="notifications.png"
                       Route="notifications"
                       ContentTemplate="{DataTemplate notifications:NotificationsPage}" />

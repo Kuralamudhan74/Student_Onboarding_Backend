@@ -16,7 +16,8 @@
 
                 <!-- Welcome Header Card -->
                 <Border StrokeThickness="0" StrokeShape="RoundRectangle 20"
-                        Padding="22,20" Margin="0,4,0,0">
+                        Padding="22,20" Margin="0,4,0,0"
+                        x:Name="WelcomeCard">
                     <Border.Background>
                         <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
                             <GradientStop Color="{StaticResource Primary}" Offset="0.0" />
@@ -34,7 +35,6 @@
                             <Label Text="Track your enrollment and course details"
                                    FontSize="13" TextColor="#FFFFFFBB" />
                         </VerticalStackLayout>
-                        <!-- Avatar circle -->
                         <Border Grid.Column="1" BackgroundColor="#FFFFFF30"
                                 StrokeThickness="0" StrokeShape="RoundRectangle 24"
                                 HeightRequest="48" WidthRequest="48" VerticalOptions="Center">
@@ -52,16 +52,31 @@
                            FontSize="13" HorizontalTextAlignment="Center" />
                 </Border>
 
-                <!-- Loading -->
-                <ActivityIndicator IsRunning="{Binding IsBusy}" IsVisible="{Binding IsBusy}"
-                                   Color="{StaticResource Primary}" HorizontalOptions="Center" />
+                <!-- Loading — with proper spacing -->
+                <Border BackgroundColor="White" StrokeShape="RoundRectangle 16"
+                        StrokeThickness="0" Padding="20" HorizontalOptions="Center"
+                        IsVisible="{Binding IsBusy}"
+                        x:Name="LoadingCard">
+                    <Border.Shadow>
+                        <Shadow Brush="#145B5BD6" Offset="0,2" Radius="10" Opacity="0.1" />
+                    </Border.Shadow>
+                    <HorizontalStackLayout Spacing="12" HorizontalOptions="Center">
+                        <ActivityIndicator IsRunning="{Binding IsBusy}"
+                                           Color="{StaticResource Primary}"
+                                           HeightRequest="24" WidthRequest="24" />
+                        <Label Text="Loading your dashboard..."
+                               FontSize="13" TextColor="{StaticResource TextMuted}"
+                               VerticalOptions="Center" />
+                    </HorizontalStackLayout>
+                </Border>
 
                 <!-- No Course Registered State -->
                 <Border BackgroundColor="White"
                         StrokeShape="RoundRectangle 20"
                         Stroke="{StaticResource BorderColor}"
                         Padding="28,40" StrokeThickness="1"
-                        IsVisible="{Binding HasCourse, Converter={StaticResource InverseBoolConverter}}">
+                        IsVisible="{Binding HasCourse, Converter={StaticResource InverseBoolConverter}}"
+                        x:Name="NoCourseCard">
                     <Border.Shadow>
                         <Shadow Brush="#145B5BD6" Offset="0,4" Radius="20" Opacity="0.12" />
                     </Border.Shadow>
@@ -86,7 +101,11 @@
                                 TextColor="White" FontAttributes="Bold"
                                 FontFamily="OpenSansSemibold"
                                 CornerRadius="14" HeightRequest="52"
-                                FontSize="16" Padding="32,0" />
+                                FontSize="16" Padding="32,0">
+                            <Button.Shadow>
+                                <Shadow Brush="#405B5BD6" Offset="0,4" Radius="14" Opacity="0.25" />
+                            </Button.Shadow>
+                        </Button>
                     </VerticalStackLayout>
                 </Border>
 
@@ -95,7 +114,8 @@
                         StrokeShape="RoundRectangle 20"
                         Stroke="{StaticResource BorderColor}"
                         Padding="0" StrokeThickness="1"
-                        IsVisible="{Binding HasCourse}">
+                        IsVisible="{Binding HasCourse}"
+                        x:Name="CourseCard">
                     <Border.Shadow>
                         <Shadow Brush="#145B5BD6" Offset="0,4" Radius="20" Opacity="0.12" />
                     </Border.Shadow>

@@ -75,6 +75,22 @@ public class AdminController : ControllerBase
         return result.Success ? Ok(result) : BadRequest(result);
     }
 
+    [HttpGet("students/stats")]
+    public async Task<IActionResult> GetStudentStats()
+    {
+        var result = await _adminService.GetDashboardAsync();
+        if (!result.Success) return BadRequest(result);
+
+        var stats = new
+        {
+            total = result.Data!.TotalStudents,
+            approved = result.Data.ApprovedStudents,
+            pending = result.Data.PendingApprovals,
+            blocked = result.Data.DeniedStudents
+        };
+        return Ok(new { success = true, data = stats });
+    }
+
     [HttpGet("notifications")]
     public async Task<IActionResult> GetNotifications()
     {
@@ -96,6 +112,13 @@ public class AdminController : ControllerBase
     {
         var adminId = User.GetUserId();
         var result = await _notificationService.MarkAsReadAsync(id, adminId);
+        return result.Success ? Ok(result) : BadRequest(result);
+    }
+
+    [HttpGet("courses")]
+    public async Task<IActionResult> GetCourses()
+    {
+        var result = await _courseService.GetActiveCoursesAsync();
         return result.Success ? Ok(result) : BadRequest(result);
     }
 

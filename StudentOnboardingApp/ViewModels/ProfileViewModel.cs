@@ -116,6 +116,14 @@ public partial class ProfileViewModel : BaseViewModel
                 Profile = result.Data;
                 PopulateFieldsFromProfile();
             }
+            else if (result.Message?.Contains("Session expired", StringComparison.OrdinalIgnoreCase) == true
+                     || result.Message?.Contains("401", StringComparison.OrdinalIgnoreCase) == true)
+            {
+                // Token invalid — force re-login
+                await _tokenStorage.ClearAllAsync();
+                if (Application.Current is App app) app.StopNotificationPolling();
+                await Shell.Current.GoToAsync($"///{Constants.Routes.Login}");
+            }
             else
             {
                 ErrorMessage = result.Message;

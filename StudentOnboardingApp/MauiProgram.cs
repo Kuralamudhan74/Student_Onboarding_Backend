@@ -61,6 +61,7 @@ public static class MauiProgram
         builder.Services.AddSingleton<IDashboardService, DashboardService>();
         builder.Services.AddSingleton<INotificationService, NotificationService>();
         builder.Services.AddSingleton<IOnboardingService, OnboardingService>();
+        builder.Services.AddSingleton<NotificationPollingService>();
 
         // ViewModels
         builder.Services.AddTransient<LoginViewModel>();

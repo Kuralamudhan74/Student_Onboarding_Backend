@@ -48,6 +48,10 @@ public partial class LoginViewModel : BaseViewModel
 
                 // Go directly to dashboard after login
                 await Shell.Current.GoToAsync("//main/dashboard");
+
+                // Start notification polling
+                if (Application.Current is App app)
+                    app.StartNotificationPolling();
             }
             else
             {

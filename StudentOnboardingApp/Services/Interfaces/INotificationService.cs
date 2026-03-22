@@ -8,4 +8,5 @@ public interface INotificationService
     Task<ApiResponse<List<NotificationDto>>> GetNotificationsAsync();
     Task<ApiResponse<string>> MarkAsReadAsync(Guid notificationId);
     Task<ApiResponse<string>> RegisterDeviceTokenAsync(string fcmToken);
+    Task<int> GetUnreadCountAsync();
 }

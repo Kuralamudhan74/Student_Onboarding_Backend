@@ -22,16 +22,24 @@
             </CollectionView.ItemsLayout>
 
             <CollectionView.Header>
-                <VerticalStackLayout Padding="20,20,20,16" Spacing="4"
-                                     x:Name="HeaderSection">
-                    <Label Text="Explore Courses"
-                           FontSize="26" FontFamily="OpenSansSemibold"
-                           FontAttributes="Bold" TextColor="Black"
-                           x:Name="HeaderTitle" />
-                    <Label Text="Find the perfect course for your career"
-                           FontSize="14" TextColor="{StaticResource TextMuted}"
-                           x:Name="HeaderSubtitle" />
+                <VerticalStackLayout Padding="20,20,20,16" Spacing="6">
+                    <!-- Header with blue accent bar -->
+                    <Grid ColumnDefinitions="Auto, *" ColumnSpacing="12" x:Name="HeaderSection">
+                        <Border BackgroundColor="{StaticResource Primary}"
+                                StrokeThickness="0" StrokeShape="RoundRectangle 3"
+                                WidthRequest="4" VerticalOptions="Fill" />
+                        <VerticalStackLayout Grid.Column="1" Spacing="4">
+                            <Label Text="Explore Courses"
+                                   FontSize="26" FontFamily="OpenSansSemibold"
+                                   FontAttributes="Bold" TextColor="{StaticResource DarkText}"
+                                   x:Name="HeaderTitle" />
+                            <Label Text="Find the perfect course for your career"
+                                   FontSize="14" TextColor="{StaticResource TextMuted}"
+                                   x:Name="HeaderSubtitle" />
+                        </VerticalStackLayout>
+                    </Grid>
 
+                    <!-- Error -->
                     <Border BackgroundColor="{StaticResource ErrorLight}"
                             StrokeShape="RoundRectangle 10" StrokeThickness="0" Padding="14,10"
                             Margin="0,8,0,0"
@@ -40,21 +48,35 @@
                                FontSize="13" HorizontalTextAlignment="Center" />
                     </Border>
 
-                    <ActivityIndicator IsRunning="{Binding IsBusy}" IsVisible="{Binding IsBusy}"
-                                       Color="{StaticResource Primary}" />
+                    <!-- Loading — spaced out in its own card -->
+                    <Border BackgroundColor="White" StrokeShape="RoundRectangle 14"
+                            StrokeThickness="0" Padding="16,12" Margin="0,8,0,0"
+                            HorizontalOptions="Center"
+                            IsVisible="{Binding IsBusy}">
+                        <Border.Shadow>
+                            <Shadow Brush="#145B5BD6" Offset="0,2" Radius="8" Opacity="0.1" />
+                        </Border.Shadow>
+                        <HorizontalStackLayout Spacing="10" HorizontalOptions="Center">
+                            <ActivityIndicator IsRunning="{Binding IsBusy}"
+                                               Color="{StaticResource Primary}"
+                                               HeightRequest="20" WidthRequest="20" />
+                            <Label Text="Loading courses..."
+                                   FontSize="13" TextColor="{StaticResource TextMuted}"
+                                   VerticalOptions="Center" />
+                        </HorizontalStackLayout>
+                    </Border>
                 </VerticalStackLayout>
             </CollectionView.Header>
 
             <CollectionView.ItemTemplate>
                 <DataTemplate x:DataType="models:CourseDto">
-                    <!-- Card with equal sizing for 3-column grid -->
                     <Border BackgroundColor="White"
                             StrokeShape="RoundRectangle 16"
                             Stroke="{StaticResource BorderLight}"
                             Padding="16,14" Margin="0" StrokeThickness="1"
                             MinimumHeightRequest="220">
                         <Border.Shadow>
-                            <Shadow Brush="#0A000000" Offset="0,3" Radius="12" Opacity="0.08" />
+                            <Shadow Brush="#0A5B5BD6" Offset="0,3" Radius="12" Opacity="0.08" />
                         </Border.Shadow>
                         <Border.GestureRecognizers>
                             <TapGestureRecognizer
@@ -67,7 +89,7 @@
                             <Grid ColumnDefinitions="*, Auto" RowDefinitions="Auto">
                                 <Label Text="{Binding Name}"
                                        FontSize="16" FontFamily="OpenSansSemibold"
-                                       FontAttributes="Bold" TextColor="Black"
+                                       FontAttributes="Bold" TextColor="{StaticResource DarkText}"
                                        LineBreakMode="TailTruncation" MaxLines="2"
                                        VerticalOptions="Start" />
                                 <Border Grid.Column="1"
@@ -82,6 +104,10 @@
                                 </Border>
                             </Grid>
 
+                            <!-- Blue accent line -->
+                            <BoxView HeightRequest="2" Color="{StaticResource Primary}"
+                                     Opacity="0.15" CornerRadius="1" />
+
                             <!-- Description -->
                             <Label Text="{Binding Description}"
                                    FontSize="12" TextColor="{StaticResource TextSecondary}"
@@ -93,7 +119,7 @@
                                 <Border BackgroundColor="{StaticResource Surface3}"
                                         StrokeThickness="0" StrokeShape="RoundRectangle 8"
                                         Padding="8,4" Margin="0,0,6,4">
-                                    <Label FontSize="11" TextColor="Black"
+                                    <Label FontSize="11" TextColor="{StaticResource DarkText}"
                                            FontFamily="OpenSansSemibold">
                                         <Label.FormattedText>
                                             <FormattedString>
