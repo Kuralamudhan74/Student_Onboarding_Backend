@@ -7,4 +7,13 @@ public class StudentDashboardResponse
     public string FirstName { get; set; } = string.Empty;
     public string LastName { get; set; } = string.Empty;
     public string Email { get; set; } = string.Empty;
+
+    // Active course info (when payment is Paid)
+    public string? CourseName { get; set; }
+    public string? CourseDuration { get; set; }
+    public string? CourseStatus { get; set; } // "Ongoing", "Completed", "Pending Payment"
+    public string? PaymentStatus { get; set; }
+    public decimal? AmountDue { get; set; }
+    public DateTime? EnrolledDate { get; set; }
+    public string? BatchTiming { get; set; }
 }

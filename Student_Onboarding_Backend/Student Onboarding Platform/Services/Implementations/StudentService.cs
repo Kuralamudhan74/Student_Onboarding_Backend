@@ -101,6 +101,32 @@ public class StudentService : IStudentService
             Email = user.Email
         };
 
+        // Find the student's active course registration
+        var registrations = await _registrationRepository.GetByUserIdAsync(userId);
+        var activeReg = registrations.FirstOrDefault();
+
+        if (activeReg != null)
+        {
+            var course = await _courseRepository.GetByIdAsync(activeReg.CourseId);
+            if (course != null)
+            {
+                dashboard.CourseName = course.Name;
+                dashboard.CourseDuration = course.Duration;
+                dashboard.PaymentStatus = activeReg.PaymentStatus;
+                dashboard.AmountDue = course.Fees - (activeReg.PaymentAmount ?? 0);
+                dashboard.EnrolledDate = activeReg.CreatedAt;
+
+                if (activeReg.PaymentStatus == "Paid")
+                {
+                    dashboard.CourseStatus = activeReg.IsCompleted ? "Completed" : "Ongoing";
+                }
+                else
+                {
+                    dashboard.CourseStatus = "Pending Payment";
+                }
+            }
+        }
+
         return ApiResponse<StudentDashboardResponse>.Ok(dashboard);
     }
 

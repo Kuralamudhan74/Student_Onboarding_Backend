@@ -12,4 +12,5 @@ public interface ICourseRegistrationRepository
     Task<int> GetAllCountAsync();
     Task<int> GetCountByUserIdAsync(Guid userId);
     Task UpdatePaymentAsync(Guid id, string paymentStatus, decimal? paymentAmount, string? notes);
+    Task<int> GetActiveCountByCourseAsync(Guid courseId);
 }

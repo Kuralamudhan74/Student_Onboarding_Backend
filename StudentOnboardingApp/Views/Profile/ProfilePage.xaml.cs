@@ -5,7 +5,6 @@ namespace StudentOnboardingApp.Views.Profile;
 public partial class ProfilePage : ContentPage
 {
     private readonly ProfileViewModel _viewModel;
-    private bool _hasAnimated;
 
     public ProfilePage(ProfileViewModel viewModel)
     {
@@ -18,45 +17,38 @@ public partial class ProfilePage : ContentPage
     {
         base.OnAppearing();
 
+        // Quick scale-in on every tab switch
+        PhotoCard.Opacity = 0;
+        PhotoCard.Scale = 0.9;
+        InfoCard.Opacity = 0;
+        InfoCard.TranslationY = 20;
+        EditCard.Opacity = 0;
+        EditCard.TranslationY = 20;
+
         await _viewModel.LoadProfileCommand.ExecuteAsync(null);
 
-        if (!_hasAnimated)
-        {
-            _hasAnimated = true;
-            await Task.Delay(50);
-            await RunEntranceAnimationsAsync();
-        }
+        // Photo card bounces in
+        await Task.WhenAll(
+            PhotoCard.FadeTo(1, 400, Easing.CubicOut),
+            PhotoCard.ScaleTo(1, 450, Easing.SpringOut)
+        );
+
+        await Task.Delay(60);
+
+        // Info/Edit cards slide up
+        await Task.WhenAll(
+            InfoCard.FadeTo(1, 350, Easing.CubicOut),
+            InfoCard.TranslateTo(0, 0, 400, Easing.CubicOut),
+            EditCard.FadeTo(1, 350, Easing.CubicOut),
+            EditCard.TranslateTo(0, 0, 400, Easing.CubicOut)
+        );
     }
 
-    private async Task RunEntranceAnimationsAsync()
+    protected override void OnDisappearing()
     {
-        // Photo card — scale bounce in
+        base.OnDisappearing();
         PhotoCard.Opacity = 0;
-        PhotoCard.Scale = 0.85;
-
-        await Task.WhenAll(
-            PhotoCard.FadeTo(1, 500, Easing.CubicOut),
-            PhotoCard.ScaleTo(1, 600, Easing.SpringOut)
-        );
-
-        await Task.Delay(100);
-
-        // Info card — slide up from bottom
         InfoCard.Opacity = 0;
-        InfoCard.TranslationY = 50;
-
-        await Task.WhenAll(
-            InfoCard.FadeTo(1, 450, Easing.CubicOut),
-            InfoCard.TranslateTo(0, 0, 500, Easing.CubicOut)
-        );
-
-        // Edit card (if visible) follows
         EditCard.Opacity = 0;
-        EditCard.TranslationY = 50;
-
-        await Task.WhenAll(
-            EditCard.FadeTo(1, 450, Easing.CubicOut),
-            EditCard.TranslateTo(0, 0, 500, Easing.CubicOut)
-        );
     }
 }

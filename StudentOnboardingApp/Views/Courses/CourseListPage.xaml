@@ -113,37 +113,20 @@
                                    FontSize="12" TextColor="{StaticResource TextSecondary}"
                                    LineBreakMode="TailTruncation" MaxLines="3" LineHeight="1.3" />
 
-                            <!-- Tags: Fees + Offer -->
-                            <FlexLayout Wrap="Wrap" Direction="Row" AlignItems="Start"
-                                        JustifyContent="Start">
-                                <Border BackgroundColor="{StaticResource Surface3}"
-                                        StrokeThickness="0" StrokeShape="RoundRectangle 8"
-                                        Padding="8,4" Margin="0,0,6,4">
-                                    <Label FontSize="11" TextColor="{StaticResource DarkText}"
-                                           FontFamily="OpenSansSemibold">
-                                        <Label.FormattedText>
-                                            <FormattedString>
-                                                <Span Text="Rs. " />
-                                                <Span Text="{Binding Fees, StringFormat='{0:N0}'}" />
-                                            </FormattedString>
-                                        </Label.FormattedText>
-                                    </Label>
-                                </Border>
-                                <Border BackgroundColor="{StaticResource SuccessLight}"
-                                        StrokeThickness="0" StrokeShape="RoundRectangle 8"
-                                        Padding="8,4" Margin="0,0,6,4"
-                                        IsVisible="{Binding OfferPrice, Converter={StaticResource IsNotNullConverter}}">
-                                    <Label FontSize="11" TextColor="{StaticResource SuccessText}"
-                                           FontFamily="OpenSansSemibold">
-                                        <Label.FormattedText>
-                                            <FormattedString>
-                                                <Span Text="Offer: Rs. " />
-                                                <Span Text="{Binding OfferPrice, StringFormat='{0:N0}'}" FontAttributes="Bold" />
-                                            </FormattedString>
-                                        </Label.FormattedText>
-                                    </Label>
-                                </Border>
-                            </FlexLayout>
+                            <!-- Fees tag -->
+                            <Border BackgroundColor="{StaticResource Surface3}"
+                                    StrokeThickness="0" StrokeShape="RoundRectangle 8"
+                                    Padding="8,4" HorizontalOptions="Start">
+                                <Label FontSize="11" TextColor="{StaticResource DarkText}"
+                                       FontFamily="OpenSansSemibold">
+                                    <Label.FormattedText>
+                                        <FormattedString>
+                                            <Span Text="Rs. " />
+                                            <Span Text="{Binding Fees, StringFormat='{0:N0}'}" />
+                                        </FormattedString>
+                                    </Label.FormattedText>
+                                </Label>
+                            </Border>
 
                             <!-- Spacer to push footer to bottom -->
                             <BoxView HeightRequest="0" VerticalOptions="FillAndExpand" Color="Transparent" />

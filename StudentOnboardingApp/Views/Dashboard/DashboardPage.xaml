@@ -145,9 +145,9 @@
                             <Border Grid.Row="0" Grid.Column="0"
                                     BackgroundColor="White" StrokeThickness="0" Padding="18,16">
                                 <VerticalStackLayout Spacing="4">
-                                    <Label Text="AMOUNT DUE" FontSize="10" FontFamily="OpenSansSemibold"
+                                    <Label Text="PAYMENT" FontSize="10" FontFamily="OpenSansSemibold"
                                            TextColor="{StaticResource TextMuted}" CharacterSpacing="0.8" />
-                                    <Label Text="{Binding Dashboard.AmountDue, StringFormat='Rs. {0:N2}'}"
+                                    <Label Text="{Binding Dashboard.PaymentStatus}"
                                            FontSize="18" FontAttributes="Bold"
                                            FontFamily="OpenSansSemibold" TextColor="{StaticResource DarkText}" />
                                 </VerticalStackLayout>
@@ -158,7 +158,7 @@
                                 <VerticalStackLayout Spacing="4">
                                     <Label Text="DURATION" FontSize="10" FontFamily="OpenSansSemibold"
                                            TextColor="{StaticResource TextMuted}" CharacterSpacing="0.8" />
-                                    <Label Text="{Binding Dashboard.Duration}"
+                                    <Label Text="{Binding Dashboard.CourseDuration}"
                                            FontSize="18" FontAttributes="Bold"
                                            FontFamily="OpenSansSemibold" TextColor="{StaticResource DarkText}" />
                                 </VerticalStackLayout>
@@ -167,12 +167,12 @@
                             <Border Grid.Row="1" Grid.Column="0"
                                     BackgroundColor="{StaticResource Surface3}" StrokeThickness="0" Padding="18,16">
                                 <VerticalStackLayout Spacing="4">
-                                    <Label Text="STATUS" FontSize="10" FontFamily="OpenSansSemibold"
+                                    <Label Text="COURSE STATUS" FontSize="10" FontFamily="OpenSansSemibold"
                                            TextColor="{StaticResource TextMuted}" CharacterSpacing="0.8" />
                                     <Border BackgroundColor="{StaticResource SuccessLight}"
                                             StrokeThickness="0" StrokeShape="RoundRectangle 12"
                                             Padding="10,4" HorizontalOptions="Start">
-                                        <Label Text="{Binding Dashboard.ApprovalStatus}"
+                                        <Label Text="{Binding Dashboard.CourseStatus}"
                                                FontSize="13" FontAttributes="Bold"
                                                FontFamily="OpenSansSemibold" TextColor="{StaticResource SuccessText}" />
                                     </Border>
@@ -182,9 +182,9 @@
                             <Border Grid.Row="1" Grid.Column="1"
                                     BackgroundColor="{StaticResource Surface3}" StrokeThickness="0" Padding="18,16">
                                 <VerticalStackLayout Spacing="4">
-                                    <Label Text="BATCH" FontSize="10" FontFamily="OpenSansSemibold"
+                                    <Label Text="AMOUNT DUE" FontSize="10" FontFamily="OpenSansSemibold"
                                            TextColor="{StaticResource TextMuted}" CharacterSpacing="0.8" />
-                                    <Label Text="{Binding Dashboard.BatchTiming}"
+                                    <Label Text="{Binding Dashboard.AmountDue, StringFormat='Rs. {0:N0}'}"
                                            FontSize="16" FontAttributes="Bold"
                                            FontFamily="OpenSansSemibold" TextColor="{StaticResource DarkText}" />
                                 </VerticalStackLayout>

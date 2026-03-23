@@ -5,7 +5,6 @@ namespace StudentOnboardingApp.Views.Dashboard;
 public partial class DashboardPage : ContentPage
 {
     private readonly DashboardViewModel _viewModel;
-    private bool _hasAnimated;
 
     public DashboardPage(DashboardViewModel viewModel)
     {
@@ -17,42 +16,24 @@ public partial class DashboardPage : ContentPage
     {
         base.OnAppearing();
 
+        // Quick fade-in on every tab switch
+        PageContent.Opacity = 0;
+        PageContent.TranslationY = 12;
+
+        // Always reload dashboard data to reflect latest changes (e.g. payment status)
         await _viewModel.LoadDashboardCommand.ExecuteAsync(null);
 
-        if (!_hasAnimated)
-        {
-            _hasAnimated = true;
-            // Ensure layout is complete before animating
-            await Task.Delay(50);
-            await RunEntranceAnimationsAsync();
-        }
+        // Smooth entrance
+        await Task.WhenAll(
+            PageContent.FadeTo(1, 350, Easing.CubicOut),
+            PageContent.TranslateTo(0, 0, 400, Easing.CubicOut)
+        );
     }
 
-    private async Task RunEntranceAnimationsAsync()
+    protected override void OnDisappearing()
     {
-        // Welcome card — slide from top + scale
-        WelcomeCard.Opacity = 0;
-        WelcomeCard.TranslationY = -40;
-        WelcomeCard.Scale = 0.92;
-
-        await Task.WhenAll(
-            WelcomeCard.FadeTo(1, 600, Easing.CubicOut),
-            WelcomeCard.TranslateTo(0, 0, 650, Easing.CubicOut),
-            WelcomeCard.ScaleTo(1, 600, Easing.SpringOut)
-        );
-
-        await Task.Delay(120);
-
-        // Content cards — slide from bottom
-        var contentCard = _viewModel.HasCourse ? CourseCard : NoCourseCard;
-        contentCard.Opacity = 0;
-        contentCard.TranslationY = 50;
-        contentCard.Scale = 0.95;
-
-        await Task.WhenAll(
-            contentCard.FadeTo(1, 500, Easing.CubicOut),
-            contentCard.TranslateTo(0, 0, 550, Easing.CubicOut),
-            contentCard.ScaleTo(1, 500, Easing.CubicOut)
-        );
+        base.OnDisappearing();
+        // Reset for next appearance
+        PageContent.Opacity = 0;
     }
 }

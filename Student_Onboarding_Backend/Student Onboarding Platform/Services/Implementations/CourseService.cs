@@ -10,11 +10,16 @@ namespace Student_Onboarding_Platform.Services.Implementations;
 public class CourseService : ICourseService
 {
     private readonly ICourseRepository _courseRepository;
+    private readonly ICourseRegistrationRepository _registrationRepository;
     private readonly ILogger<CourseService> _logger;
 
-    public CourseService(ICourseRepository courseRepository, ILogger<CourseService> logger)
+    public CourseService(
+        ICourseRepository courseRepository,
+        ICourseRegistrationRepository registrationRepository,
+        ILogger<CourseService> logger)
     {
         _courseRepository = courseRepository;
+        _registrationRepository = registrationRepository;
         _logger = logger;
     }
 
@@ -102,6 +107,10 @@ public class CourseService : ICourseService
         var course = await _courseRepository.GetByIdAsync(courseId);
         if (course == null)
             return ApiResponse<string>.Fail("Course not found.");
+
+        var activeStudents = await _registrationRepository.GetActiveCountByCourseAsync(courseId);
+        if (activeStudents > 0)
+            return ApiResponse<string>.Fail($"Cannot delete this course. {activeStudents} active student(s) are enrolled.");
 
         await _courseRepository.SoftDeleteAsync(courseId);
         _logger.LogInformation("Course soft-deleted: {CourseId}", courseId);

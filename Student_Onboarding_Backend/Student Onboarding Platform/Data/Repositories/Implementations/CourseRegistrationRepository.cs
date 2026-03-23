@@ -78,6 +78,14 @@ public class CourseRegistrationRepository : ICourseRegistrationRepository
             new { UserId = userId, IsActive = true });
     }
 
+    public async Task<int> GetActiveCountByCourseAsync(Guid courseId)
+    {
+        using var conn = _db.CreateConnection();
+        return await conn.ExecuteScalarAsync<int>(
+            "SELECT COUNT(*) FROM CourseRegistrations WHERE CourseId = @CourseId AND IsActive = @IsActive",
+            new { CourseId = courseId, IsActive = true });
+    }
+
     public async Task UpdatePaymentAsync(Guid id, string paymentStatus, decimal? paymentAmount, string? notes)
     {
         using var conn = _db.CreateConnection();

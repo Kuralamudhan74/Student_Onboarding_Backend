@@ -101,8 +101,17 @@ public partial class App : Application
                 await Shell.Current.GoToAsync("//main/dashboard");
                 _pollingService.Start(TimeSpan.FromSeconds(15));
             }
+            else
+            {
+                // Explicitly navigate to login page
+                await Shell.Current.GoToAsync($"///{Constants.Routes.Login}");
+            }
         }
-        catch { }
+        catch
+        {
+            // On any error, force login
+            try { await Shell.Current.GoToAsync($"///{Constants.Routes.Login}"); } catch { }
+        }
     }
 
     public void StartNotificationPolling()

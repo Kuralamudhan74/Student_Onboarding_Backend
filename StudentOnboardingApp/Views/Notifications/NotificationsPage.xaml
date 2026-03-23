@@ -147,7 +147,7 @@
                                        TextColor="{StaticResource TextSecondary}"
                                        LineBreakMode="TailTruncation"
                                        MaxLines="2" />
-                                <Label Text="{Binding CreatedAt, StringFormat='{0:MMM dd, yyyy HH:mm}'}"
+                                <Label Text="{Binding TimeAgo}"
                                        FontSize="11"
                                        TextColor="{StaticResource TextMuted}" />
                             </VerticalStackLayout>
