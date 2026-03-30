@@ -12,6 +12,7 @@ public partial class App : Application
     private readonly ITokenStorageService _tokenStorage;
     private readonly NotificationPollingService _pollingService;
     private bool _isLoggingOut;
+    private bool _startAuthenticated;
 
     public App(ITokenStorageService tokenStorage, NotificationPollingService pollingService)
     {
@@ -19,29 +20,30 @@ public partial class App : Application
         _tokenStorage = tokenStorage;
         _pollingService = pollingService;
 
-        // Listen for forced logout from AuthenticatedHttpClientHandler
+        // Check auth state synchronously before Shell is created
+        // This prevents the login page flash
+        _startAuthenticated = CheckAuthSync();
+
+        // Listen for forced logout
         WeakReferenceMessenger.Default.Register<LogoutMessage>(this, async (_, _) =>
         {
-            if (_isLoggingOut) return; // prevent cascade
+            if (_isLoggingOut) return;
             _isLoggingOut = true;
-
             _pollingService.Stop();
 
             MainThread.BeginInvokeOnMainThread(async () =>
             {
                 try
                 {
+                    await _tokenStorage.ClearAllAsync();
                     await Shell.Current.GoToAsync($"///{Constants.Routes.Login}");
                 }
-                catch { /* navigation may fail during startup */ }
-                finally
-                {
-                    _isLoggingOut = false;
-                }
+                catch { }
+                finally { _isLoggingOut = false; }
             });
         });
 
-        // Listen for new notifications and show in-app toast
+        // Push notifications
         WeakReferenceMessenger.Default.Register<NewNotificationsMessage>(this, async (_, msg) =>
         {
             if (_isLoggingOut) return;
@@ -49,24 +51,33 @@ public partial class App : Application
             {
                 try
                 {
+                    var text = $"\ud83d\udd14 {notification.Title}\n{notification.Body}";
                     var snackbar = Snackbar.Make(
-                        $"\ud83d\udd14 {notification.Title}: {notification.Body}",
-                        duration: TimeSpan.FromSeconds(4),
+                        text,
+                        actionButtonText: "View",
+                        action: async () =>
+                        {
+                            try { await Shell.Current.GoToAsync("//main/notifications"); }
+                            catch { }
+                        },
+                        duration: TimeSpan.FromSeconds(5),
                         visualOptions: new SnackbarOptions
                         {
-                            BackgroundColor = Color.FromArgb("#5B5BD6"),
+                            BackgroundColor = Color.FromArgb("#1E1E4A"),
                             TextColor = Colors.White,
-                            CornerRadius = 12,
+                            ActionButtonTextColor = Color.FromArgb("#A5B4FC"),
+                            CornerRadius = 16,
                             Font = Microsoft.Maui.Font.SystemFontOfSize(13, FontWeight.Semibold),
+                            ActionButtonFont = Microsoft.Maui.Font.SystemFontOfSize(13, FontWeight.Bold),
                         });
                     await snackbar.Show();
-                    await Task.Delay(500);
+                    await Task.Delay(800);
                 }
                 catch { }
             }
         });
 
-        // Listen for badge count updates
+        // Badge count updates
         WeakReferenceMessenger.Default.Register<BadgeCountMessage>(this, (_, msg) =>
         {
             if (_isLoggingOut) return;
@@ -78,39 +89,73 @@ public partial class App : Application
         });
     }
 
+    /// <summary>
+    /// Synchronously check if tokens exist in SecureStorage.
+    /// Used to decide the initial Shell route before UI renders.
+    /// </summary>
+    private bool CheckAuthSync()
+    {
+        try
+        {
+            var token = SecureStorage.Default.GetAsync(Constants.AccessTokenKey).Result;
+            return !string.IsNullOrEmpty(token);
+        }
+        catch { return false; }
+    }
+
     protected override Window CreateWindow(IActivationState? activationState)
     {
-        var window = new Window(new AppShell());
+        var shell = new AppShell();
+        var window = new Window(shell);
 
         window.Created += async (_, _) =>
         {
-            await Task.Delay(200);
-            await NavigateBasedOnAuthStateAsync();
+            await Task.Delay(100);
+
+            if (_startAuthenticated)
+            {
+                // Verify token is still valid
+                var valid = await VerifyTokenAsync();
+                if (valid)
+                {
+                    await Shell.Current.GoToAsync("//main/dashboard");
+                    _pollingService.Start(TimeSpan.FromSeconds(15));
+                }
+                else
+                {
+                    // Token expired — stay on login (which is the default route)
+                    await _tokenStorage.ClearAllAsync();
+                    // Already on login page since it's the default Shell route
+                }
+            }
+            // If not authenticated, Shell already shows login as default
         };
 
         return window;
     }
 
-    private async Task NavigateBasedOnAuthStateAsync()
+    private async Task<bool> VerifyTokenAsync()
     {
         try
         {
-            var isAuthenticated = await _tokenStorage.IsAuthenticatedAsync();
-            if (isAuthenticated)
-            {
-                await Shell.Current.GoToAsync("//main/dashboard");
-                _pollingService.Start(TimeSpan.FromSeconds(15));
-            }
-            else
-            {
-                // Explicitly navigate to login page
-                await Shell.Current.GoToAsync($"///{Constants.Routes.Login}");
-            }
+            var dashboardService = IPlatformApplication.Current?.Services.GetService<IDashboardService>();
+            if (dashboardService == null) return false;
+
+            var result = await dashboardService.GetDashboardAsync();
+            if (result.Success) return true;
+
+            // Check if it's an auth error
+            if (result.Message?.Contains("Session expired", StringComparison.OrdinalIgnoreCase) == true
+                || result.Message?.Contains("401", StringComparison.OrdinalIgnoreCase) == true
+                || result.Message?.Contains("Unauthorized", StringComparison.OrdinalIgnoreCase) == true)
+                return false;
+
+            // Other errors (network, etc.) — give benefit of the doubt
+            return true;
         }
         catch
         {
-            // On any error, force login
-            try { await Shell.Current.GoToAsync($"///{Constants.Routes.Login}"); } catch { }
+            return false;
         }
     }
 

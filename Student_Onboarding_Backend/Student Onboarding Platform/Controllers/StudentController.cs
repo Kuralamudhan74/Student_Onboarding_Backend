@@ -92,12 +92,20 @@ public class StudentController : ControllerBase
             var course = await _courseRepository.GetByIdAsync(request.CourseId);
             var courseName = course?.Name ?? "a course";
 
+            // Notify the student
             await _notificationService.CreateStudentNotificationAsync(
                 userId,
                 "CourseRegistration",
                 "Course Registration Submitted",
                 $"You have registered for \"{courseName}\". Your registration is under review. Please wait for admin approval.",
                 request.CourseId);
+
+            // Notify all admins
+            var student = await _userService.GetByIdAsync(userId);
+            if (student != null)
+            {
+                await _notificationService.NotifyAdminsOfCourseRegistrationAsync(student, courseName, request.CourseId);
+            }
         }
 
         return result.Success ? Ok(result) : BadRequest(result);

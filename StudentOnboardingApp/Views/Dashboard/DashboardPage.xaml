@@ -12,11 +12,11 @@
                  Command="{Binding LoadDashboardCommand}"
                  RefreshColor="{StaticResource Primary}">
         <ScrollView>
-            <VerticalStackLayout Spacing="20" Padding="20" x:Name="PageContent">
+            <VerticalStackLayout Spacing="0" Padding="24,28" x:Name="PageContent">
 
                 <!-- Welcome Header Card -->
                 <Border StrokeThickness="0" StrokeShape="RoundRectangle 20"
-                        Padding="22,20" Margin="0,4,0,0"
+                        Padding="26,24" Margin="0,0,0,28"
                         x:Name="WelcomeCard">
                     <Border.Background>
                         <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
@@ -47,6 +47,7 @@
                 <!-- Error -->
                 <Border BackgroundColor="{StaticResource ErrorLight}"
                         StrokeShape="RoundRectangle 10" StrokeThickness="0" Padding="14,10"
+                        Margin="0,0,0,16"
                         IsVisible="{Binding ErrorMessage, Converter={StaticResource IsNotNullConverter}}">
                     <Label Text="{Binding ErrorMessage}" TextColor="{StaticResource ErrorText}"
                            FontSize="13" HorizontalTextAlignment="Center" />
@@ -55,6 +56,7 @@
                 <!-- Loading — with proper spacing -->
                 <Border BackgroundColor="White" StrokeShape="RoundRectangle 16"
                         StrokeThickness="0" Padding="20" HorizontalOptions="Center"
+                        Margin="0,0,0,20"
                         IsVisible="{Binding IsBusy}"
                         x:Name="LoadingCard">
                     <Border.Shadow>
@@ -74,7 +76,8 @@
                 <Border BackgroundColor="White"
                         StrokeShape="RoundRectangle 20"
                         Stroke="{StaticResource BorderColor}"
-                        Padding="28,40" StrokeThickness="1"
+                        Padding="28,44" StrokeThickness="1"
+                        Margin="0,8,0,0"
                         IsVisible="{Binding HasCourse, Converter={StaticResource InverseBoolConverter}}"
                         x:Name="NoCourseCard">
                     <Border.Shadow>
@@ -114,6 +117,7 @@
                         StrokeShape="RoundRectangle 20"
                         Stroke="{StaticResource BorderColor}"
                         Padding="0" StrokeThickness="1"
+                        Margin="0,8,0,0"
                         IsVisible="{Binding HasCourse}"
                         x:Name="CourseCard">
                     <Border.Shadow>
@@ -122,78 +126,126 @@
                     <VerticalStackLayout Spacing="0">
 
                         <!-- Course Name Header -->
-                        <Border StrokeThickness="0" StrokeShape="RoundRectangle 20,20,0,0" Padding="22,20">
+                        <Border StrokeThickness="0" StrokeShape="RoundRectangle 20,20,0,0" Padding="28,28">
                             <Border.Background>
                                 <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
                                     <GradientStop Color="{StaticResource Primary}" Offset="0.0" />
                                     <GradientStop Color="{StaticResource Secondary}" Offset="1.0" />
                                 </LinearGradientBrush>
                             </Border.Background>
-                            <VerticalStackLayout Spacing="4">
+                            <VerticalStackLayout Spacing="8">
                                 <Label Text="ENROLLED COURSE" FontSize="10" FontFamily="OpenSansSemibold"
-                                       TextColor="#FFFFFF99" CharacterSpacing="1" />
+                                       TextColor="#FFFFFF99" CharacterSpacing="1.2" />
                                 <Label Text="{Binding Dashboard.CourseName}"
-                                       FontSize="22" FontAttributes="Bold"
+                                       FontSize="24" FontAttributes="Bold"
                                        FontFamily="OpenSansSemibold" TextColor="White" />
                             </VerticalStackLayout>
                         </Border>
 
                         <!-- Details Grid -->
                         <Grid ColumnDefinitions="*, *" RowDefinitions="Auto, Auto"
-                              RowSpacing="0" ColumnSpacing="0">
+                              RowSpacing="1" ColumnSpacing="1"
+                              BackgroundColor="{StaticResource BorderColor}">
 
                             <Border Grid.Row="0" Grid.Column="0"
-                                    BackgroundColor="White" StrokeThickness="0" Padding="18,16">
-                                <VerticalStackLayout Spacing="4">
+                                    BackgroundColor="White" StrokeThickness="0" Padding="24,22">
+                                <VerticalStackLayout Spacing="8">
                                     <Label Text="PAYMENT" FontSize="10" FontFamily="OpenSansSemibold"
                                            TextColor="{StaticResource TextMuted}" CharacterSpacing="0.8" />
                                     <Label Text="{Binding Dashboard.PaymentStatus}"
-                                           FontSize="18" FontAttributes="Bold"
+                                           FontSize="20" FontAttributes="Bold"
                                            FontFamily="OpenSansSemibold" TextColor="{StaticResource DarkText}" />
                                 </VerticalStackLayout>
                             </Border>
 
                             <Border Grid.Row="0" Grid.Column="1"
-                                    BackgroundColor="White" StrokeThickness="0" Padding="18,16">
-                                <VerticalStackLayout Spacing="4">
+                                    BackgroundColor="White" StrokeThickness="0" Padding="24,22">
+                                <VerticalStackLayout Spacing="8">
                                     <Label Text="DURATION" FontSize="10" FontFamily="OpenSansSemibold"
                                            TextColor="{StaticResource TextMuted}" CharacterSpacing="0.8" />
                                     <Label Text="{Binding Dashboard.CourseDuration}"
-                                           FontSize="18" FontAttributes="Bold"
+                                           FontSize="20" FontAttributes="Bold"
                                            FontFamily="OpenSansSemibold" TextColor="{StaticResource DarkText}" />
                                 </VerticalStackLayout>
                             </Border>
 
                             <Border Grid.Row="1" Grid.Column="0"
-                                    BackgroundColor="{StaticResource Surface3}" StrokeThickness="0" Padding="18,16">
-                                <VerticalStackLayout Spacing="4">
+                                    BackgroundColor="{StaticResource Surface3}" StrokeThickness="0" Padding="24,22">
+                                <VerticalStackLayout Spacing="8">
                                     <Label Text="COURSE STATUS" FontSize="10" FontFamily="OpenSansSemibold"
                                            TextColor="{StaticResource TextMuted}" CharacterSpacing="0.8" />
                                     <Border BackgroundColor="{StaticResource SuccessLight}"
                                             StrokeThickness="0" StrokeShape="RoundRectangle 12"
-                                            Padding="10,4" HorizontalOptions="Start">
+                                            Padding="12,6" HorizontalOptions="Start">
                                         <Label Text="{Binding Dashboard.CourseStatus}"
-                                               FontSize="13" FontAttributes="Bold"
+                                               FontSize="14" FontAttributes="Bold"
                                                FontFamily="OpenSansSemibold" TextColor="{StaticResource SuccessText}" />
                                     </Border>
                                 </VerticalStackLayout>
                             </Border>
 
                             <Border Grid.Row="1" Grid.Column="1"
-                                    BackgroundColor="{StaticResource Surface3}" StrokeThickness="0" Padding="18,16">
-                                <VerticalStackLayout Spacing="4">
+                                    BackgroundColor="{StaticResource Surface3}" StrokeThickness="0" Padding="24,22">
+                                <VerticalStackLayout Spacing="8">
                                     <Label Text="AMOUNT DUE" FontSize="10" FontFamily="OpenSansSemibold"
                                            TextColor="{StaticResource TextMuted}" CharacterSpacing="0.8" />
                                     <Label Text="{Binding Dashboard.AmountDue, StringFormat='Rs. {0:N0}'}"
-                                           FontSize="16" FontAttributes="Bold"
+                                           FontSize="18" FontAttributes="Bold"
                                            FontFamily="OpenSansSemibold" TextColor="{StaticResource DarkText}" />
                                 </VerticalStackLayout>
                             </Border>
                         </Grid>
 
+                        <!-- Progress Bar Section -->
+                        <Border BackgroundColor="White" StrokeThickness="0" Padding="28,24">
+                            <VerticalStackLayout Spacing="14">
+                                <Grid ColumnDefinitions="*, Auto">
+                                    <Label Text="COURSE PROGRESS" FontSize="10" FontFamily="OpenSansSemibold"
+                                           TextColor="{StaticResource TextMuted}" CharacterSpacing="0.8"
+                                           VerticalOptions="Center" />
+                                    <Label Grid.Column="1"
+                                           Text="{Binding ProgressText}"
+                                           FontSize="12" FontFamily="OpenSansSemibold"
+                                           FontAttributes="Bold"
+                                           VerticalOptions="Center">
+                                        <Label.Triggers>
+                                            <DataTrigger TargetType="Label" Binding="{Binding IsCompleted}" Value="True">
+                                                <Setter Property="TextColor" Value="{StaticResource SuccessText}" />
+                                            </DataTrigger>
+                                            <DataTrigger TargetType="Label" Binding="{Binding IsCompleted}" Value="False">
+                                                <Setter Property="TextColor" Value="{StaticResource Primary}" />
+                                            </DataTrigger>
+                                        </Label.Triggers>
+                                    </Label>
+                                </Grid>
+
+                                <!-- Progress bar using MAUI ProgressBar -->
+                                <ProgressBar x:Name="ProgressBarControl"
+                                             Progress="0"
+                                             ProgressColor="{StaticResource Primary}"
+                                             HeightRequest="14"
+                                             Margin="0,4" />
+
+                                <!-- Percentage -->
+                                <Label Text="{Binding CourseProgress, StringFormat='{0:P0}'}"
+                                       FontSize="22" FontFamily="OpenSansSemibold"
+                                       FontAttributes="Bold" HorizontalOptions="Center"
+                                       Margin="0,4,0,0">
+                                    <Label.Triggers>
+                                        <DataTrigger TargetType="Label" Binding="{Binding IsCompleted}" Value="True">
+                                            <Setter Property="TextColor" Value="{StaticResource SuccessText}" />
+                                        </DataTrigger>
+                                        <DataTrigger TargetType="Label" Binding="{Binding IsCompleted}" Value="False">
+                                            <Setter Property="TextColor" Value="{StaticResource Primary}" />
+                                        </DataTrigger>
+                                    </Label.Triggers>
+                                </Label>
+                            </VerticalStackLayout>
+                        </Border>
+
                         <!-- Enrolled Date Footer -->
                         <Border BackgroundColor="{StaticResource Surface3}"
-                                StrokeThickness="0" StrokeShape="RoundRectangle 0,0,20,20" Padding="22,14">
+                                StrokeThickness="0" StrokeShape="RoundRectangle 0,0,20,20" Padding="28,20">
                             <Label FontSize="13" TextColor="{StaticResource TextMuted}">
                                 <Label.FormattedText>
                                     <FormattedString>

@@ -46,6 +46,29 @@ public class NotificationService : INotificationService
         _logger.LogInformation("Notifications created for {Count} admin(s)", admins.Count());
     }
 
+    public async Task NotifyAdminsOfCourseRegistrationAsync(User student, string courseName, Guid courseId)
+    {
+        _logger.LogInformation("Notifying admins of course registration by student {StudentId} for course {CourseName}", student.Id, courseName);
+
+        var admins = await _userService.GetAdminUsersAsync();
+        foreach (var admin in admins)
+        {
+            var notification = new Notification
+            {
+                UserId = admin.Id,
+                Type = nameof(NotificationType.CourseRegistration),
+                Title = "New Course Registration",
+                Message = $"{student.FirstName} {student.LastName} has registered for \"{courseName}\". Payment is pending.",
+                ReferenceId = courseId,
+                IsRead = false
+            };
+
+            await _notificationRepository.CreateAsync(notification);
+        }
+
+        _logger.LogInformation("Course registration notifications created for {Count} admin(s)", admins.Count());
+    }
+
     public async Task<ApiResponse<List<NotificationResponse>>> GetNotificationsAsync(Guid adminId)
     {
         var notifications = await _notificationRepository.GetByUserIdAsync(adminId);
