@@ -28,11 +28,39 @@ public class NotificationService : INotificationService
         }
     }
 
+    public async Task<ApiResponse<List<NotificationDto>>> GetAdminNotificationsAsync()
+    {
+        try
+        {
+            var response = await _client.GetAsync("admin/notifications");
+            var result = await response.Content.ReadFromJsonAsync<ApiResponse<List<NotificationDto>>>();
+            return result ?? new ApiResponse<List<NotificationDto>> { Success = false, Message = "Failed to parse response" };
+        }
+        catch (Exception ex)
+        {
+            return new ApiResponse<List<NotificationDto>> { Success = false, Message = ex.Message };
+        }
+    }
+
     public async Task<ApiResponse<string>> MarkAsReadAsync(Guid notificationId)
     {
         try
         {
             var response = await _client.PutAsync($"student/notifications/{notificationId}/read", null);
+            var result = await response.Content.ReadFromJsonAsync<ApiResponse<string>>();
+            return result ?? new ApiResponse<string> { Success = false, Message = "Failed to parse response" };
+        }
+        catch (Exception ex)
+        {
+            return new ApiResponse<string> { Success = false, Message = ex.Message };
+        }
+    }
+
+    public async Task<ApiResponse<string>> MarkAdminNotificationAsReadAsync(Guid notificationId)
+    {
+        try
+        {
+            var response = await _client.PutAsync($"admin/notifications/{notificationId}/read", null);
             var result = await response.Content.ReadFromJsonAsync<ApiResponse<string>>();
             return result ?? new ApiResponse<string> { Success = false, Message = "Failed to parse response" };
         }
@@ -68,6 +96,21 @@ public class NotificationService : INotificationService
         catch
         {
             return 0;
+        }
+    }
+
+    public async Task<ApiResponse<string>> SendNotificationAsync(string title, string message, List<Guid>? studentIds = null)
+    {
+        try
+        {
+            var request = new { Title = title, Message = message, StudentIds = studentIds };
+            var response = await _client.PostAsJsonAsync("admin/notifications/send", request);
+            var result = await response.Content.ReadFromJsonAsync<ApiResponse<string>>();
+            return result ?? new ApiResponse<string> { Success = false, Message = "Failed to parse response" };
+        }
+        catch (Exception ex)
+        {
+            return new ApiResponse<string> { Success = false, Message = ex.Message };
         }
     }
 }

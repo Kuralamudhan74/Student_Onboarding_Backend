@@ -16,7 +16,11 @@
       "Bash(curl -sk -X POST https://localhost:7292/api/auth/signup -H \"Content-Type: application/json\" -d '{\"\"firstName\"\":\"\"Test\"\",\"\"lastName\"\":\"\"User\"\",\"\"email\"\":\"\"test@test.com\"\",\"\"phoneNumber\"\":\"\"1234567890\"\",\"\"password\"\":\"\"Test@123\"\",\"\"confirmPassword\"\":\"\"Test@123\"\"}')",
       "Bash(find /d/SOP/student_onboard -maxdepth 3 -type f \\\\\\(-name .env* -o -name *.env \\\\\\))",
       "Bash(xargs ls:*)",
-      "Bash(findstr \"error CS\")"
+      "Bash(findstr \"error CS\")",
+      "Bash(find /d/SOP/student_onboard/src -type f \\\\\\(-name *.tsx -o -name *.ts -o -name *.jsx -o -name *.js \\\\\\))",
+      "Bash(grep -E \"\\\\.\\(cs|csproj\\)$\")",
+      "Bash(grep -r wwwroot d:/SOP/Student_Onboarding_Backend --include=*.cs --include=*.json)",
+      "Bash(timeout 120 bash -c 'while ! test -s /c/Users/SUCHIT~1/AppData/Local/Temp/claude/d--SOP/a4e8f3c1-5c36-467e-8cac-d932a1a601ed/tasks/bxe757ecj.output; do sleep 2; done; cat /c/Users/SUCHIT~1/AppData/Local/Temp/claude/d--SOP/a4e8f3c1-5c36-467e-8cac-d932a1a601ed/tasks/bxe757ecj.output')"
     ],
     "additionalDirectories": [
       "d:\\SOP\\Student_Onboarding_Backend\\.git"

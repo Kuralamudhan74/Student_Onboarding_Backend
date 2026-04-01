@@ -13,6 +13,7 @@ public class NotificationIconConverter : IValueConverter
             "CourseRegistration" => "\uD83D\uDCDA",  // books
             "PaymentUpdate" => "\uD83D\uDCB3",      // credit card
             "NewRegistration" => "\uD83D\uDC64",    // person
+            "AdminMessage" => "\uD83D\uDCE2",         // loudspeaker
             _ => "\uD83D\uDD14"                      // bell
         };
     }

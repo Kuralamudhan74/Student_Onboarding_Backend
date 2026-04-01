@@ -12,6 +12,9 @@ public interface INotificationService
     Task<ApiResponse<UnreadCountResponse>> GetUnreadCountAsync(Guid adminId);
     Task<ApiResponse<string>> MarkAsReadAsync(Guid notificationId, Guid adminId);
 
+    // Admin broadcast to students
+    Task<ApiResponse<string>> SendToStudentsAsync(string title, string message, List<Guid>? studentIds = null);
+
     // Student notification methods
     Task CreateStudentNotificationAsync(Guid studentId, string type, string title, string message, Guid? referenceId = null);
     Task<ApiResponse<List<NotificationResponse>>> GetStudentNotificationsAsync(Guid studentId);

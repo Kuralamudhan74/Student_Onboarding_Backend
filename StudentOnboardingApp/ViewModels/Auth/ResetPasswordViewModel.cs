@@ -53,7 +53,7 @@ public partial class ResetPasswordViewModel : BaseViewModel
             if (result.Success)
             {
                 await Shell.Current.DisplayAlert("Success", "Password reset successfully. Please login.", "OK");
-                await Shell.Current.GoToAsync($"///{Constants.Routes.Login}");
+                await Shell.Current.GoToAsync("///auth/login");
             }
             else
             {

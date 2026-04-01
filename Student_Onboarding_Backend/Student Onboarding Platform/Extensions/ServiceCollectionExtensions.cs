@@ -21,6 +21,7 @@ public static class ServiceCollectionExtensions
         services.Configure<JwtSettings>(configuration.GetSection("JwtSettings"));
         services.Configure<SmtpSettings>(configuration.GetSection("SmtpSettings"));
         services.Configure<OtpSettings>(configuration.GetSection("OtpSettings"));
+        services.Configure<BytescaleSettings>(configuration.GetSection("BytescaleSettings"));
 
         // Data
         services.AddSingleton<DbConnectionFactory>();
@@ -48,6 +49,8 @@ public static class ServiceCollectionExtensions
         services.AddScoped<IAdminService, AdminService>();
         services.AddScoped<ICourseService, CourseService>();
         services.AddScoped<INotificationService, NotificationService>();
+        services.AddHttpClient("Bytescale");
+        services.AddScoped<IFileStorageService, BytescaleStorageService>();
 
         return services;
     }
@@ -73,7 +76,7 @@ public static class ServiceCollectionExtensions
                 ValidIssuer = jwtSettings.Issuer,
                 ValidAudience = jwtSettings.Audience,
                 IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtSettings.SecretKey)),
-                ClockSkew = TimeSpan.Zero
+                ClockSkew = TimeSpan.FromMinutes(2)
             };
         });
 

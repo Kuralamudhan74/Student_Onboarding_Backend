@@ -171,6 +171,9 @@ public partial class CourseDetailViewModel : BaseViewModel
         }
     }
 
+    [ObservableProperty]
+    private bool _applicationSubmitted;
+
     [RelayCommand]
     private async Task ApplyAsync()
     {
@@ -183,7 +186,10 @@ public partial class CourseDetailViewModel : BaseViewModel
 
             if (result.Success)
             {
-                await Shell.Current.GoToAsync(Constants.Routes.ApprovalWaiting);
+                // Show success state briefly, then redirect to dashboard
+                ApplicationSubmitted = true;
+                await Task.Delay(2000);
+                await Shell.Current.GoToAsync("//main/dashboard");
             }
             else
             {

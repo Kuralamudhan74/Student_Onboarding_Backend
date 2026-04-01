@@ -8,7 +8,28 @@
              Title="{Binding Title}"
              BackgroundColor="{StaticResource LightBackground}">
 
-    <ScrollView>
+    <Grid>
+    <!-- Application Submitted Success Overlay -->
+    <VerticalStackLayout IsVisible="{Binding ApplicationSubmitted}"
+                         VerticalOptions="Center" HorizontalOptions="Center"
+                         Spacing="16" Padding="40">
+        <Border BackgroundColor="{StaticResource SuccessLight}"
+                StrokeThickness="0" StrokeShape="RoundRectangle 40"
+                HeightRequest="80" WidthRequest="80" HorizontalOptions="Center">
+            <Label Text="✅" FontSize="36"
+                   HorizontalOptions="Center" VerticalOptions="Center" />
+        </Border>
+        <Label Text="Application Submitted!"
+               FontSize="24" FontFamily="OpenSansSemibold" FontAttributes="Bold"
+               TextColor="{StaticResource DarkText}" HorizontalOptions="Center" />
+        <Label Text="Your course application has been submitted successfully. Redirecting..."
+               FontSize="14" TextColor="{StaticResource TextSecondary}"
+               HorizontalTextAlignment="Center" />
+        <ActivityIndicator IsRunning="True" Color="{StaticResource Primary}"
+                           HorizontalOptions="Center" Margin="0,10,0,0" />
+    </VerticalStackLayout>
+
+    <ScrollView IsVisible="{Binding ApplicationSubmitted, Converter={StaticResource InverseBoolConverter}}">
         <VerticalStackLayout Spacing="16" Padding="20">
 
             <!-- Loading -->
@@ -296,4 +317,5 @@
 
         </VerticalStackLayout>
     </ScrollView>
+    </Grid>
 </ContentPage>

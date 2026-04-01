@@ -16,4 +16,15 @@ public class StudentDashboardResponse
     public decimal? AmountDue { get; set; }
     public DateTime? EnrolledDate { get; set; }
     public string? BatchTiming { get; set; }
+
+    // Previously completed courses
+    public List<CompletedCourseDto> CompletedCourses { get; set; } = [];
+}
+
+public class CompletedCourseDto
+{
+    public string CourseName { get; set; } = string.Empty;
+    public string? Duration { get; set; }
+    public DateTime? CompletedAt { get; set; }
+    public DateTime EnrolledAt { get; set; }
 }

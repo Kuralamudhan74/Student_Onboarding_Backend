@@ -1,3 +1,4 @@
+using System.Collections.ObjectModel;
 using System.Text.RegularExpressions;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
@@ -42,6 +43,11 @@ public partial class DashboardViewModel : BaseViewModel
     [ObservableProperty]
     private bool _isCompleted;
 
+    [ObservableProperty]
+    private bool _hasCompletedCourses;
+
+    public ObservableCollection<CompletedCourseDto> CompletedCourses { get; } = [];
+
     [RelayCommand]
     private async Task LoadDashboardAsync()
     {
@@ -62,6 +68,12 @@ public partial class DashboardViewModel : BaseViewModel
                 Dashboard = result.Data;
                 HasCourse = !string.IsNullOrEmpty(result.Data.CourseName);
                 CalculateProgress(result.Data);
+
+                // Populate completed courses
+                CompletedCourses.Clear();
+                foreach (var c in result.Data.CompletedCourses)
+                    CompletedCourses.Add(c);
+                HasCompletedCourses = CompletedCourses.Count > 0;
             }
             else
             {
@@ -70,6 +82,8 @@ public partial class DashboardViewModel : BaseViewModel
                 CourseProgress = 0;
                 ProgressText = "";
                 IsCompleted = false;
+                CompletedCourses.Clear();
+                HasCompletedCourses = false;
             }
         });
         IsRefreshing = false;

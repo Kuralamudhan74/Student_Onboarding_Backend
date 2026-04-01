@@ -5,7 +5,6 @@ namespace StudentOnboardingApp.Views.Courses;
 public partial class CourseListPage : ContentPage
 {
     private readonly CourseListViewModel _viewModel;
-    private bool _dataLoaded;
 
     public CourseListPage(CourseListViewModel viewModel)
     {
@@ -22,11 +21,8 @@ public partial class CourseListPage : ContentPage
         HeaderSection.TranslationX = -30;
         HeaderSection.Scale = 0.95;
 
-        if (!_dataLoaded || _viewModel.Courses.Count == 0)
-        {
-            await _viewModel.LoadCoursesCommand.ExecuteAsync(null);
-            _dataLoaded = true;
-        }
+        // Always reload to reflect admin edits
+        await _viewModel.LoadCoursesCommand.ExecuteAsync(null);
 
         // Header slides in with spring
         await Task.WhenAll(
@@ -51,7 +47,7 @@ public partial class CourseListPage : ContentPage
         await Task.Delay(50);
 
         var cards = GetVisualTreeChildren<Border>(CoursesCollection)
-            .Where(b => b.BackgroundColor == Colors.White && b.MinimumHeightRequest >= 200)
+            .Where(b => b.BackgroundColor == Colors.White && b.MinimumHeightRequest >= 250)
             .ToList();
 
         foreach (var card in cards)

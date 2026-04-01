@@ -99,12 +99,17 @@
                                TextColor="Black" CharacterSpacing="1" />
                         <Border BackgroundColor="White" Stroke="{StaticResource BorderColor}"
                                 StrokeShape="RoundRectangle 12" Padding="12,2" StrokeThickness="1.5">
-                            <Picker Title="Select a Course"
-                                    ItemsSource="{Binding Courses}"
-                                    ItemDisplayBinding="{Binding Name}"
-                                    SelectedItem="{Binding SelectedCourse}"
-                                    TextColor="Black"
-                                    TitleColor="{StaticResource TextMuted}" />
+                            <Grid ColumnDefinitions="*, Auto">
+                                <Picker Title="Select a Course"
+                                        ItemsSource="{Binding Courses}"
+                                        ItemDisplayBinding="{Binding Name}"
+                                        SelectedItem="{Binding SelectedCourse}"
+                                        TextColor="Black"
+                                        TitleColor="{StaticResource TextMuted}" />
+                                <Label Grid.Column="1" Text="▼" FontSize="12"
+                                       TextColor="{StaticResource TextMuted}"
+                                       VerticalOptions="Center" Margin="0,0,8,0" />
+                            </Grid>
                         </Border>
                     </VerticalStackLayout>
 

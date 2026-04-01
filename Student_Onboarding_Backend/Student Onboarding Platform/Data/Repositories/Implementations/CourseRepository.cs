@@ -21,9 +21,9 @@ public class CourseRepository : ICourseRepository
         using var conn = _db.CreateConnection();
         await conn.ExecuteAsync(@"
             INSERT INTO Courses (Id, Name, Description, Fees, OfferPrice, Syllabus, Duration,
-                IsActive, IsDeleted, CreatedBy, CreatedAt)
+                Instructor, Category, Thumbnail, IsActive, IsDeleted, CreatedBy, CreatedAt)
             VALUES (@Id, @Name, @Description, @Fees, @OfferPrice, @Syllabus, @Duration,
-                @IsActive, @IsDeleted, @CreatedBy, @CreatedAt)",
+                @Instructor, @Category, @Thumbnail, @IsActive, @IsDeleted, @CreatedBy, @CreatedAt)",
             course);
 
         return course;
@@ -53,6 +53,7 @@ public class CourseRepository : ICourseRepository
         await conn.ExecuteAsync(@"
             UPDATE Courses SET Name = @Name, Description = @Description, Fees = @Fees,
                 OfferPrice = @OfferPrice, Syllabus = @Syllabus, Duration = @Duration,
+                Instructor = @Instructor, Category = @Category, Thumbnail = @Thumbnail,
                 IsActive = @IsActive, UpdatedAt = @UpdatedAt
             WHERE Id = @Id",
             course);

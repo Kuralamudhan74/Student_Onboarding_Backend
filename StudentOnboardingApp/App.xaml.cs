@@ -36,7 +36,7 @@ public partial class App : Application
                 try
                 {
                     await _tokenStorage.ClearAllAsync();
-                    await Shell.Current.GoToAsync($"///{Constants.Routes.Login}");
+                    await Shell.Current.GoToAsync("///auth/login");
                 }
                 catch { }
                 finally { _isLoggingOut = false; }
@@ -57,7 +57,14 @@ public partial class App : Application
                         actionButtonText: "View",
                         action: async () =>
                         {
-                            try { await Shell.Current.GoToAsync("//main/notifications"); }
+                            try
+                            {
+                                var user = await _tokenStorage.GetUserAsync();
+                                var route = user?.Role?.Equals("Admin", StringComparison.OrdinalIgnoreCase) == true
+                                    ? "//admin/admin-notifications"
+                                    : "//main/notifications";
+                                await Shell.Current.GoToAsync(route);
+                            }
                             catch { }
                         },
                         duration: TimeSpan.FromSeconds(5),
@@ -110,7 +117,7 @@ public partial class App : Application
 
         window.Created += async (_, _) =>
         {
-            await Task.Delay(100);
+            await Task.Delay(200);
 
             if (_startAuthenticated)
             {
@@ -118,17 +125,19 @@ public partial class App : Application
                 var valid = await VerifyTokenAsync();
                 if (valid)
                 {
-                    await Shell.Current.GoToAsync("//main/dashboard");
+                    var user = await _tokenStorage.GetUserAsync();
+                    var route = user?.Role?.Equals("Admin", StringComparison.OrdinalIgnoreCase) == true
+                        ? "//admin/dashboard"
+                        : "//main/dashboard";
+                    await Shell.Current.GoToAsync(route);
                     _pollingService.Start(TimeSpan.FromSeconds(15));
-                }
-                else
-                {
-                    // Token expired — stay on login (which is the default route)
-                    await _tokenStorage.ClearAllAsync();
-                    // Already on login page since it's the default Shell route
+                    return;
                 }
             }
-            // If not authenticated, Shell already shows login as default
+
+            // Not authenticated or token invalid — ensure we're on login
+            await _tokenStorage.ClearAllAsync();
+            await Shell.Current.GoToAsync("///auth/login");
         };
 
         return window;
@@ -138,20 +147,15 @@ public partial class App : Application
     {
         try
         {
+            // First check if token exists and hasn't expired locally
+            var isAuthenticated = await _tokenStorage.IsAuthenticatedAsync();
+            if (!isAuthenticated) return false;
+
             var dashboardService = IPlatformApplication.Current?.Services.GetService<IDashboardService>();
             if (dashboardService == null) return false;
 
             var result = await dashboardService.GetDashboardAsync();
-            if (result.Success) return true;
-
-            // Check if it's an auth error
-            if (result.Message?.Contains("Session expired", StringComparison.OrdinalIgnoreCase) == true
-                || result.Message?.Contains("401", StringComparison.OrdinalIgnoreCase) == true
-                || result.Message?.Contains("Unauthorized", StringComparison.OrdinalIgnoreCase) == true)
-                return false;
-
-            // Other errors (network, etc.) — give benefit of the doubt
-            return true;
+            return result.Success;
         }
         catch
         {

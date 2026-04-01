@@ -46,8 +46,11 @@ public partial class LoginViewModel : BaseViewModel
                     return;
                 }
 
-                // Go directly to dashboard after login
-                await Shell.Current.GoToAsync("//main/dashboard");
+                // Route based on user role
+                var route = result.Data.User.Role?.Equals("Admin", StringComparison.OrdinalIgnoreCase) == true
+                    ? "//admin/dashboard"
+                    : "//main/dashboard";
+                await Shell.Current.GoToAsync(route);
 
                 // Start notification polling
                 if (Application.Current is App app)

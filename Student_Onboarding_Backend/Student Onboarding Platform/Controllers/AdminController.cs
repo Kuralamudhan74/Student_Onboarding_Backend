@@ -91,6 +91,16 @@ public class AdminController : ControllerBase
         return Ok(new { success = true, data = stats });
     }
 
+    [HttpPost("notifications/send")]
+    public async Task<IActionResult> SendNotification([FromBody] SendNotificationRequest request)
+    {
+        if (string.IsNullOrWhiteSpace(request.Title) || string.IsNullOrWhiteSpace(request.Message))
+            return BadRequest(new { success = false, message = "Title and message are required." });
+
+        var result = await _notificationService.SendToStudentsAsync(request.Title, request.Message, request.StudentIds);
+        return result.Success ? Ok(result) : BadRequest(result);
+    }
+
     [HttpGet("notifications")]
     public async Task<IActionResult> GetNotifications()
     {

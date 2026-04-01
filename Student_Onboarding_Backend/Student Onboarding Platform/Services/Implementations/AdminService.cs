@@ -14,6 +14,7 @@ public class AdminService : IAdminService
     private readonly ICourseRegistrationRepository _registrationRepository;
     private readonly IEmailService _emailService;
     private readonly INotificationService _notificationService;
+    private readonly ISessionService _sessionService;
     private readonly ILogger<AdminService> _logger;
 
     public AdminService(
@@ -22,6 +23,7 @@ public class AdminService : IAdminService
         ICourseRegistrationRepository registrationRepository,
         IEmailService emailService,
         INotificationService notificationService,
+        ISessionService sessionService,
         ILogger<AdminService> logger)
     {
         _userService = userService;
@@ -29,6 +31,7 @@ public class AdminService : IAdminService
         _registrationRepository = registrationRepository;
         _emailService = emailService;
         _notificationService = notificationService;
+        _sessionService = sessionService;
         _logger = logger;
     }
 
@@ -142,6 +145,13 @@ public class AdminService : IAdminService
         _logger.LogInformation("Updating student {StudentId} IsActive to {IsActive}", studentId, request.IsActive);
         await _userService.UpdateIsActiveAsync(studentId, request.IsActive);
 
+        // If deactivating, revoke all sessions to force immediate logout
+        if (!request.IsActive)
+        {
+            await _sessionService.RevokeAllUserSessionsAsync(studentId);
+            _logger.LogInformation("All sessions revoked for deactivated student {StudentId}", studentId);
+        }
+
         return ApiResponse<string>.Ok("Student updated successfully.");
     }
 
@@ -182,6 +192,10 @@ public class AdminService : IAdminService
             return ApiResponse<string>.Fail("Student is already denied.");
 
         await _userService.UpdateApprovalStatusAsync(studentId, nameof(ApprovalStatus.Denied), adminId, request.Reason);
+
+        // Revoke all active sessions to force immediate logout
+        await _sessionService.RevokeAllUserSessionsAsync(studentId);
+        _logger.LogInformation("All sessions revoked for denied student {StudentId}", studentId);
 
         await _emailService.SendDenialEmailAsync(student.Email, student.FirstName, request.Reason);
 

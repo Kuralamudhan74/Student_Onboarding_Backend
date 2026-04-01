@@ -260,6 +260,90 @@
                     </VerticalStackLayout>
                 </Border>
 
+                <!-- Completed Courses Section -->
+                <Border BackgroundColor="White"
+                        StrokeShape="RoundRectangle 20"
+                        Stroke="{StaticResource BorderColor}"
+                        Padding="0" StrokeThickness="1"
+                        Margin="0,20,0,0"
+                        IsVisible="{Binding HasCompletedCourses}">
+                    <Border.Shadow>
+                        <Shadow Brush="#145B5BD6" Offset="0,4" Radius="20" Opacity="0.12" />
+                    </Border.Shadow>
+                    <VerticalStackLayout Spacing="0">
+                        <!-- Section Header -->
+                        <Border StrokeThickness="0" StrokeShape="RoundRectangle 20,20,0,0"
+                                Padding="24,20" BackgroundColor="{StaticResource Surface2}">
+                            <HorizontalStackLayout Spacing="10">
+                                <Border BackgroundColor="{StaticResource SuccessLight}"
+                                        StrokeThickness="0" StrokeShape="RoundRectangle 10"
+                                        HeightRequest="36" WidthRequest="36">
+                                    <Label Text="🏆" FontSize="18"
+                                           HorizontalOptions="Center" VerticalOptions="Center" />
+                                </Border>
+                                <VerticalStackLayout Spacing="2" VerticalOptions="Center">
+                                    <Label Text="Completed Courses" FontSize="16"
+                                           FontFamily="OpenSansSemibold" FontAttributes="Bold"
+                                           TextColor="{StaticResource DarkText}" />
+                                    <Label Text="Your learning achievements"
+                                           FontSize="11" TextColor="{StaticResource TextMuted}" />
+                                </VerticalStackLayout>
+                            </HorizontalStackLayout>
+                        </Border>
+
+                        <BoxView HeightRequest="1" Color="{StaticResource BorderColor}" />
+
+                        <!-- Completed Courses List -->
+                        <CollectionView ItemsSource="{Binding CompletedCourses}"
+                                        SelectionMode="None">
+                            <CollectionView.ItemTemplate>
+                                <DataTemplate x:DataType="models:CompletedCourseDto">
+                                    <VerticalStackLayout>
+                                        <Grid Padding="24,16" ColumnDefinitions="Auto, *, Auto" ColumnSpacing="14">
+                                            <!-- Checkmark icon -->
+                                            <Border BackgroundColor="{StaticResource SuccessLight}"
+                                                    StrokeThickness="0" StrokeShape="RoundRectangle 10"
+                                                    HeightRequest="40" WidthRequest="40"
+                                                    VerticalOptions="Center">
+                                                <Label Text="✅" FontSize="18"
+                                                       HorizontalOptions="Center" VerticalOptions="Center" />
+                                            </Border>
+
+                                            <!-- Course info -->
+                                            <VerticalStackLayout Grid.Column="1" Spacing="4" VerticalOptions="Center">
+                                                <Label Text="{Binding CourseName}"
+                                                       FontSize="14" FontFamily="OpenSansSemibold"
+                                                       FontAttributes="Bold" TextColor="{StaticResource DarkText}"
+                                                       LineBreakMode="TailTruncation" MaxLines="1" />
+                                                <Label FontSize="11" TextColor="{StaticResource TextMuted}">
+                                                    <Label.FormattedText>
+                                                        <FormattedString>
+                                                            <Span Text="{Binding Duration}" />
+                                                            <Span Text=" · Completed " />
+                                                            <Span Text="{Binding CompletedAt, StringFormat='{0:MMM yyyy}'}" />
+                                                        </FormattedString>
+                                                    </Label.FormattedText>
+                                                </Label>
+                                            </VerticalStackLayout>
+
+                                            <!-- Completed badge -->
+                                            <Border Grid.Column="2"
+                                                    BackgroundColor="{StaticResource SuccessLight}"
+                                                    StrokeThickness="0" StrokeShape="RoundRectangle 8"
+                                                    Padding="8,4" VerticalOptions="Center">
+                                                <Label Text="Done" FontSize="10"
+                                                       FontFamily="OpenSansSemibold" FontAttributes="Bold"
+                                                       TextColor="{StaticResource SuccessText}" />
+                                            </Border>
+                                        </Grid>
+                                        <BoxView HeightRequest="1" Color="{StaticResource BorderLight}" Margin="24,0" />
+                                    </VerticalStackLayout>
+                                </DataTemplate>
+                            </CollectionView.ItemTemplate>
+                        </CollectionView>
+                    </VerticalStackLayout>
+                </Border>
+
             </VerticalStackLayout>
         </ScrollView>
     </RefreshView>

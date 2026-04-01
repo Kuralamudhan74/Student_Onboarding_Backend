@@ -71,82 +71,134 @@
             <CollectionView.ItemTemplate>
                 <DataTemplate x:DataType="models:CourseDto">
                     <Border BackgroundColor="White"
-                            StrokeShape="RoundRectangle 16"
+                            StrokeShape="RoundRectangle 18"
                             Stroke="{StaticResource BorderLight}"
-                            Padding="16,14" Margin="0" StrokeThickness="1"
-                            MinimumHeightRequest="220">
+                            Padding="0" Margin="0" StrokeThickness="1"
+                            MinimumHeightRequest="260">
                         <Border.Shadow>
-                            <Shadow Brush="#0A5B5BD6" Offset="0,3" Radius="12" Opacity="0.08" />
+                            <Shadow Brush="#145B5BD6" Offset="0,4" Radius="16" Opacity="0.10" />
                         </Border.Shadow>
                         <Border.GestureRecognizers>
                             <TapGestureRecognizer
                                 Command="{Binding Source={RelativeSource AncestorType={x:Type vm:CourseListViewModel}}, Path=GoToCourseDetailCommand}"
                                 CommandParameter="{Binding .}" />
                         </Border.GestureRecognizers>
-                        <VerticalStackLayout Spacing="10">
+                        <VerticalStackLayout Spacing="0">
 
-                            <!-- Title + Duration badge -->
-                            <Grid ColumnDefinitions="*, Auto" RowDefinitions="Auto">
-                                <Label Text="{Binding Name}"
-                                       FontSize="16" FontFamily="OpenSansSemibold"
-                                       FontAttributes="Bold" TextColor="{StaticResource DarkText}"
-                                       LineBreakMode="TailTruncation" MaxLines="2"
-                                       VerticalOptions="Start" />
+                            <!-- Card Header with category + thumbnail -->
+                            <Grid BackgroundColor="{StaticResource Surface2}"
+                                  Padding="16,14" ColumnDefinitions="Auto, *, Auto">
+                                <!-- Thumbnail emoji icon -->
+                                <Border BackgroundColor="{StaticResource Surface3}"
+                                        StrokeThickness="0" StrokeShape="RoundRectangle 12"
+                                        HeightRequest="42" WidthRequest="42"
+                                        VerticalOptions="Center">
+                                    <Label Text="{Binding DisplayThumbnail}"
+                                           FontSize="20"
+                                           HorizontalOptions="Center" VerticalOptions="Center" />
+                                </Border>
+
+                                <!-- Category badge -->
                                 <Border Grid.Column="1"
+                                        BackgroundColor="{StaticResource Surface3}"
+                                        StrokeThickness="0" StrokeShape="RoundRectangle 10"
+                                        Padding="8,4" HorizontalOptions="Start"
+                                        VerticalOptions="Center" Margin="10,0,0,0"
+                                        IsVisible="{Binding HasCategory}">
+                                    <Label Text="{Binding DisplayCategory}"
+                                           FontSize="10" FontFamily="OpenSansSemibold"
+                                           TextColor="{StaticResource Primary}" />
+                                </Border>
+
+                                <!-- Duration badge -->
+                                <Border Grid.Column="2"
                                         BackgroundColor="{StaticResource Primary}"
                                         StrokeThickness="0"
                                         StrokeShape="RoundRectangle 10"
                                         Padding="8,4"
-                                        VerticalOptions="Start">
+                                        VerticalOptions="Center">
                                     <Label Text="{Binding Duration}"
                                            FontSize="10" FontFamily="OpenSansSemibold"
                                            TextColor="White" />
                                 </Border>
                             </Grid>
 
-                            <!-- Blue accent line -->
-                            <BoxView HeightRequest="2" Color="{StaticResource Primary}"
-                                     Opacity="0.15" CornerRadius="1" />
-
-                            <!-- Description -->
-                            <Label Text="{Binding Description}"
-                                   FontSize="12" TextColor="{StaticResource TextSecondary}"
-                                   LineBreakMode="TailTruncation" MaxLines="3" LineHeight="1.3" />
-
-                            <!-- Fees tag -->
-                            <Border BackgroundColor="{StaticResource Surface3}"
-                                    StrokeThickness="0" StrokeShape="RoundRectangle 8"
-                                    Padding="8,4" HorizontalOptions="Start">
-                                <Label FontSize="11" TextColor="{StaticResource DarkText}"
-                                       FontFamily="OpenSansSemibold">
-                                    <Label.FormattedText>
-                                        <FormattedString>
-                                            <Span Text="Rs. " />
-                                            <Span Text="{Binding Fees, StringFormat='{0:N0}'}" />
-                                        </FormattedString>
-                                    </Label.FormattedText>
-                                </Label>
-                            </Border>
-
-                            <!-- Spacer to push footer to bottom -->
-                            <BoxView HeightRequest="0" VerticalOptions="FillAndExpand" Color="Transparent" />
-
                             <!-- Divider -->
                             <BoxView HeightRequest="1" Color="{StaticResource BorderLight}" />
 
-                            <!-- Footer: View Details + arrow -->
-                            <Grid ColumnDefinitions="*, Auto">
-                                <Label Text="View Details"
-                                       FontSize="12" TextColor="{StaticResource Primary}"
-                                       FontFamily="OpenSansSemibold"
-                                       VerticalOptions="Center" />
-                                <Border Grid.Column="1" BackgroundColor="{StaticResource Surface3}"
-                                        StrokeThickness="0" StrokeShape="RoundRectangle 12"
-                                        HeightRequest="24" WidthRequest="24">
-                                    <Label Text="&#x203A;" FontSize="14" TextColor="{StaticResource Primary}"
-                                           HorizontalOptions="Center" VerticalOptions="Center" />
-                                </Border>
-                            </Grid>
+                            <!-- Card Body -->
+                            <VerticalStackLayout Padding="16,14" Spacing="8">
+                                <!-- Title -->
+                                <Label Text="{Binding Name}"
+                                       FontSize="15" FontFamily="OpenSansSemibold"
+                                       FontAttributes="Bold" TextColor="{StaticResource DarkText}"
+                                       LineBreakMode="TailTruncation" MaxLines="2" />
+
+                                <!-- Instructor -->
+                                <HorizontalStackLayout Spacing="6" IsVisible="{Binding HasInstructor}">
+                                    <Label Text="👤" FontSize="12" VerticalOptions="Center" />
+                                    <Label Text="{Binding DisplayInstructor}"
+                                           FontSize="12" TextColor="{StaticResource TextMuted}"
+                                           FontFamily="OpenSansSemibold" VerticalOptions="Center" />
+                                </HorizontalStackLayout>
+
+                                <!-- Description -->
+                                <Label Text="{Binding Description}"
+                                       FontSize="12" TextColor="{StaticResource TextSecondary}"
+                                       LineBreakMode="TailTruncation" MaxLines="2" LineHeight="1.3" />
+
+                                <!-- Price row -->
+                                <HorizontalStackLayout Spacing="8" Margin="0,4,0,0">
+                                    <!-- Main price -->
+                                    <Border BackgroundColor="{StaticResource Surface3}"
+                                            StrokeThickness="0" StrokeShape="RoundRectangle 8"
+                                            Padding="10,5" HorizontalOptions="Start">
+                                        <Label FontSize="13" TextColor="{StaticResource Primary}"
+                                               FontFamily="OpenSansSemibold" FontAttributes="Bold">
+                                            <Label.FormattedText>
+                                                <FormattedString>
+                                                    <Span Text="₹ " />
+                                                    <Span Text="{Binding Fees, StringFormat='{0:N0}'}" />
+                                                </FormattedString>
+                                            </Label.FormattedText>
+                                        </Label>
+                                    </Border>
+
+                                    <!-- Offer price -->
+                                    <Label IsVisible="{Binding HasOfferPrice}"
+                                           VerticalOptions="Center"
+                                           FontSize="11" TextColor="{StaticResource TextMuted}"
+                                           TextDecorations="Strikethrough">
+                                        <Label.FormattedText>
+                                            <FormattedString>
+                                                <Span Text="₹ " />
+                                                <Span Text="{Binding OfferPrice, StringFormat='{0:N0}'}" />
+                                            </FormattedString>
+                                        </Label.FormattedText>
+                                    </Label>
+                                </HorizontalStackLayout>
+
+                                <!-- Spacer to push footer to bottom -->
+                                <BoxView HeightRequest="0" VerticalOptions="FillAndExpand" Color="Transparent" />
+
+                                <!-- Divider -->
+                                <BoxView HeightRequest="1" Color="{StaticResource BorderLight}" />
+
+                                <!-- Footer: View Details + arrow -->
+                                <Grid ColumnDefinitions="*, Auto" Margin="0,4,0,0">
+                                    <Label Text="View Details"
+                                           FontSize="12" TextColor="{StaticResource Primary}"
+                                           FontFamily="OpenSansSemibold"
+                                           VerticalOptions="Center" />
+                                    <Border Grid.Column="1" BackgroundColor="{StaticResource Surface3}"
+                                            StrokeThickness="0" StrokeShape="RoundRectangle 12"
+                                            HeightRequest="26" WidthRequest="26">
+                                        <Label Text="›" FontSize="16" TextColor="{StaticResource Primary}"
+                                               FontAttributes="Bold"
+                                               HorizontalOptions="Center" VerticalOptions="Center" />
+                                    </Border>
+                                </Grid>
+                            </VerticalStackLayout>
                         </VerticalStackLayout>
                     </Border>
                 </DataTemplate>

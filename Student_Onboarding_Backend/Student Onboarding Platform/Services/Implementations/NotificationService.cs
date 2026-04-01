@@ -100,6 +100,33 @@ public class NotificationService : INotificationService
         return ApiResponse<string>.Ok("Notification marked as read.");
     }
 
+    public async Task<ApiResponse<string>> SendToStudentsAsync(string title, string message, List<Guid>? studentIds = null)
+    {
+        IEnumerable<User> students;
+
+        if (studentIds != null && studentIds.Count > 0)
+        {
+            // Send to selected students
+            var all = await _userService.GetStudentsAsync(0, int.MaxValue, null, null);
+            students = all.Where(s => studentIds.Contains(s.Id));
+        }
+        else
+        {
+            // Send to all approved students
+            students = await _userService.GetStudentsAsync(0, int.MaxValue, "Approved", null);
+        }
+
+        var count = 0;
+        foreach (var student in students)
+        {
+            await CreateStudentNotificationAsync(student.Id, "AdminMessage", title, message);
+            count++;
+        }
+
+        _logger.LogInformation("Admin notification sent to {Count} student(s): {Title}", count, title);
+        return ApiResponse<string>.Ok($"Notification sent to {count} student(s).");
+    }
+
     // Student notification methods
 
     public async Task CreateStudentNotificationAsync(Guid studentId, string type, string title, string message, Guid? referenceId = null)

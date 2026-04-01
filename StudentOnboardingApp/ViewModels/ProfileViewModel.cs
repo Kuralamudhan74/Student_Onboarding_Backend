@@ -78,8 +78,12 @@ public partial class ProfileViewModel : BaseViewModel
     {
         try
         {
-            var url = $"{Constants.ApiBaseUrl.Replace("/api/", "")}{photoPath}";
-            // Use HttpClientHandler that bypasses SSL for localhost
+            // If it's already a full URL (Bytescale CDN), use it directly
+            // Otherwise prepend the backend base URL (legacy local storage)
+            var url = photoPath.StartsWith("http", StringComparison.OrdinalIgnoreCase)
+                ? photoPath
+                : $"{Constants.ApiBaseUrl.Replace("/api/", "")}{photoPath}";
+
             using var handler = new HttpClientHandler();
 #if DEBUG
             handler.ServerCertificateCustomValidationCallback = (_, _, _, _) => true;
@@ -122,7 +126,7 @@ public partial class ProfileViewModel : BaseViewModel
                 // Token invalid — force re-login
                 await _tokenStorage.ClearAllAsync();
                 if (Application.Current is App app) app.StopNotificationPolling();
-                await Shell.Current.GoToAsync($"///{Constants.Routes.Login}");
+                await Shell.Current.GoToAsync("///auth/login");
             }
             else
             {
@@ -240,6 +244,6 @@ public partial class ProfileViewModel : BaseViewModel
         if (!confirm) return;
 
         await _authService.LogoutAsync();
-        await Shell.Current.GoToAsync($"///{Constants.Routes.Login}");
+        await Shell.Current.GoToAsync("///auth/login");
     }
 }

@@ -28,7 +28,7 @@ public partial class ApprovalWaitingViewModel : BaseViewModel
     private async Task StartPollingAsync()
     {
         _pollCts = new CancellationTokenSource();
-        _pollTimer = new PeriodicTimer(TimeSpan.FromSeconds(30));
+        _pollTimer = new PeriodicTimer(TimeSpan.FromSeconds(10));
 
         // Check immediately
         await CheckStatusAsync();
@@ -58,7 +58,9 @@ public partial class ApprovalWaitingViewModel : BaseViewModel
             {
                 case "Approved":
                     StopPolling();
-                    // Go to dashboard after approval
+                    // Start notification polling and go to dashboard
+                    if (Application.Current is App app)
+                        app.StartNotificationPolling();
                     await Shell.Current.GoToAsync("//main/dashboard");
                     break;
                 case "Denied":

@@ -13,6 +13,7 @@ public class StudentService : IStudentService
     private readonly ICourseRepository _courseRepository;
     private readonly ICourseRegistrationRepository _registrationRepository;
     private readonly IEmailService _emailService;
+    private readonly IFileStorageService _fileStorage;
     private readonly ILogger<StudentService> _logger;
 
     public StudentService(
@@ -20,12 +21,14 @@ public class StudentService : IStudentService
         ICourseRepository courseRepository,
         ICourseRegistrationRepository registrationRepository,
         IEmailService emailService,
+        IFileStorageService fileStorage,
         ILogger<StudentService> logger)
     {
         _userService = userService;
         _courseRepository = courseRepository;
         _registrationRepository = registrationRepository;
         _emailService = emailService;
+        _fileStorage = fileStorage;
         _logger = logger;
     }
 
@@ -64,23 +67,16 @@ public class StudentService : IStudentService
         if (user == null)
             return ApiResponse<StudentProfileResponse>.Fail("User not found.");
 
-        // Save photo to wwwroot/uploads/photos
-        var uploadsDir = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "uploads", "photos");
-        Directory.CreateDirectory(uploadsDir);
-
         var fileName = $"{userId}_{DateTime.UtcNow.Ticks}{Path.GetExtension(photo.FileName)}";
-        var filePath = Path.Combine(uploadsDir, fileName);
+        var contentType = photo.ContentType ?? "image/jpeg";
 
-        using (var stream = new FileStream(filePath, FileMode.Create))
-        {
-            await photo.CopyToAsync(stream);
-        }
+        using var stream = photo.OpenReadStream();
+        var photoUrl = await _fileStorage.UploadAsync(stream, fileName, contentType);
 
-        var photoUrl = $"/uploads/photos/{fileName}";
         await _userService.UpdateProfilePhotoAsync(userId, photoUrl);
         user.ProfilePhotoUrl = photoUrl;
 
-        _logger.LogInformation("Profile photo uploaded for user {UserId}", userId);
+        _logger.LogInformation("Profile photo uploaded to Bytescale for user {UserId}", userId);
         return ApiResponse<StudentProfileResponse>.Ok(MapToProfile(user), "Photo uploaded successfully.");
     }
 
@@ -101,9 +97,12 @@ public class StudentService : IStudentService
             Email = user.Email
         };
 
-        // Find the student's active course registration
+        // Find all registrations
         var registrations = await _registrationRepository.GetByUserIdAsync(userId);
-        var activeReg = registrations.FirstOrDefault();
+
+        // Active/current course = first non-completed, or most recent if all completed
+        var activeReg = registrations.FirstOrDefault(r => !r.IsCompleted)
+                        ?? registrations.FirstOrDefault();
 
         if (activeReg != null)
         {
@@ -124,6 +123,26 @@ public class StudentService : IStudentService
                 {
                     dashboard.CourseStatus = "Pending Payment";
                 }
+            }
+        }
+
+        // Populate completed courses (excluding the active one shown above)
+        var completedRegs = registrations
+            .Where(r => r.IsCompleted && r.Id != activeReg?.Id)
+            .OrderByDescending(r => r.CompletedAt);
+
+        foreach (var reg in completedRegs)
+        {
+            var course = await _courseRepository.GetByIdAsync(reg.CourseId);
+            if (course != null)
+            {
+                dashboard.CompletedCourses.Add(new CompletedCourseDto
+                {
+                    CourseName = course.Name,
+                    Duration = course.Duration,
+                    CompletedAt = reg.CompletedAt,
+                    EnrolledAt = reg.CreatedAt
+                });
             }
         }
 

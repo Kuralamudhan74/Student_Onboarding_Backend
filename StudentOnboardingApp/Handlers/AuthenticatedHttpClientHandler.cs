@@ -27,6 +27,13 @@ public class AuthenticatedHttpClientHandler : DelegatingHandler
     protected override async Task<HttpResponseMessage> SendAsync(
         HttpRequestMessage request, CancellationToken cancellationToken)
     {
+        // Proactively refresh if token expires within 2 minutes
+        var expiry = await _tokenStorage.GetTokenExpiryAsync();
+        if (expiry.HasValue && expiry.Value <= DateTime.UtcNow.AddMinutes(2))
+        {
+            await TryProactiveRefreshAsync(cancellationToken);
+        }
+
         var token = await _tokenStorage.GetAccessTokenAsync();
         if (!string.IsNullOrEmpty(token))
             request.Headers.Authorization = new AuthenticationHeaderValue("Bearer", token);
@@ -39,6 +46,48 @@ public class AuthenticatedHttpClientHandler : DelegatingHandler
         }
 
         return response;
+    }
+
+    private async Task TryProactiveRefreshAsync(CancellationToken cancellationToken)
+    {
+        if (!await _refreshSemaphore.WaitAsync(0, cancellationToken))
+            return; // Another thread is already refreshing
+
+        try
+        {
+            // Re-check expiry inside the lock
+            var expiry = await _tokenStorage.GetTokenExpiryAsync();
+            if (expiry.HasValue && expiry.Value > DateTime.UtcNow.AddMinutes(2))
+                return; // Already refreshed by another thread
+
+            var refreshToken = await _tokenStorage.GetRefreshTokenAsync();
+            if (string.IsNullOrEmpty(refreshToken))
+                return;
+
+            var publicClient = _httpClientFactory.CreateClient(Constants.PublicApiClient);
+            var refreshResponse = await publicClient.PostAsJsonAsync(
+                "auth/refresh-token",
+                new RefreshTokenRequest { RefreshToken = refreshToken },
+                cancellationToken);
+
+            if (refreshResponse.IsSuccessStatusCode)
+            {
+                var result = await refreshResponse.Content
+                    .ReadFromJsonAsync<ApiResponse<AuthResponse>>(cancellationToken: cancellationToken);
+
+                if (result?.Success == true && result.Data != null)
+                {
+                    await _tokenStorage.SaveTokensAsync(
+                        result.Data.AccessToken,
+                        result.Data.RefreshToken,
+                        result.Data.ExpiresAt);
+                }
+            }
+        }
+        finally
+        {
+            _refreshSemaphore.Release();
+        }
     }
 
     private async Task<HttpResponseMessage> HandleUnauthorizedAsync(
