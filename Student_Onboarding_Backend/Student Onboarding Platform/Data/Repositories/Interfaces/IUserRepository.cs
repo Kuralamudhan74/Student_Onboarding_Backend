@@ -19,4 +19,5 @@ public interface IUserRepository
         DateTime? dateOfBirth, string? address, string? education);
     Task UpdateProfilePhotoAsync(Guid userId, string photoUrl);
     Task UpdateIsActiveAsync(Guid userId, bool isActive);
+    Task<IEnumerable<User>> GetStudentsWithBirthdayTodayAsync();
 }

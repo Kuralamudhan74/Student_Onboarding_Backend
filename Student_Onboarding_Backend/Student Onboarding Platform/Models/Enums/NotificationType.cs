@@ -5,5 +5,6 @@ public enum NotificationType
     NewRegistration,
     CourseRegistration,
     StudentApproved,
-    StudentDenied
+    StudentDenied,
+    BirthdayWish
 }

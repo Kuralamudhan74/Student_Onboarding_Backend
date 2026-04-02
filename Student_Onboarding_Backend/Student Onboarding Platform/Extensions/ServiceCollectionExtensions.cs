@@ -52,6 +52,9 @@ public static class ServiceCollectionExtensions
         services.AddHttpClient("Bytescale");
         services.AddScoped<IFileStorageService, BytescaleStorageService>();
 
+        // Background services
+        services.AddHostedService<BirthdayNotificationService>();
+
         return services;
     }
 

@@ -183,4 +183,17 @@ public class UserRepository : IUserRepository
             "UPDATE Users SET IsActive = @IsActive, UpdatedAt = @UpdatedAt WHERE Id = @Id",
             new { Id = userId, IsActive = isActive, UpdatedAt = DateTime.UtcNow });
     }
+
+    public async Task<IEnumerable<User>> GetStudentsWithBirthdayTodayAsync()
+    {
+        using var conn = _db.CreateConnection();
+        return await conn.QueryAsync<User>(@"
+            SELECT * FROM Users
+            WHERE Role = 'Student' AND IsDeleted = 0 AND IsActive = 1
+              AND ApprovalStatus = 'Approved'
+              AND DateOfBirth IS NOT NULL
+              AND MONTH(DateOfBirth) = MONTH(GETDATE())
+              AND DAY(DateOfBirth) = DAY(GETDATE())",
+            new { });
+    }
 }
