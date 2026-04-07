@@ -16,15 +16,18 @@ public class AdminController : ControllerBase
     private readonly IAdminService _adminService;
     private readonly ICourseService _courseService;
     private readonly INotificationService _notificationService;
+    private readonly IFaqService _faqService;
 
     public AdminController(
         IAdminService adminService,
         ICourseService courseService,
-        INotificationService notificationService)
+        INotificationService notificationService,
+        IFaqService faqService)
     {
         _adminService = adminService;
         _courseService = courseService;
         _notificationService = notificationService;
+        _faqService = faqService;
     }
 
     [HttpGet("dashboard")]
@@ -167,6 +170,39 @@ public class AdminController : ControllerBase
     public async Task<IActionResult> UpdatePayment(Guid id, [FromBody] UpdatePaymentRequest request)
     {
         var result = await _adminService.UpdatePaymentAsync(id, request);
+        return result.Success ? Ok(result) : BadRequest(result);
+    }
+
+    // ── FAQ Management ────────────────────────────────────────────────
+
+    [HttpGet("faqs")]
+    public async Task<IActionResult> GetFaqs()
+    {
+        var result = await _faqService.GetAllFaqsAsync();
+        return result.Success ? Ok(result) : BadRequest(result);
+    }
+
+    [HttpPost("faqs")]
+    public async Task<IActionResult> CreateFaq([FromBody] CreateFaqRequest request)
+    {
+        Guid adminId;
+        try { adminId = User.GetUserId(); }
+        catch { adminId = Guid.Empty; }
+        var result = await _faqService.CreateFaqAsync(request, adminId);
+        return result.Success ? Ok(result) : BadRequest(result);
+    }
+
+    [HttpPut("faqs/{id}")]
+    public async Task<IActionResult> UpdateFaq(Guid id, [FromBody] UpdateFaqRequest request)
+    {
+        var result = await _faqService.UpdateFaqAsync(id, request);
+        return result.Success ? Ok(result) : BadRequest(result);
+    }
+
+    [HttpDelete("faqs/{id}")]
+    public async Task<IActionResult> DeleteFaq(Guid id)
+    {
+        var result = await _faqService.DeleteFaqAsync(id);
         return result.Success ? Ok(result) : BadRequest(result);
     }
 }

@@ -1,8 +1,11 @@
+using StudentOnboardingApp.Models.Faq;
+using StudentOnboardingApp.Services.Interfaces;
+
 namespace StudentOnboardingApp.Views.Faq;
 
 public partial class FaqPage : ContentPage
 {
-    private static readonly List<(string Question, string Answer)> FaqItems = new()
+    private static readonly List<(string Question, string Answer)> FallbackFaqs = new()
     {
         ("How do I register for a course?",
          "Navigate to the Courses tab, select the course you're interested in, and tap the 'Register' button. Fill in the required details and submit."),
@@ -35,16 +38,45 @@ public partial class FaqPage : ContentPage
     public FaqPage()
     {
         InitializeComponent();
-        BuildFaqList();
+        _ = LoadFaqsAsync();
     }
 
-    private void BuildFaqList()
+    private async Task LoadFaqsAsync()
     {
-        foreach (var (question, answer) in FaqItems)
+        var faqItems = new List<(string Question, string Answer)>();
+
+        try
         {
-            var card = CreateFaqCard(question, answer);
-            FaqList.Children.Add(card);
+            var faqService = Application.Current?.Handler?.MauiContext?.Services.GetService<IFaqService>();
+            if (faqService != null)
+            {
+                var result = await faqService.GetFaqsAsync();
+                if (result.Success && result.Data != null && result.Data.Count > 0)
+                {
+                    foreach (var faq in result.Data.OrderBy(f => f.SortOrder))
+                    {
+                        faqItems.Add((faq.Question, faq.Answer));
+                    }
+                }
+            }
         }
+        catch
+        {
+            // Fallback to hardcoded FAQs on any error
+        }
+
+        // Use fallback if API returned nothing
+        if (faqItems.Count == 0)
+            faqItems.AddRange(FallbackFaqs);
+
+        MainThread.BeginInvokeOnMainThread(() =>
+        {
+            FaqList.Children.Clear();
+            foreach (var (question, answer) in faqItems)
+            {
+                FaqList.Children.Add(CreateFaqCard(question, answer));
+            }
+        });
     }
 
     private static View CreateFaqCard(string question, string answer)
@@ -130,7 +162,6 @@ public partial class FaqPage : ContentPage
         }
         catch
         {
-            // Fallback: shell back navigation
             await Shell.Current.GoToAsync("..");
         }
     }
