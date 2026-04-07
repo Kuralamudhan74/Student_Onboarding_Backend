@@ -7,7 +7,6 @@ CREATE INDEX IF NOT EXISTS idx_users_email ON Users(Email);
 CREATE INDEX IF NOT EXISTS idx_users_phone ON Users(PhoneNumber);
 
 CREATE INDEX IF NOT EXISTS idx_sessions_userid ON UserSessions(UserId);
-CREATE INDEX IF NOT EXISTS idx_sessions_refreshtoken ON UserSessions(RefreshToken);
 
 CREATE INDEX IF NOT EXISTS idx_otp_email ON OtpVerifications(Email);
 CREATE INDEX IF NOT EXISTS idx_otp_phone ON OtpVerifications(PhoneNumber);
