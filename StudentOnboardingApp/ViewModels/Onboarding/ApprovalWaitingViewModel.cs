@@ -7,12 +7,14 @@ namespace StudentOnboardingApp.ViewModels.Onboarding;
 public partial class ApprovalWaitingViewModel : BaseViewModel
 {
     private readonly IOnboardingService _onboardingService;
+    private readonly ITokenStorageService _tokenStorage;
     private PeriodicTimer? _pollTimer;
     private CancellationTokenSource? _pollCts;
 
-    public ApprovalWaitingViewModel(IOnboardingService onboardingService)
+    public ApprovalWaitingViewModel(IOnboardingService onboardingService, ITokenStorageService tokenStorage)
     {
         _onboardingService = onboardingService;
+        _tokenStorage = tokenStorage;
         Title = "Application Status";
     }
 
@@ -26,7 +28,7 @@ public partial class ApprovalWaitingViewModel : BaseViewModel
     private async Task StartPollingAsync()
     {
         _pollCts = new CancellationTokenSource();
-        _pollTimer = new PeriodicTimer(TimeSpan.FromSeconds(30));
+        _pollTimer = new PeriodicTimer(TimeSpan.FromSeconds(10));
 
         // Check immediately
         await CheckStatusAsync();
@@ -46,23 +48,29 @@ public partial class ApprovalWaitingViewModel : BaseViewModel
 
     private async Task CheckStatusAsync()
     {
-        var result = await _onboardingService.GetApprovalStatusAsync();
+        var user = await _tokenStorage.GetUserAsync();
+        if (user == null) return;
+
+        var result = await _onboardingService.GetApprovalStatusAsync(user.Email);
         if (result.Success && result.Data != null)
         {
-            switch (result.Data)
+            switch (result.Data.ApprovalStatus)
             {
                 case "Approved":
                     StopPolling();
-                    await Shell.Current.GoToAsync(Constants.Routes.OnboardingInstructions);
+                    // Start notification polling and go to dashboard
+                    if (Application.Current is App app)
+                        app.StartNotificationPolling();
+                    await Shell.Current.GoToAsync("//main/dashboard");
                     break;
-                case "Blocked":
+                case "Denied":
                     IsBlocked = true;
-                    StatusMessage = "Your application has been blocked. Please contact the administrator.";
+                    StatusMessage = result.Data.Message ?? "Your application has been denied. Please contact the administrator.";
                     StopPolling();
                     break;
                 case "Pending":
                 default:
-                    StatusMessage = "Your application is under review. Please wait for admin approval.";
+                    StatusMessage = result.Data.Message ?? "Your application is under review. Please wait for admin approval.";
                     break;
             }
         }

@@ -46,7 +46,35 @@ public class CourseService : ICourseService
     {
         try
         {
-            var response = await _client.PostAsJsonAsync("course/apply", request);
+            var response = await _client.PostAsJsonAsync("student/courses/register", request);
+            var result = await response.Content.ReadFromJsonAsync<ApiResponse<string>>();
+            return result ?? new ApiResponse<string> { Success = false, Message = "Failed to parse response" };
+        }
+        catch (Exception ex)
+        {
+            return new ApiResponse<string> { Success = false, Message = ex.Message };
+        }
+    }
+
+    public async Task<ApiResponse<CourseReviewsResponse>> GetCourseReviewsAsync(Guid courseId)
+    {
+        try
+        {
+            var response = await _client.GetAsync($"student/courses/{courseId}/reviews");
+            var result = await response.Content.ReadFromJsonAsync<ApiResponse<CourseReviewsResponse>>();
+            return result ?? new ApiResponse<CourseReviewsResponse> { Success = false, Message = "Failed to parse response" };
+        }
+        catch (Exception ex)
+        {
+            return new ApiResponse<CourseReviewsResponse> { Success = false, Message = ex.Message };
+        }
+    }
+
+    public async Task<ApiResponse<string>> SubmitReviewAsync(Guid courseId, SubmitReviewRequest request)
+    {
+        try
+        {
+            var response = await _client.PostAsJsonAsync($"student/courses/{courseId}/review", request);
             var result = await response.Content.ReadFromJsonAsync<ApiResponse<string>>();
             return result ?? new ApiResponse<string> { Success = false, Message = "Failed to parse response" };
         }

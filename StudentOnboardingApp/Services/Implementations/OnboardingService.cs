@@ -14,17 +14,18 @@ public class OnboardingService : IOnboardingService
         _client = httpClientFactory.CreateClient(Constants.AuthenticatedApiClient);
     }
 
-    public async Task<ApiResponse<string>> GetApprovalStatusAsync()
+    public async Task<ApiResponse<ApprovalStatusResponse>> GetApprovalStatusAsync(string email)
     {
         try
         {
-            var response = await _client.GetAsync("onboarding/approval-status");
-            var result = await response.Content.ReadFromJsonAsync<ApiResponse<string>>();
-            return result ?? new ApiResponse<string> { Success = false, Message = "Failed to parse response" };
+            var request = new { Email = email };
+            var response = await _client.PostAsJsonAsync("auth/check-approval-status", request);
+            var result = await response.Content.ReadFromJsonAsync<ApiResponse<ApprovalStatusResponse>>();
+            return result ?? new ApiResponse<ApprovalStatusResponse> { Success = false, Message = "Failed to parse response" };
         }
         catch (Exception ex)
         {
-            return new ApiResponse<string> { Success = false, Message = ex.Message };
+            return new ApiResponse<ApprovalStatusResponse> { Success = false, Message = ex.Message };
         }
     }
 

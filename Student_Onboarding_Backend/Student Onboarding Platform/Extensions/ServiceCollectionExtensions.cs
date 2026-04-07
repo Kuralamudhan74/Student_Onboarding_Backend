@@ -21,6 +21,7 @@ public static class ServiceCollectionExtensions
         services.Configure<JwtSettings>(configuration.GetSection("JwtSettings"));
         services.Configure<SmtpSettings>(configuration.GetSection("SmtpSettings"));
         services.Configure<OtpSettings>(configuration.GetSection("OtpSettings"));
+        services.Configure<BytescaleSettings>(configuration.GetSection("BytescaleSettings"));
 
         // Data
         services.AddSingleton<DbConnectionFactory>();
@@ -30,6 +31,10 @@ public static class ServiceCollectionExtensions
         services.AddScoped<ISessionRepository, SessionRepository>();
         services.AddScoped<IOtpRepository, OtpRepository>();
         services.AddScoped<ILoginAttemptRepository, LoginAttemptRepository>();
+        services.AddScoped<ICourseRepository, CourseRepository>();
+        services.AddScoped<ICourseRegistrationRepository, CourseRegistrationRepository>();
+        services.AddScoped<INotificationRepository, NotificationRepository>();
+        services.AddScoped<ICourseReviewRepository, CourseReviewRepository>();
 
         // Services
         services.AddScoped<IAuthService, AuthService>();
@@ -40,6 +45,15 @@ public static class ServiceCollectionExtensions
         services.AddScoped<ISessionService, SessionService>();
         services.AddScoped<ILoginAttemptService, LoginAttemptService>();
         services.AddSingleton<IPasswordHasher, BCryptPasswordHasher>();
+        services.AddScoped<IStudentService, StudentService>();
+        services.AddScoped<IAdminService, AdminService>();
+        services.AddScoped<ICourseService, CourseService>();
+        services.AddScoped<INotificationService, NotificationService>();
+        services.AddHttpClient("Bytescale");
+        services.AddScoped<IFileStorageService, BytescaleStorageService>();
+
+        // Background services
+        services.AddHostedService<BirthdayNotificationService>();
 
         return services;
     }
@@ -65,7 +79,7 @@ public static class ServiceCollectionExtensions
                 ValidIssuer = jwtSettings.Issuer,
                 ValidAudience = jwtSettings.Audience,
                 IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtSettings.SecretKey)),
-                ClockSkew = TimeSpan.Zero
+                ClockSkew = TimeSpan.FromMinutes(2)
             };
         });
 

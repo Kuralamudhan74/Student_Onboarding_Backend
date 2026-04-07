@@ -8,6 +8,7 @@
 *.user
 *.userosscache
 *.sln.docstates
+*.slnLaunch.user
 
 ## Rider
 .idea/

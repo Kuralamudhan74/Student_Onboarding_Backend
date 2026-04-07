@@ -61,6 +61,7 @@ public static class MauiProgram
         builder.Services.AddSingleton<IDashboardService, DashboardService>();
         builder.Services.AddSingleton<INotificationService, NotificationService>();
         builder.Services.AddSingleton<IOnboardingService, OnboardingService>();
+        builder.Services.AddSingleton<NotificationPollingService>();
 
         // ViewModels
         builder.Services.AddTransient<LoginViewModel>();
@@ -77,6 +78,7 @@ public static class MauiProgram
         builder.Services.AddTransient<EditProfileViewModel>();
         builder.Services.AddTransient<ChangePasswordViewModel>();
         builder.Services.AddTransient<NotificationsViewModel>();
+        builder.Services.AddTransient<AdminNotificationsViewModel>();
 
         // Pages
         builder.Services.AddTransient<LoginPage>();
@@ -93,6 +95,7 @@ public static class MauiProgram
         builder.Services.AddTransient<EditProfilePage>();
         builder.Services.AddTransient<ChangePasswordPage>();
         builder.Services.AddTransient<NotificationsPage>();
+        builder.Services.AddTransient<AdminNotificationsPage>();
 
 #if DEBUG
         builder.Logging.AddDebug();

@@ -51,6 +51,7 @@ if (app.Environment.IsDevelopment())
 
 app.UseSerilogRequestLogging();
 app.UseHttpsRedirection();
+app.UseStaticFiles(); // Serve uploaded photos from wwwroot
 app.UseCors("AllowAll");
 app.UseAuthentication();
 app.UseAuthorization();

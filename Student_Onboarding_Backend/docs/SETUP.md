@@ -19,12 +19,29 @@
 
 1. Go to **SQL Editor** in your Supabase dashboard
 2. Run the scripts in order from `sql/postgres/`:
+
+   **Phase 1 (Authentication):**
    - `001_create_users_table.sql`
    - `002_create_user_sessions_table.sql`
    - `003_create_otp_verifications_table.sql`
    - `004_create_login_attempts_table.sql`
    - `005_create_user_social_logins_table.sql`
    - `006_create_indexes.sql`
+
+   **Phase 2 (Admin Approval, Courses, Notifications):**
+   - `007_alter_users_add_approval.sql`
+   - `008_create_courses_table.sql`
+   - `009_create_course_registrations_table.sql`
+   - `010_create_notifications_table.sql`
+   - `011_create_phase2_indexes.sql`
+   - `012_seed_admin_user.sql`
+
+   All scripts are idempotent — safe to re-run.
+
+3. **Default Admin Account** (created by script 012):
+   - Email: `admin@synora.com`
+   - Password: `Admin@1234`
+   - Use the forgot-password flow to reset if the seeded hash doesn't match your BCrypt version.
 
 ## 3. Configure appsettings
 

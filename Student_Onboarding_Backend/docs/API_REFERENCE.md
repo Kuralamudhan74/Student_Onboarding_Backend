@@ -81,13 +81,16 @@ Login with email and password.
       "email": "john@example.com",
       "phoneNumber": "+1234567890",
       "emailVerified": true,
-      "role": "Student"
+      "role": "Student",
+      "approvalStatus": "Approved"
     }
   }
 }
 ```
 
 **Rate Limiting:** 5 failed attempts per 15-minute window locks the account temporarily.
+
+**Approval Checks:** Login is blocked if the user's approval status is Pending or Denied. Only Approved users can login.
 
 ---
 
@@ -228,3 +231,40 @@ Authorization: Bearer <access_token>
   "refreshToken": "base64string..."
 }
 ```
+
+---
+
+## POST /api/auth/check-approval-status
+Check a student's approval status by email.
+
+**Auth Required:** No
+
+**Request Body:**
+```json
+{
+  "email": "john@example.com"
+}
+```
+
+**Success Response (200):**
+```json
+{
+  "success": true,
+  "message": "Approval status retrieved.",
+  "data": {
+    "approvalStatus": "Pending",
+    "message": "Your account is pending admin approval. You will be notified once approved."
+  }
+}
+```
+
+**Note:** Returns "Pending" for non-existent emails to prevent email enumeration.
+
+---
+
+# Phase 2 Endpoints
+
+For full documentation of all Phase 2 endpoints, see [PHASE2_API_REFERENCE.md](PHASE2_API_REFERENCE.md):
+- **Student APIs** (`/api/student/*`) — Profile, dashboard, course registration
+- **Admin APIs** (`/api/admin/*`) — Student management, course CRUD, notifications, payments
+- **Course APIs** (`/api/courses/*`) — Public course catalog

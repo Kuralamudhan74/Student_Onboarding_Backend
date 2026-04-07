@@ -8,12 +8,10 @@ namespace StudentOnboardingApp.ViewModels.Auth;
 public partial class LoginViewModel : BaseViewModel
 {
     private readonly IAuthService _authService;
-    private readonly IOnboardingService _onboardingService;
 
-    public LoginViewModel(IAuthService authService, IOnboardingService onboardingService)
+    public LoginViewModel(IAuthService authService)
     {
         _authService = authService;
-        _onboardingService = onboardingService;
         Title = "Login";
     }
 
@@ -48,16 +46,15 @@ public partial class LoginViewModel : BaseViewModel
                     return;
                 }
 
-                // Check approval status
-                var statusResult = await _onboardingService.GetApprovalStatusAsync();
-                if (statusResult.Success && statusResult.Data == "Approved")
-                {
-                    await Shell.Current.GoToAsync("//main/dashboard");
-                }
-                else
-                {
-                    await Shell.Current.GoToAsync(Constants.Routes.ApprovalWaiting);
-                }
+                // Route based on user role
+                var route = result.Data.User.Role?.Equals("Admin", StringComparison.OrdinalIgnoreCase) == true
+                    ? "//admin/dashboard"
+                    : "//main/dashboard";
+                await Shell.Current.GoToAsync(route);
+
+                // Start notification polling
+                if (Application.Current is App app)
+                    app.StartNotificationPolling();
             }
             else
             {

@@ -7,5 +7,7 @@ public enum FailureReason
     AccountLocked,
     AccountInactive,
     EmailNotVerified,
-    AccountDeleted
+    AccountDeleted,
+    PendingApproval,
+    AccountDenied
 }

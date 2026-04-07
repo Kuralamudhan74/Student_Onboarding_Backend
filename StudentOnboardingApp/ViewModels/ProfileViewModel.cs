@@ -2,6 +2,7 @@ using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using StudentOnboardingApp.Models.Profile;
 using StudentOnboardingApp.Services.Interfaces;
+using System.Net.Http;
 
 namespace StudentOnboardingApp.ViewModels;
 
@@ -25,6 +26,89 @@ public partial class ProfileViewModel : BaseViewModel
     [ObservableProperty]
     private StudentProfileDto? _profile;
 
+    // Editable fields
+    [ObservableProperty]
+    private string _firstName = string.Empty;
+
+    [ObservableProperty]
+    private string _lastName = string.Empty;
+
+    [ObservableProperty]
+    private string? _phoneNumber;
+
+    [ObservableProperty]
+    private DateTime _dateOfBirth = DateTime.Today.AddYears(-18);
+
+    [ObservableProperty]
+    private string? _address;
+
+    [ObservableProperty]
+    private string? _education;
+
+    [ObservableProperty]
+    private bool _isEditing;
+
+    [ObservableProperty]
+    private string? _successMessage;
+
+    [ObservableProperty]
+    private ImageSource? _profileImage;
+
+    public bool HasPhoto => ProfileImage != null;
+
+    partial void OnProfileChanged(StudentProfileDto? value)
+    {
+        OnPropertyChanged(nameof(HasPhoto));
+        if (value != null && !string.IsNullOrEmpty(value.ProfilePhotoUrl))
+        {
+            _ = LoadProfileImageAsync(value.ProfilePhotoUrl);
+        }
+        else
+        {
+            ProfileImage = null;
+        }
+    }
+
+    partial void OnProfileImageChanged(ImageSource? value)
+    {
+        OnPropertyChanged(nameof(HasPhoto));
+    }
+
+    private async Task LoadProfileImageAsync(string photoPath)
+    {
+        try
+        {
+            // If it's already a full URL (Bytescale CDN), use it directly
+            // Otherwise prepend the backend base URL (legacy local storage)
+            var url = photoPath.StartsWith("http", StringComparison.OrdinalIgnoreCase)
+                ? photoPath
+                : $"{Constants.ApiBaseUrl.Replace("/api/", "")}{photoPath}";
+
+            using var handler = new HttpClientHandler();
+#if DEBUG
+            handler.ServerCertificateCustomValidationCallback = (_, _, _, _) => true;
+#endif
+            using var client = new HttpClient(handler);
+            var bytes = await client.GetByteArrayAsync(url);
+            ProfileImage = ImageSource.FromStream(() => new MemoryStream(bytes));
+        }
+        catch
+        {
+            ProfileImage = null;
+        }
+    }
+
+    private void PopulateFieldsFromProfile()
+    {
+        if (Profile == null) return;
+        FirstName = Profile.FirstName;
+        LastName = Profile.LastName;
+        PhoneNumber = Profile.PhoneNumber;
+        DateOfBirth = Profile.DateOfBirth ?? DateTime.Today.AddYears(-18);
+        Address = Profile.Address;
+        Education = Profile.Education;
+    }
+
     [RelayCommand]
     private async Task LoadProfileAsync()
     {
@@ -34,12 +118,81 @@ public partial class ProfileViewModel : BaseViewModel
             if (result.Success && result.Data != null)
             {
                 Profile = result.Data;
+                PopulateFieldsFromProfile();
+            }
+            else if (result.Message?.Contains("Session expired", StringComparison.OrdinalIgnoreCase) == true
+                     || result.Message?.Contains("401", StringComparison.OrdinalIgnoreCase) == true)
+            {
+                // Token invalid — force re-login
+                await _tokenStorage.ClearAllAsync();
+                if (Application.Current is App app) app.StopNotificationPolling();
+                await Shell.Current.GoToAsync("///auth/login");
             }
             else
             {
                 ErrorMessage = result.Message;
             }
         });
+    }
+
+    [RelayCommand]
+    private void ToggleEdit()
+    {
+        if (!IsEditing)
+        {
+            // Entering edit mode — auto-fill fields from current profile
+            PopulateFieldsFromProfile();
+        }
+        IsEditing = !IsEditing;
+        SuccessMessage = null;
+        ErrorMessage = null;
+    }
+
+    [RelayCommand]
+    private async Task SaveProfileAsync()
+    {
+        if (string.IsNullOrWhiteSpace(FirstName) || string.IsNullOrWhiteSpace(LastName))
+        {
+            ErrorMessage = "First name and last name are required.";
+            return;
+        }
+
+        await ExecuteAsync(async () =>
+        {
+            var request = new UpdateProfileRequest
+            {
+                FirstName = FirstName.Trim(),
+                LastName = LastName.Trim(),
+                PhoneNumber = PhoneNumber?.Trim(),
+                DateOfBirth = DateOfBirth,
+                Address = Address?.Trim(),
+                Education = Education?.Trim()
+            };
+
+            var result = await _profileService.UpdateProfileAsync(request);
+            if (result.Success)
+            {
+                IsEditing = false;
+                SuccessMessage = "Profile updated successfully!";
+                ErrorMessage = null;
+                // Reload profile to get fresh data from server
+                await LoadProfileInternalAsync();
+            }
+            else
+            {
+                ErrorMessage = result.Message ?? "Failed to update profile.";
+            }
+        });
+    }
+
+    private async Task LoadProfileInternalAsync()
+    {
+        var result = await _profileService.GetProfileAsync();
+        if (result.Success && result.Data != null)
+        {
+            Profile = result.Data;
+            PopulateFieldsFromProfile();
+        }
     }
 
     [RelayCommand]
@@ -55,12 +208,14 @@ public partial class ProfileViewModel : BaseViewModel
             if (result != null)
             {
                 IsBusy = true;
+                ErrorMessage = null;
                 using var stream = await result.OpenReadAsync();
                 var uploadResult = await _profileService.UploadPhotoAsync(stream, result.FileName);
 
                 if (uploadResult.Success)
                 {
-                    await LoadProfileAsync();
+                    SuccessMessage = "Photo uploaded!";
+                    await LoadProfileInternalAsync();
                 }
                 else
                 {
@@ -72,13 +227,8 @@ public partial class ProfileViewModel : BaseViewModel
         catch (Exception ex)
         {
             ErrorMessage = ex.Message;
+            IsBusy = false;
         }
-    }
-
-    [RelayCommand]
-    private async Task GoToEditProfileAsync()
-    {
-        await Shell.Current.GoToAsync(Constants.Routes.EditProfile);
     }
 
     [RelayCommand]
@@ -94,6 +244,6 @@ public partial class ProfileViewModel : BaseViewModel
         if (!confirm) return;
 
         await _authService.LogoutAsync();
-        await Shell.Current.GoToAsync($"///{Constants.Routes.Login}");
+        await Shell.Current.GoToAsync("///auth/login");
     }
 }

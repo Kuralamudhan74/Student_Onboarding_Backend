@@ -24,10 +24,17 @@
             <!-- IsNotNull Converter (for error message visibility) -->
             <converters:IsNotNullConverter x:Key="IsNotNullConverter" />
 
+            <!-- Notification type icon converter -->
+            <converters:NotificationIconConverter x:Key="NotificationIconConverter" />
+
             <!-- BoolToString for password toggle -->
             <converters:BoolToStringConverter x:Key="BoolToStringConverter"
                                              TrueValue="Hide"
                                              FalseValue="Show" />
+            <!-- BoolToString for edit toggle -->
+            <converters:BoolToStringConverter x:Key="EditToggleConverter"
+                                             TrueValue="Cancel"
+                                             FalseValue="Edit" />
         </ResourceDictionary>
     </Application.Resources>
 </Application>

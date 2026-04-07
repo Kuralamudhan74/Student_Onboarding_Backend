@@ -12,13 +12,15 @@
     Title="Student Onboarding"
     Shell.FlyoutBehavior="Disabled">
 
-    <!-- Auth Flow - Login as initial page -->
-    <ShellContent Route="login"
-                  ContentTemplate="{DataTemplate auth:LoginPage}"
-                  Shell.NavBarIsVisible="False"
-                  Shell.TabBarIsVisible="False" />
+    <!-- Auth Flow - Login as initial page (wrapped in TabBar so Shell treats it as a proper section) -->
+    <TabBar Route="auth">
+        <ShellContent Route="login"
+                      ContentTemplate="{DataTemplate auth:LoginPage}"
+                      Shell.NavBarIsVisible="False"
+                      Shell.TabBarIsVisible="False" />
+    </TabBar>
 
-    <!-- Main App with Tab Bar -->
+    <!-- Student Main App with Tab Bar -->
     <TabBar Route="main">
         <ShellContent Title="Dashboard"
                       Icon="dashboard.png"
@@ -32,10 +34,31 @@
                       Icon="profile.png"
                       Route="profile"
                       ContentTemplate="{DataTemplate profile:ProfilePage}" />
-        <ShellContent Title="Alerts"
+        <ShellContent x:Name="alertsTab"
+                      Title="Alerts"
                       Icon="notifications.png"
                       Route="notifications"
                       ContentTemplate="{DataTemplate notifications:NotificationsPage}" />
+    </TabBar>
+
+    <!-- Admin Main App with Tab Bar -->
+    <TabBar Route="admin">
+        <ShellContent Title="Dashboard"
+                      Icon="dashboard.png"
+                      Route="dashboard"
+                      ContentTemplate="{DataTemplate dashboard:DashboardPage}" />
+        <ShellContent Title="Courses"
+                      Icon="courses.png"
+                      Route="courses"
+                      ContentTemplate="{DataTemplate courses:CourseListPage}" />
+        <ShellContent Title="Notifications"
+                      Icon="notifications.png"
+                      Route="admin-notifications"
+                      ContentTemplate="{DataTemplate notifications:AdminNotificationsPage}" />
+        <ShellContent Title="Profile"
+                      Icon="profile.png"
+                      Route="profile"
+                      ContentTemplate="{DataTemplate profile:ProfilePage}" />
     </TabBar>
 
 </Shell>

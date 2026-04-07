@@ -14,4 +14,5 @@ public interface IAuthService
     Task<ApiResponse<string>> ChangePasswordAsync(Guid userId, ChangePasswordRequest request);
     Task<ApiResponse<AuthResponse>> RefreshTokenAsync(RefreshTokenRequest request);
     Task<ApiResponse<string>> LogoutAsync(Guid userId, string refreshToken);
+    Task<ApiResponse<CheckApprovalStatusResponse>> CheckApprovalStatusAsync(CheckApprovalStatusRequest request);
 }
