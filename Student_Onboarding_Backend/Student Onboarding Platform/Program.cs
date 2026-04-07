@@ -4,6 +4,10 @@ using Student_Onboarding_Platform.Middleware;
 
 var builder = WebApplication.CreateBuilder(args);
 
+// Render sets PORT env variable
+var port = Environment.GetEnvironmentVariable("PORT") ?? "10000";
+builder.WebHost.UseUrls($"http://0.0.0.0:{port}");
+
 // Serilog
 Log.Logger = new LoggerConfiguration()
     .ReadFrom.Configuration(builder.Configuration)
@@ -43,14 +47,13 @@ var app = builder.Build();
 // Middleware pipeline
 app.UseMiddleware<ExceptionHandlingMiddleware>();
 
-if (app.Environment.IsDevelopment())
-{
-    app.UseSwagger();
-    app.UseSwaggerUI();
-}
+app.UseSwagger();
+app.UseSwaggerUI();
 
 app.UseSerilogRequestLogging();
-app.UseHttpsRedirection();
+// Render handles HTTPS at the proxy level
+if (!app.Environment.IsProduction())
+    app.UseHttpsRedirection();
 app.UseStaticFiles(); // Serve uploaded photos from wwwroot
 app.UseCors("AllowAll");
 app.UseAuthentication();
