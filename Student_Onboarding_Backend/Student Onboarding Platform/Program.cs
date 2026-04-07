@@ -44,11 +44,11 @@ builder.Services.AddCors(options =>
 
 var app = builder.Build();
 
-// Middleware pipeline
-app.UseMiddleware<ExceptionHandlingMiddleware>();
-
 app.UseSwagger();
 app.UseSwaggerUI();
+
+// Middleware pipeline
+app.UseMiddleware<ExceptionHandlingMiddleware>();
 
 app.UseSerilogRequestLogging();
 // Render handles HTTPS at the proxy level
