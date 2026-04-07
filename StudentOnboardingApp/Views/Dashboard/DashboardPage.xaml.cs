@@ -1,4 +1,5 @@
 using StudentOnboardingApp.ViewModels;
+using StudentOnboardingApp.Views.Faq;
 
 namespace StudentOnboardingApp.Views.Dashboard;
 
@@ -47,6 +48,9 @@ public partial class DashboardPage : ContentPage
 
             await ProgressBarControl.ProgressTo(_viewModel.CourseProgress, 1200, Easing.CubicOut);
         }
+
+        // Animate the bot avatar
+        _ = AnimateBotAsync();
     }
 
     private async Task AnimateSectionsAsync()
@@ -82,6 +86,41 @@ public partial class DashboardPage : ContentPage
             }));
 #pragma warning restore CS4014
         }
+    }
+
+    private async void OnFaqButtonTapped(object sender, TappedEventArgs e)
+    {
+        // Bounce the avatar on tap
+        await BotAvatar.ScaleTo(0.85, 80, Easing.CubicOut);
+        await BotAvatar.ScaleTo(1.0, 150, Easing.SpringOut);
+        await Navigation.PushAsync(new FaqPage());
+    }
+
+    private async Task AnimateBotAsync()
+    {
+        // Start bot avatar hidden
+        BotAvatar.Opacity = 0;
+        BotAvatar.Scale = 0.3;
+        BotBubble.Opacity = 0;
+        BotBubble.TranslationX = 30;
+
+        // Bot bounces in
+        await Task.Delay(800);
+        await Task.WhenAll(
+            BotAvatar.FadeTo(1, 350, Easing.CubicOut),
+            BotAvatar.ScaleTo(1, 500, Easing.SpringOut)
+        );
+
+        // Speech bubble slides in
+        await Task.Delay(300);
+        await Task.WhenAll(
+            BotBubble.FadeTo(1, 300, Easing.CubicOut),
+            BotBubble.TranslateTo(0, 0, 400, Easing.CubicOut)
+        );
+
+        // Auto-hide the bubble after 4 seconds
+        await Task.Delay(4000);
+        await BotBubble.FadeTo(0, 300, Easing.CubicIn);
     }
 
     private static List<T> GetVisualTreeChildren<T>(IView parent) where T : class

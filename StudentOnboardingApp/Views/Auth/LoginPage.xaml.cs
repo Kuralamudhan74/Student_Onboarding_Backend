@@ -1,4 +1,5 @@
 using StudentOnboardingApp.ViewModels.Auth;
+using StudentOnboardingApp.Views.Faq;
 
 namespace StudentOnboardingApp.Views.Auth;
 
@@ -39,5 +40,38 @@ public partial class LoginPage : ContentPage
             FormCard.FadeTo(1, 400, Easing.CubicOut),
             FormCard.TranslateTo(0, 0, 450, Easing.CubicOut)
         );
+
+        // Animate bot greeting
+        _ = AnimateBotAsync();
+    }
+
+    private async Task AnimateBotAsync()
+    {
+        BotAvatar.Opacity = 0;
+        BotAvatar.Scale = 0.3;
+        BotBubble.Opacity = 0;
+        BotBubble.TranslationX = 30;
+
+        await Task.Delay(1200);
+        await Task.WhenAll(
+            BotAvatar.FadeTo(1, 350, Easing.CubicOut),
+            BotAvatar.ScaleTo(1, 500, Easing.SpringOut)
+        );
+
+        await Task.Delay(300);
+        await Task.WhenAll(
+            BotBubble.FadeTo(1, 300, Easing.CubicOut),
+            BotBubble.TranslateTo(0, 0, 400, Easing.CubicOut)
+        );
+
+        await Task.Delay(5000);
+        await BotBubble.FadeTo(0, 300, Easing.CubicIn);
+    }
+
+    private async void OnBotTapped(object sender, TappedEventArgs e)
+    {
+        await BotAvatar.ScaleTo(0.85, 80, Easing.CubicOut);
+        await BotAvatar.ScaleTo(1.0, 150, Easing.SpringOut);
+        await Navigation.PushAsync(new FaqPage());
     }
 }

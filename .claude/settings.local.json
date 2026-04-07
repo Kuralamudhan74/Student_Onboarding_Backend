@@ -24,7 +24,10 @@
       "Bash(npx react-scripts:*)",
       "Bash(npm install:*)",
       "Bash(grep -E \"\\\\.js$|\\\\.json$\")",
-      "Bash(grep -v \"^.*\\\\\\\\\\(bin\\\\\\\\|obj\\\\\\\\\\)\")"
+      "Bash(grep -v \"^.*\\\\\\\\\\(bin\\\\\\\\|obj\\\\\\\\\\)\")",
+      "Bash(where pandoc:*)",
+      "Bash(python -c \"import docx; print\\('python-docx available'\\)\")",
+      "Bash(pip list:*)"
     ],
     "additionalDirectories": [
       "d:\\SOP\\Student_Onboarding_Backend\\.git"
