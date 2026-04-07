@@ -21,6 +21,7 @@ public class StudentController : ControllerBase
     private readonly ICourseRegistrationRepository _registrationRepository;
     private readonly ICourseReviewRepository _reviewRepository;
     private readonly IUserService _userService;
+    private readonly IFaqService _faqService;
 
     public StudentController(
         IStudentService studentService,
@@ -28,7 +29,8 @@ public class StudentController : ControllerBase
         ICourseRepository courseRepository,
         ICourseRegistrationRepository registrationRepository,
         ICourseReviewRepository reviewRepository,
-        IUserService userService)
+        IUserService userService,
+        IFaqService faqService)
     {
         _studentService = studentService;
         _notificationService = notificationService;
@@ -36,6 +38,7 @@ public class StudentController : ControllerBase
         _registrationRepository = registrationRepository;
         _reviewRepository = reviewRepository;
         _userService = userService;
+        _faqService = faqService;
     }
 
     [HttpGet("profile")]
@@ -207,5 +210,13 @@ public class StudentController : ControllerBase
             HasReviewed = hasReviewed,
             Reviews = response
         }));
+    }
+
+    [HttpGet("faqs")]
+    [AllowAnonymous]
+    public async Task<IActionResult> GetFaqs()
+    {
+        var result = await _faqService.GetActiveFaqsAsync();
+        return result.Success ? Ok(result) : BadRequest(result);
     }
 }

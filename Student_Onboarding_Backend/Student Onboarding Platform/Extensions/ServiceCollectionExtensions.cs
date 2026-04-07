@@ -35,6 +35,7 @@ public static class ServiceCollectionExtensions
         services.AddScoped<ICourseRegistrationRepository, CourseRegistrationRepository>();
         services.AddScoped<INotificationRepository, NotificationRepository>();
         services.AddScoped<ICourseReviewRepository, CourseReviewRepository>();
+        services.AddScoped<IFaqRepository, FaqRepository>();
 
         // Services
         services.AddScoped<IAuthService, AuthService>();
@@ -49,6 +50,7 @@ public static class ServiceCollectionExtensions
         services.AddScoped<IAdminService, AdminService>();
         services.AddScoped<ICourseService, CourseService>();
         services.AddScoped<INotificationService, NotificationService>();
+        services.AddScoped<IFaqService, FaqService>();
         services.AddHttpClient("Bytescale");
         services.AddScoped<IFileStorageService, BytescaleStorageService>();
 

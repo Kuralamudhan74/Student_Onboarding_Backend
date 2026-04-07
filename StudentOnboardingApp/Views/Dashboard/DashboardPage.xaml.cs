@@ -98,6 +98,14 @@ public partial class DashboardPage : ContentPage
 
     private async Task AnimateBotAsync()
     {
+        // Personalize the greeting with student's name
+        var name = _viewModel.UserName;
+        var hour = DateTime.Now.Hour;
+        var timeGreet = hour < 12 ? "Good morning" : hour < 17 ? "Good afternoon" : "Good evening";
+        BotMessage.Text = string.IsNullOrWhiteSpace(name) || name == "Student"
+            ? $"{timeGreet}! Need help? Tap me!"
+            : $"{timeGreet}, {name}! Need help? Tap me!";
+
         // Start bot avatar hidden
         BotAvatar.Opacity = 0;
         BotAvatar.Scale = 0.3;

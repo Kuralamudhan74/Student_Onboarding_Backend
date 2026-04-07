@@ -20,6 +20,9 @@ public class DbConnectionFactory
 
     public IDbConnection CreateConnection()
     {
+        if (_isProduction)
+            return new NpgsqlConnection(_connectionString);
+
         return new SqlConnection(_connectionString);
     }
 
