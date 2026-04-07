@@ -2,10 +2,10 @@
 FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
 WORKDIR /src
 
-COPY "Student Onboarding Platform/*.csproj" "Student Onboarding Platform/"
+COPY ["Student Onboarding Platform/Student Onboarding Platform.csproj", "Student Onboarding Platform/"]
 RUN dotnet restore "Student Onboarding Platform/Student Onboarding Platform.csproj"
 
-COPY "Student Onboarding Platform/" "Student Onboarding Platform/"
+COPY ["Student Onboarding Platform/", "Student Onboarding Platform/"]
 RUN dotnet publish "Student Onboarding Platform/Student Onboarding Platform.csproj" -c Release -o /app/publish
 
 # Runtime stage
@@ -14,7 +14,7 @@ WORKDIR /app
 COPY --from=build /app/publish .
 
 # Render sets PORT env variable
-ENV ASPNETCORE_URLS=http://+:${PORT:-10000}
+ENV ASPNETCORE_URLS=http://+:10000
 ENV ASPNETCORE_ENVIRONMENT=Production
 
 EXPOSE 10000
