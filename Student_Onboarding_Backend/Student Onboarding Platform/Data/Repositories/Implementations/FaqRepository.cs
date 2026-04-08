@@ -31,22 +31,24 @@ public class FaqRepository : IFaqRepository
     {
         using var conn = _db.CreateConnection();
         return await conn.QueryFirstOrDefaultAsync<Faq>(
-            "SELECT * FROM Faqs WHERE Id = @Id AND IsDeleted = 0",
-            new { Id = id });
+            "SELECT * FROM Faqs WHERE Id = @Id AND IsDeleted = @IsDeleted",
+            new { Id = id, IsDeleted = false });
     }
 
     public async Task<IEnumerable<Faq>> GetAllAsync()
     {
         using var conn = _db.CreateConnection();
         return await conn.QueryAsync<Faq>(
-            "SELECT * FROM Faqs WHERE IsDeleted = 0 ORDER BY SortOrder, CreatedAt");
+            "SELECT * FROM Faqs WHERE IsDeleted = @IsDeleted ORDER BY SortOrder, CreatedAt",
+            new { IsDeleted = false });
     }
 
     public async Task<IEnumerable<Faq>> GetActiveAsync()
     {
         using var conn = _db.CreateConnection();
         return await conn.QueryAsync<Faq>(
-            "SELECT * FROM Faqs WHERE IsDeleted = 0 AND IsActive = 1 ORDER BY SortOrder, CreatedAt");
+            "SELECT * FROM Faqs WHERE IsDeleted = @IsDeleted AND IsActive = @IsActive ORDER BY SortOrder, CreatedAt",
+            new { IsDeleted = false, IsActive = true });
     }
 
     public async Task UpdateAsync(Faq faq)
@@ -65,7 +67,7 @@ public class FaqRepository : IFaqRepository
     {
         using var conn = _db.CreateConnection();
         await conn.ExecuteAsync(
-            "UPDATE Faqs SET IsDeleted = 1, UpdatedAt = @UpdatedAt WHERE Id = @Id",
-            new { Id = id, UpdatedAt = DateTime.UtcNow });
+            "UPDATE Faqs SET IsDeleted = @IsDeleted, UpdatedAt = @UpdatedAt WHERE Id = @Id",
+            new { Id = id, IsDeleted = true, UpdatedAt = DateTime.UtcNow });
     }
 }
