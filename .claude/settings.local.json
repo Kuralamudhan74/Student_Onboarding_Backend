@@ -31,7 +31,9 @@
       "Bash(grep -n \"HttpPost\\\\|HttpGet\\\\|HttpPut\\\\|HttpDelete\" \"/d/SOP/Student_Onboarding_Backend/Student Onboarding Platform/Controllers\"/*.cs)",
       "WebFetch(domain:student-onboarding-api.onrender.com)",
       "Bash(xxd -l 100 -s 12000 \"d:/SOP/student_onboard/src/services/api.js\")",
-      "Bash(curl -s -w \"\\\\nHTTP_STATUS: %{http_code}\" \"https://student-onboarding-api.onrender.com/api/Admin/faqs\")"
+      "Bash(curl -s -w \"\\\\nHTTP_STATUS: %{http_code}\" \"https://student-onboarding-api.onrender.com/api/Admin/faqs\")",
+      "Bash(gh api:*)",
+      "WebFetch(domain:github.com)"
     ],
     "additionalDirectories": [
       "d:\\SOP\\Student_Onboarding_Backend\\.git"
