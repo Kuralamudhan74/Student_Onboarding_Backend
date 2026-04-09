@@ -1,4 +1,4 @@
-using System.Net.Http.Json;
+using StudentOnboardingApp.Helpers;
 using StudentOnboardingApp.Models.Common;
 using StudentOnboardingApp.Models.Dashboard;
 using StudentOnboardingApp.Services.Interfaces;
@@ -19,12 +19,11 @@ public class DashboardService : IDashboardService
         try
         {
             var response = await _client.GetAsync("student/dashboard");
-            var result = await response.Content.ReadFromJsonAsync<ApiResponse<DashboardDto>>();
-            return result ?? new ApiResponse<DashboardDto> { Success = false, Message = "Failed to parse response" };
+            return await HttpResponseParser.ParseAsync<DashboardDto>(response);
         }
         catch (Exception ex)
         {
-            return new ApiResponse<DashboardDto> { Success = false, Message = ex.Message };
+            return new ApiResponse<DashboardDto> { Success = false, Message = "Unable to load dashboard. Please try again." };
         }
     }
 }

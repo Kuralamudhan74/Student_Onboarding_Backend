@@ -5,10 +5,13 @@ namespace StudentOnboardingApp.Views.Auth;
 
 public partial class LoginPage : ContentPage
 {
-    public LoginPage(LoginViewModel viewModel)
+    private readonly IServiceProvider _serviceProvider;
+
+    public LoginPage(LoginViewModel viewModel, IServiceProvider serviceProvider)
     {
         InitializeComponent();
         BindingContext = viewModel;
+        _serviceProvider = serviceProvider;
     }
 
     protected override async void OnAppearing()
@@ -72,6 +75,6 @@ public partial class LoginPage : ContentPage
     {
         await BotAvatar.ScaleTo(0.85, 80, Easing.CubicOut);
         await BotAvatar.ScaleTo(1.0, 150, Easing.SpringOut);
-        await Navigation.PushAsync(new FaqPage());
+        await Navigation.PushAsync(_serviceProvider.GetRequiredService<FaqPage>());
     }
 }

@@ -11,6 +11,7 @@ using StudentOnboardingApp.Views.Courses;
 using StudentOnboardingApp.Views.Dashboard;
 using StudentOnboardingApp.Views.Notifications;
 using StudentOnboardingApp.Views.Onboarding;
+using StudentOnboardingApp.Views.Faq;
 using StudentOnboardingApp.Views.Profile;
 
 namespace StudentOnboardingApp;
@@ -97,6 +98,7 @@ public static class MauiProgram
         builder.Services.AddTransient<ChangePasswordPage>();
         builder.Services.AddTransient<NotificationsPage>();
         builder.Services.AddTransient<AdminNotificationsPage>();
+        builder.Services.AddTransient<FaqPage>();
 
 #if DEBUG
         builder.Logging.AddDebug();

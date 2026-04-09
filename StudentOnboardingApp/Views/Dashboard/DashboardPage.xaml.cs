@@ -6,11 +6,13 @@ namespace StudentOnboardingApp.Views.Dashboard;
 public partial class DashboardPage : ContentPage
 {
     private readonly DashboardViewModel _viewModel;
+    private readonly IServiceProvider _serviceProvider;
 
-    public DashboardPage(DashboardViewModel viewModel)
+    public DashboardPage(DashboardViewModel viewModel, IServiceProvider serviceProvider)
     {
         InitializeComponent();
         BindingContext = _viewModel = viewModel;
+        _serviceProvider = serviceProvider;
     }
 
     protected override async void OnAppearing()
@@ -93,7 +95,7 @@ public partial class DashboardPage : ContentPage
         // Bounce the avatar on tap
         await BotAvatar.ScaleTo(0.85, 80, Easing.CubicOut);
         await BotAvatar.ScaleTo(1.0, 150, Easing.SpringOut);
-        await Navigation.PushAsync(new FaqPage());
+        await Navigation.PushAsync(_serviceProvider.GetRequiredService<FaqPage>());
     }
 
     private async Task AnimateBotAsync()

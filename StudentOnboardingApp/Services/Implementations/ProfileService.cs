@@ -36,7 +36,7 @@ public class ProfileService : IProfileService
         }
         catch (Exception ex)
         {
-            return new ApiResponse<StudentProfileDto> { Success = false, Message = ex.Message };
+            return new ApiResponse<StudentProfileDto> { Success = false, Message = "Something went wrong. Please try again." };
         }
     }
 
@@ -67,7 +67,7 @@ public class ProfileService : IProfileService
         }
         catch (Exception ex)
         {
-            return new ApiResponse<StudentProfileDto> { Success = false, Message = ex.Message };
+            return new ApiResponse<StudentProfileDto> { Success = false, Message = "Something went wrong. Please try again." };
         }
     }
 
@@ -100,7 +100,7 @@ public class ProfileService : IProfileService
         }
         catch (Exception ex)
         {
-            return new ApiResponse<StudentProfileDto> { Success = false, Message = ex.Message };
+            return new ApiResponse<StudentProfileDto> { Success = false, Message = "Something went wrong. Please try again." };
         }
     }
 
@@ -126,7 +126,7 @@ public class ProfileService : IProfileService
         }
         catch (Exception ex)
         {
-            return new ApiResponse<string> { Success = false, Message = ex.Message };
+            return new ApiResponse<string> { Success = false, Message = "Something went wrong. Please try again." };
         }
     }
 }

@@ -5,6 +5,8 @@ namespace StudentOnboardingApp.Views.Faq;
 
 public partial class FaqPage : ContentPage
 {
+    private readonly IFaqService? _faqService;
+
     private static readonly List<(string Question, string Answer)> FallbackFaqs = new()
     {
         ("How do I register for a course?",
@@ -35,8 +37,9 @@ public partial class FaqPage : ContentPage
     private const string PhoneNumber = "+919876543210";
     private const string EmailAddress = "support@eduadmin.com";
 
-    public FaqPage()
+    public FaqPage(IFaqService faqService)
     {
+        _faqService = faqService;
         InitializeComponent();
         _ = LoadFaqsAsync();
     }
@@ -47,10 +50,9 @@ public partial class FaqPage : ContentPage
 
         try
         {
-            var faqService = Application.Current?.Handler?.MauiContext?.Services.GetService<IFaqService>();
-            if (faqService != null)
+            if (_faqService != null)
             {
-                var result = await faqService.GetFaqsAsync();
+                var result = await _faqService.GetFaqsAsync();
                 if (result.Success && result.Data != null && result.Data.Count > 0)
                 {
                     foreach (var faq in result.Data.OrderBy(f => f.SortOrder))

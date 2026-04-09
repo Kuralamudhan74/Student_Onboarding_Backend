@@ -173,6 +173,17 @@ public class AdminController : ControllerBase
         return result.Success ? Ok(result) : BadRequest(result);
     }
 
+    [HttpPost("profile/photo")]
+    public async Task<IActionResult> UploadProfilePhoto(IFormFile photo)
+    {
+        if (photo == null || photo.Length == 0)
+            return BadRequest(new { success = false, message = "No photo provided." });
+
+        var adminId = User.GetUserId();
+        var result = await _adminService.UploadProfilePhotoAsync(adminId, photo);
+        return result.Success ? Ok(result) : BadRequest(result);
+    }
+
     // ── FAQ Management ────────────────────────────────────────────────
 
     [HttpGet("faqs")]

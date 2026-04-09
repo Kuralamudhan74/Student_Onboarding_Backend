@@ -3,9 +3,7 @@ namespace StudentOnboardingApp;
 public static class Constants
 {
     // API Configuration
-    // For Windows: use localhost directly
-    // For Android Emulator: use https://10.0.2.2:7292/api/
-    public const string ApiBaseUrl = "https://localhost:7292/api/";
+    public const string ApiBaseUrl = "https://student-onboarding-api.onrender.com/api/";
 
     // Secure Storage Keys
     public const string AccessTokenKey = "access_token";

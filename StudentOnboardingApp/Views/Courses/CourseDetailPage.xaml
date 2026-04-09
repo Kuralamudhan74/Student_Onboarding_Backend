@@ -298,6 +298,20 @@
                 </VerticalStackLayout>
             </Border>
 
+            <!-- Applying Indicator -->
+            <Border BackgroundColor="White" StrokeShape="RoundRectangle 14"
+                    StrokeThickness="0" Padding="16,12" HorizontalOptions="Center"
+                    IsVisible="{Binding IsApplying}">
+                <HorizontalStackLayout Spacing="10" HorizontalOptions="Center">
+                    <ActivityIndicator IsRunning="{Binding IsApplying}"
+                                       Color="{StaticResource Primary}"
+                                       HeightRequest="20" WidthRequest="20" />
+                    <Label Text="Submitting application..." FontSize="13"
+                           TextColor="{StaticResource Primary}" VerticalOptions="Center"
+                           FontFamily="OpenSansSemibold" />
+                </HorizontalStackLayout>
+            </Border>
+
             <!-- Apply Button -->
             <Button Text="Apply for this Course"
                     Command="{Binding ApplyCommand}"
@@ -309,6 +323,7 @@
                     HeightRequest="52"
                     FontSize="16"
                     Margin="0,10,0,20"
+                    IsVisible="{Binding IsApplying, Converter={StaticResource InverseBoolConverter}}"
                     IsEnabled="{Binding IsBusy, Converter={StaticResource InverseBoolConverter}}">
                 <Button.Shadow>
                     <Shadow Brush="#405B5BD6" Offset="0,4" Radius="14" Opacity="0.25" />

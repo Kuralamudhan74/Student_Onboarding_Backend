@@ -1,4 +1,5 @@
 using System.Net.Http.Json;
+using StudentOnboardingApp.Helpers;
 using StudentOnboardingApp.Models.Common;
 using StudentOnboardingApp.Models.Onboarding;
 using StudentOnboardingApp.Services.Interfaces;
@@ -20,12 +21,11 @@ public class OnboardingService : IOnboardingService
         {
             var request = new { Email = email };
             var response = await _client.PostAsJsonAsync("auth/check-approval-status", request);
-            var result = await response.Content.ReadFromJsonAsync<ApiResponse<ApprovalStatusResponse>>();
-            return result ?? new ApiResponse<ApprovalStatusResponse> { Success = false, Message = "Failed to parse response" };
+            return await HttpResponseParser.ParseAsync<ApprovalStatusResponse>(response);
         }
-        catch (Exception ex)
+        catch
         {
-            return new ApiResponse<ApprovalStatusResponse> { Success = false, Message = ex.Message };
+            return new ApiResponse<ApprovalStatusResponse> { Success = false, Message = "Unable to check approval status." };
         }
     }
 
@@ -34,12 +34,11 @@ public class OnboardingService : IOnboardingService
         try
         {
             var response = await _client.GetAsync("onboarding/instructions");
-            var result = await response.Content.ReadFromJsonAsync<ApiResponse<List<OnboardingInstructionDto>>>();
-            return result ?? new ApiResponse<List<OnboardingInstructionDto>> { Success = false, Message = "Failed to parse response" };
+            return await HttpResponseParser.ParseAsync<List<OnboardingInstructionDto>>(response);
         }
-        catch (Exception ex)
+        catch
         {
-            return new ApiResponse<List<OnboardingInstructionDto>> { Success = false, Message = ex.Message };
+            return new ApiResponse<List<OnboardingInstructionDto>> { Success = false, Message = "Unable to load instructions." };
         }
     }
 
@@ -48,12 +47,11 @@ public class OnboardingService : IOnboardingService
         try
         {
             var response = await _client.PostAsync("onboarding/accept", null);
-            var result = await response.Content.ReadFromJsonAsync<ApiResponse<string>>();
-            return result ?? new ApiResponse<string> { Success = false, Message = "Failed to parse response" };
+            return await HttpResponseParser.ParseAsync<string>(response);
         }
-        catch (Exception ex)
+        catch
         {
-            return new ApiResponse<string> { Success = false, Message = ex.Message };
+            return new ApiResponse<string> { Success = false, Message = "Failed to accept onboarding." };
         }
     }
 }

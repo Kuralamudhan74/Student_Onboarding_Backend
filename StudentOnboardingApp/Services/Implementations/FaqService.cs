@@ -1,4 +1,4 @@
-using System.Net.Http.Json;
+using StudentOnboardingApp.Helpers;
 using StudentOnboardingApp.Models.Common;
 using StudentOnboardingApp.Models.Faq;
 using StudentOnboardingApp.Services.Interfaces;
@@ -19,12 +19,11 @@ public class FaqService : IFaqService
         try
         {
             var response = await _client.GetAsync("Student/faqs");
-            var result = await response.Content.ReadFromJsonAsync<ApiResponse<List<FaqDto>>>();
-            return result ?? new ApiResponse<List<FaqDto>> { Success = false, Message = "Failed to parse response" };
+            return await HttpResponseParser.ParseAsync<List<FaqDto>>(response);
         }
-        catch (Exception ex)
+        catch
         {
-            return new ApiResponse<List<FaqDto>> { Success = false, Message = ex.Message };
+            return new ApiResponse<List<FaqDto>> { Success = false, Message = "Unable to load FAQs." };
         }
     }
 }

@@ -1,4 +1,5 @@
 using System.Net.Http.Json;
+using StudentOnboardingApp.Helpers;
 using StudentOnboardingApp.Models.Common;
 using StudentOnboardingApp.Models.Notification;
 using StudentOnboardingApp.Services.Interfaces;
@@ -19,12 +20,11 @@ public class NotificationService : INotificationService
         try
         {
             var response = await _client.GetAsync("student/notifications");
-            var result = await response.Content.ReadFromJsonAsync<ApiResponse<List<NotificationDto>>>();
-            return result ?? new ApiResponse<List<NotificationDto>> { Success = false, Message = "Failed to parse response" };
+            return await HttpResponseParser.ParseAsync<List<NotificationDto>>(response);
         }
-        catch (Exception ex)
+        catch
         {
-            return new ApiResponse<List<NotificationDto>> { Success = false, Message = ex.Message };
+            return new ApiResponse<List<NotificationDto>> { Success = false, Message = "Unable to load notifications." };
         }
     }
 
@@ -33,12 +33,11 @@ public class NotificationService : INotificationService
         try
         {
             var response = await _client.GetAsync("admin/notifications");
-            var result = await response.Content.ReadFromJsonAsync<ApiResponse<List<NotificationDto>>>();
-            return result ?? new ApiResponse<List<NotificationDto>> { Success = false, Message = "Failed to parse response" };
+            return await HttpResponseParser.ParseAsync<List<NotificationDto>>(response);
         }
-        catch (Exception ex)
+        catch
         {
-            return new ApiResponse<List<NotificationDto>> { Success = false, Message = ex.Message };
+            return new ApiResponse<List<NotificationDto>> { Success = false, Message = "Unable to load notifications." };
         }
     }
 
@@ -47,12 +46,11 @@ public class NotificationService : INotificationService
         try
         {
             var response = await _client.PutAsync($"student/notifications/{notificationId}/read", null);
-            var result = await response.Content.ReadFromJsonAsync<ApiResponse<string>>();
-            return result ?? new ApiResponse<string> { Success = false, Message = "Failed to parse response" };
+            return await HttpResponseParser.ParseAsync<string>(response);
         }
-        catch (Exception ex)
+        catch
         {
-            return new ApiResponse<string> { Success = false, Message = ex.Message };
+            return new ApiResponse<string> { Success = false, Message = "Failed to mark notification as read." };
         }
     }
 
@@ -61,12 +59,11 @@ public class NotificationService : INotificationService
         try
         {
             var response = await _client.PutAsync($"admin/notifications/{notificationId}/read", null);
-            var result = await response.Content.ReadFromJsonAsync<ApiResponse<string>>();
-            return result ?? new ApiResponse<string> { Success = false, Message = "Failed to parse response" };
+            return await HttpResponseParser.ParseAsync<string>(response);
         }
-        catch (Exception ex)
+        catch
         {
-            return new ApiResponse<string> { Success = false, Message = ex.Message };
+            return new ApiResponse<string> { Success = false, Message = "Failed to mark notification as read." };
         }
     }
 
@@ -75,12 +72,11 @@ public class NotificationService : INotificationService
         try
         {
             var response = await _client.PostAsJsonAsync("student/notifications/register-device", new { Token = fcmToken });
-            var result = await response.Content.ReadFromJsonAsync<ApiResponse<string>>();
-            return result ?? new ApiResponse<string> { Success = false, Message = "Failed to parse response" };
+            return await HttpResponseParser.ParseAsync<string>(response);
         }
-        catch (Exception ex)
+        catch
         {
-            return new ApiResponse<string> { Success = false, Message = ex.Message };
+            return new ApiResponse<string> { Success = false, Message = "Failed to register device." };
         }
     }
 
@@ -105,12 +101,11 @@ public class NotificationService : INotificationService
         {
             var request = new { Title = title, Message = message, StudentIds = studentIds };
             var response = await _client.PostAsJsonAsync("admin/notifications/send", request);
-            var result = await response.Content.ReadFromJsonAsync<ApiResponse<string>>();
-            return result ?? new ApiResponse<string> { Success = false, Message = "Failed to parse response" };
+            return await HttpResponseParser.ParseAsync<string>(response);
         }
-        catch (Exception ex)
+        catch
         {
-            return new ApiResponse<string> { Success = false, Message = ex.Message };
+            return new ApiResponse<string> { Success = false, Message = "Failed to send notification." };
         }
     }
 }

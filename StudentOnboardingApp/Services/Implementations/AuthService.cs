@@ -1,4 +1,5 @@
 using System.Net.Http.Json;
+using StudentOnboardingApp.Helpers;
 using StudentOnboardingApp.Models.Auth;
 using StudentOnboardingApp.Models.Common;
 using StudentOnboardingApp.Services.Interfaces;
@@ -23,13 +24,13 @@ public class AuthService : IAuthService
     public async Task<ApiResponse<string>> SignupAsync(SignupRequest request)
     {
         var response = await _publicClient.PostAsJsonAsync("auth/signup", request);
-        return await ParseResponseAsync<string>(response);
+        return await HttpResponseParser.ParseAsync<string>(response);
     }
 
     public async Task<ApiResponse<AuthResponse>> LoginAsync(LoginRequest request)
     {
         var response = await _publicClient.PostAsJsonAsync("auth/login", request);
-        var result = await ParseResponseAsync<AuthResponse>(response);
+        var result = await HttpResponseParser.ParseAsync<AuthResponse>(response);
 
         if (result.Success && result.Data != null)
         {
@@ -46,37 +47,37 @@ public class AuthService : IAuthService
     public async Task<ApiResponse<string>> VerifyOtpAsync(VerifyOtpRequest request)
     {
         var response = await _publicClient.PostAsJsonAsync("auth/verify-otp", request);
-        return await ParseResponseAsync<string>(response);
+        return await HttpResponseParser.ParseAsync<string>(response);
     }
 
     public async Task<ApiResponse<string>> ResendOtpAsync(ResendOtpRequest request)
     {
         var response = await _publicClient.PostAsJsonAsync("auth/resend-otp", request);
-        return await ParseResponseAsync<string>(response);
+        return await HttpResponseParser.ParseAsync<string>(response);
     }
 
     public async Task<ApiResponse<string>> ForgotPasswordAsync(ForgotPasswordRequest request)
     {
         var response = await _publicClient.PostAsJsonAsync("auth/forgot-password", request);
-        return await ParseResponseAsync<string>(response);
+        return await HttpResponseParser.ParseAsync<string>(response);
     }
 
     public async Task<ApiResponse<string>> ResetPasswordAsync(ResetPasswordRequest request)
     {
         var response = await _publicClient.PostAsJsonAsync("auth/reset-password", request);
-        return await ParseResponseAsync<string>(response);
+        return await HttpResponseParser.ParseAsync<string>(response);
     }
 
     public async Task<ApiResponse<string>> ChangePasswordAsync(ChangePasswordRequest request)
     {
         var response = await _authenticatedClient.PostAsJsonAsync("auth/change-password", request);
-        return await ParseResponseAsync<string>(response);
+        return await HttpResponseParser.ParseAsync<string>(response);
     }
 
     public async Task<ApiResponse<AuthResponse>> RefreshTokenAsync(RefreshTokenRequest request)
     {
         var response = await _publicClient.PostAsJsonAsync("auth/refresh-token", request);
-        var result = await ParseResponseAsync<AuthResponse>(response);
+        var result = await HttpResponseParser.ParseAsync<AuthResponse>(response);
 
         if (result.Success && result.Data != null)
         {
@@ -91,26 +92,11 @@ public class AuthService : IAuthService
 
     public async Task<ApiResponse<string>> LogoutAsync()
     {
-        var response = await _authenticatedClient.PostAsync("auth/logout", null);
-        var result = await ParseResponseAsync<string>(response);
+        var refreshToken = await _tokenStorage.GetRefreshTokenAsync();
+        var response = await _authenticatedClient.PostAsJsonAsync("auth/logout",
+            new RefreshTokenRequest { RefreshToken = refreshToken ?? string.Empty });
+        var result = await HttpResponseParser.ParseAsync<string>(response);
         await _tokenStorage.ClearAllAsync();
         return result;
-    }
-
-    private static async Task<ApiResponse<T>> ParseResponseAsync<T>(HttpResponseMessage response)
-    {
-        try
-        {
-            var result = await response.Content.ReadFromJsonAsync<ApiResponse<T>>();
-            return result ?? new ApiResponse<T> { Success = false, Message = "Failed to parse response" };
-        }
-        catch
-        {
-            return new ApiResponse<T>
-            {
-                Success = false,
-                Message = $"Request failed with status {response.StatusCode}"
-            };
-        }
     }
 }

@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Http;
 using Student_Onboarding_Platform.Data.Repositories.Interfaces;
 using Student_Onboarding_Platform.Models.DTOs.Admin;
 using Student_Onboarding_Platform.Models.DTOs.Common;
@@ -15,6 +16,7 @@ public class AdminService : IAdminService
     private readonly IEmailService _emailService;
     private readonly INotificationService _notificationService;
     private readonly ISessionService _sessionService;
+    private readonly IFileStorageService _fileStorage;
     private readonly ILogger<AdminService> _logger;
 
     public AdminService(
@@ -24,6 +26,7 @@ public class AdminService : IAdminService
         IEmailService emailService,
         INotificationService notificationService,
         ISessionService sessionService,
+        IFileStorageService fileStorage,
         ILogger<AdminService> logger)
     {
         _userService = userService;
@@ -32,6 +35,7 @@ public class AdminService : IAdminService
         _emailService = emailService;
         _notificationService = notificationService;
         _sessionService = sessionService;
+        _fileStorage = fileStorage;
         _logger = logger;
     }
 
@@ -269,5 +273,23 @@ public class AdminService : IAdminService
 
         _logger.LogInformation("Payment updated for registration {RegistrationId}: {Status}", registrationId, request.PaymentStatus);
         return ApiResponse<string>.Ok("Payment updated successfully.");
+    }
+
+    public async Task<ApiResponse<string>> UploadProfilePhotoAsync(Guid adminId, IFormFile photo)
+    {
+        var user = await _userService.GetByIdAsync(adminId);
+        if (user == null)
+            return ApiResponse<string>.Fail("Admin not found.");
+
+        var fileName = $"{adminId}_{DateTime.UtcNow.Ticks}{Path.GetExtension(photo.FileName)}";
+        var contentType = photo.ContentType ?? "image/jpeg";
+
+        using var stream = photo.OpenReadStream();
+        var photoUrl = await _fileStorage.UploadAsync(stream, fileName, contentType);
+
+        await _userService.UpdateProfilePhotoAsync(adminId, photoUrl);
+
+        _logger.LogInformation("Profile photo uploaded for admin {AdminId}", adminId);
+        return ApiResponse<string>.Ok(photoUrl, "Profile photo uploaded successfully.");
     }
 }

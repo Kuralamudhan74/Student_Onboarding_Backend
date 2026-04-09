@@ -174,19 +174,24 @@ public partial class CourseDetailViewModel : BaseViewModel
     [ObservableProperty]
     private bool _applicationSubmitted;
 
+    [ObservableProperty]
+    private bool _isApplying;
+
     [RelayCommand]
     private async Task ApplyAsync()
     {
-        if (Course == null) return;
+        if (Course == null || IsApplying) return;
 
-        await ExecuteAsync(async () =>
+        IsApplying = true;
+        ErrorMessage = null;
+
+        try
         {
             var request = new CourseApplicationRequest { CourseId = Course.Id };
             var result = await _courseService.ApplyForCourseAsync(request);
 
             if (result.Success)
             {
-                // Show success state briefly, then redirect to dashboard
                 ApplicationSubmitted = true;
                 await Task.Delay(2000);
                 await Shell.Current.GoToAsync("//main/dashboard");
@@ -195,6 +200,14 @@ public partial class CourseDetailViewModel : BaseViewModel
             {
                 ErrorMessage = result.Message;
             }
-        });
+        }
+        catch
+        {
+            ErrorMessage = "Unable to apply for this course. Please try again.";
+        }
+        finally
+        {
+            IsApplying = false;
+        }
     }
 }

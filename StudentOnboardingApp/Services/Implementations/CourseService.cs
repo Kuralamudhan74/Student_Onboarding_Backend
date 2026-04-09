@@ -1,4 +1,5 @@
 using System.Net.Http.Json;
+using StudentOnboardingApp.Helpers;
 using StudentOnboardingApp.Models.Common;
 using StudentOnboardingApp.Models.Course;
 using StudentOnboardingApp.Services.Interfaces;
@@ -19,12 +20,11 @@ public class CourseService : ICourseService
         try
         {
             var response = await _client.GetAsync("course");
-            var result = await response.Content.ReadFromJsonAsync<ApiResponse<List<CourseDto>>>();
-            return result ?? new ApiResponse<List<CourseDto>> { Success = false, Message = "Failed to parse response" };
+            return await HttpResponseParser.ParseAsync<List<CourseDto>>(response);
         }
-        catch (Exception ex)
+        catch
         {
-            return new ApiResponse<List<CourseDto>> { Success = false, Message = ex.Message };
+            return new ApiResponse<List<CourseDto>> { Success = false, Message = "Unable to load courses. Please try again." };
         }
     }
 
@@ -33,12 +33,11 @@ public class CourseService : ICourseService
         try
         {
             var response = await _client.GetAsync($"course/{courseId}");
-            var result = await response.Content.ReadFromJsonAsync<ApiResponse<CourseDetailDto>>();
-            return result ?? new ApiResponse<CourseDetailDto> { Success = false, Message = "Failed to parse response" };
+            return await HttpResponseParser.ParseAsync<CourseDetailDto>(response);
         }
-        catch (Exception ex)
+        catch
         {
-            return new ApiResponse<CourseDetailDto> { Success = false, Message = ex.Message };
+            return new ApiResponse<CourseDetailDto> { Success = false, Message = "Unable to load course details. Please try again." };
         }
     }
 
@@ -47,12 +46,11 @@ public class CourseService : ICourseService
         try
         {
             var response = await _client.PostAsJsonAsync("student/courses/register", request);
-            var result = await response.Content.ReadFromJsonAsync<ApiResponse<string>>();
-            return result ?? new ApiResponse<string> { Success = false, Message = "Failed to parse response" };
+            return await HttpResponseParser.ParseAsync<string>(response);
         }
-        catch (Exception ex)
+        catch
         {
-            return new ApiResponse<string> { Success = false, Message = ex.Message };
+            return new ApiResponse<string> { Success = false, Message = "Unable to register for course. Please try again." };
         }
     }
 
@@ -61,12 +59,11 @@ public class CourseService : ICourseService
         try
         {
             var response = await _client.GetAsync($"student/courses/{courseId}/reviews");
-            var result = await response.Content.ReadFromJsonAsync<ApiResponse<CourseReviewsResponse>>();
-            return result ?? new ApiResponse<CourseReviewsResponse> { Success = false, Message = "Failed to parse response" };
+            return await HttpResponseParser.ParseAsync<CourseReviewsResponse>(response);
         }
-        catch (Exception ex)
+        catch
         {
-            return new ApiResponse<CourseReviewsResponse> { Success = false, Message = ex.Message };
+            return new ApiResponse<CourseReviewsResponse> { Success = false, Message = "Unable to load reviews. Please try again." };
         }
     }
 
@@ -75,12 +72,11 @@ public class CourseService : ICourseService
         try
         {
             var response = await _client.PostAsJsonAsync($"student/courses/{courseId}/review", request);
-            var result = await response.Content.ReadFromJsonAsync<ApiResponse<string>>();
-            return result ?? new ApiResponse<string> { Success = false, Message = "Failed to parse response" };
+            return await HttpResponseParser.ParseAsync<string>(response);
         }
-        catch (Exception ex)
+        catch
         {
-            return new ApiResponse<string> { Success = false, Message = ex.Message };
+            return new ApiResponse<string> { Success = false, Message = "Unable to submit review. Please try again." };
         }
     }
 }
