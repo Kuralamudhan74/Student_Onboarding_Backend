@@ -13,9 +13,8 @@ FROM mcr.microsoft.com/dotnet/aspnet:8.0 AS runtime
 WORKDIR /app
 COPY --from=build /app/publish .
 
-# Render sets PORT env variable
-ENV ASPNETCORE_URLS=http://+:10000
+ENV ASPNETCORE_URLS=http://+:${PORT}
 ENV ASPNETCORE_ENVIRONMENT=Production
 
-EXPOSE 10000
+EXPOSE 8080
 ENTRYPOINT ["dotnet", "Student Onboarding Platform.dll"]
