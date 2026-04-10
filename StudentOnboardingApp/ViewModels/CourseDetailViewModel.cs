@@ -193,8 +193,16 @@ public partial class CourseDetailViewModel : BaseViewModel
             if (result.Success)
             {
                 ApplicationSubmitted = true;
-                await Task.Delay(2000);
-                await Shell.Current.GoToAsync("//main/dashboard");
+                await Task.Delay(3000);
+                try
+                {
+                    await Shell.Current.GoToAsync("//main/courses");
+                }
+                catch
+                {
+                    // Fallback: navigate back if route fails
+                    await Shell.Current.Navigation.PopToRootAsync();
+                }
             }
             else
             {
