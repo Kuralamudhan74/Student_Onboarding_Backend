@@ -43,7 +43,8 @@
       "Bash(find /d/SOP/StudentOnboardingApp -name \"*.cs\" -exec grep -l \"PostAsync.*null\\\\|PostAsJsonAsync.*null\" {} \\\\;)",
       "Bash(find /d/SOP/StudentOnboardingApp -name \"*.cs\" -exec grep -l \"JsonSerializerContext\\\\|JsonSourceGenerationOptions\\\\|TypeInfoResolver\" {} \\\\;)",
       "Bash(find /d/SOP/StudentOnboardingApp -name \"*.cs\" -exec grep -l \"PostAsJsonAsync\" {} \\\\;)",
-      "Bash(npm start:*)"
+      "Bash(npm start:*)",
+      "Bash(curl -s -X PUT \"https://student-onboarding-api.onrender.com/api/Admin/course-registrations/00000000-0000-0000-0000-000000000000/payment\" -H \"Content-Type: application/json\" -d '{\"paymentStatus\":\"Partially Paid\",\"paymentAmount\":0,\"notes\":\"test\"}')"
     ],
     "additionalDirectories": [
       "d:\\SOP\\Student_Onboarding_Backend\\.git"
