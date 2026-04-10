@@ -13,7 +13,7 @@
                  Command="{Binding LoadDashboardCommand}"
                  RefreshColor="{StaticResource Primary}">
         <ScrollView>
-            <VerticalStackLayout Spacing="0" Padding="24,28" x:Name="PageContent">
+            <VerticalStackLayout Spacing="0" Padding="20,24,20,32" x:Name="PageContent">
 
                 <!-- Welcome Header Card -->
                 <Border StrokeThickness="0" StrokeShape="RoundRectangle 20"

@@ -84,13 +84,28 @@ public partial class ProfileViewModel : BaseViewModel
                 ? photoPath
                 : $"{Constants.ApiBaseUrl.Replace("/api/", "")}{photoPath}";
 
-            using var handler = new HttpClientHandler();
+            // Try URI-based loading first (works best with CDN URLs and MAUI image caching)
+            try
+            {
+                ProfileImage = ImageSource.FromUri(new Uri(url));
+                return;
+            }
+            catch
+            {
+                // Fallback to manual download if URI loading fails
+            }
+
+            // Manual download fallback
+            var handler = new HttpClientHandler();
 #if DEBUG
             handler.ServerCertificateCustomValidationCallback = (_, _, _, _) => true;
 #endif
-            using var client = new HttpClient(handler);
+            using var client = new HttpClient(handler) { Timeout = TimeSpan.FromSeconds(15) };
             var bytes = await client.GetByteArrayAsync(url);
-            ProfileImage = ImageSource.FromStream(() => new MemoryStream(bytes));
+            if (bytes != null && bytes.Length > 0)
+            {
+                ProfileImage = ImageSource.FromStream(() => new MemoryStream(bytes));
+            }
         }
         catch
         {

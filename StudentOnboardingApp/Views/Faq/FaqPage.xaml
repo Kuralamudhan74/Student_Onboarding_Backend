@@ -75,7 +75,7 @@
                             <TapGestureRecognizer Tapped="OnPhoneTapped" />
                         </Border.GestureRecognizers>
                         <VerticalStackLayout Spacing="6" HorizontalOptions="Center">
-                            <Label Text="&#x1F4DE;" FontSize="22"
+                            <Label Text="&#x1F4DE;" FontSize="24"
                                    HorizontalOptions="Center" />
                             <Label Text="Call Us" FontSize="13"
                                    FontFamily="OpenSansSemibold" FontAttributes="Bold"
@@ -88,15 +88,15 @@
                     </Border>
 
                     <!-- Email Button -->
-                    <Border Grid.Column="1" BackgroundColor="{StaticResource Surface3}"
-                            StrokeThickness="1" Stroke="{StaticResource BorderColor}"
+                    <Border Grid.Column="1" BackgroundColor="#EEF2FF"
+                            StrokeThickness="1" Stroke="#C7D2FE"
                             StrokeShape="RoundRectangle 14" Padding="14,12"
                             x:Name="EmailCard">
                         <Border.GestureRecognizers>
                             <TapGestureRecognizer Tapped="OnEmailTapped" />
                         </Border.GestureRecognizers>
                         <VerticalStackLayout Spacing="6" HorizontalOptions="Center">
-                            <Label Text="&#x2709;" FontSize="22"
+                            <Label Text="&#x1F4E7;" FontSize="24"
                                    HorizontalOptions="Center" />
                             <Label Text="Email Us" FontSize="13"
                                    FontFamily="OpenSansSemibold" FontAttributes="Bold"

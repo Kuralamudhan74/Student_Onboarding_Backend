@@ -8,7 +8,7 @@
              BackgroundColor="{StaticResource LightBackground}">
 
     <ScrollView>
-        <VerticalStackLayout Spacing="16" Padding="20" x:Name="ProfileContent">
+        <VerticalStackLayout Spacing="18" Padding="20,24,20,32" x:Name="ProfileContent">
 
             <!-- Loading — properly spaced in its own card -->
             <Border BackgroundColor="White" StrokeShape="RoundRectangle 14"

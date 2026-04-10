@@ -143,13 +143,30 @@ public partial class FaqPage : ContentPage
         };
 
         var tapGesture = new TapGestureRecognizer();
-        tapGesture.Tapped += (s, e) =>
+        tapGesture.Tapped += async (s, e) =>
         {
-            answerLabel.IsVisible = !answerLabel.IsVisible;
-            chevron.Text = answerLabel.IsVisible ? "\u25BC" : "\u25B6";
-            border.BackgroundColor = answerLabel.IsVisible
+            var expanding = !answerLabel.IsVisible;
+            chevron.Text = expanding ? "\u25BC" : "\u25B6";
+            border.BackgroundColor = expanding
                 ? Color.FromArgb("#FAFAFF")
                 : Colors.White;
+
+            if (expanding)
+            {
+                answerLabel.Opacity = 0;
+                answerLabel.TranslationY = -6;
+                answerLabel.IsVisible = true;
+                await Task.WhenAll(
+                    answerLabel.FadeTo(1, 180, Easing.CubicOut),
+                    answerLabel.TranslateTo(0, 0, 200, Easing.CubicOut)
+                );
+            }
+            else
+            {
+                await answerLabel.FadeTo(0, 120, Easing.CubicOut);
+                answerLabel.IsVisible = false;
+                answerLabel.TranslationY = 0;
+            }
         };
         border.GestureRecognizers.Add(tapGesture);
 
@@ -172,11 +189,27 @@ public partial class FaqPage : ContentPage
     {
         try
         {
-            PhoneDialer.Default.Open(PhoneNumber);
+            if (PhoneDialer.Default.IsSupported)
+            {
+                PhoneDialer.Default.Open(PhoneNumber);
+            }
+            else
+            {
+                // Fallback: use Launcher to open tel: URI
+                await Launcher.Default.OpenAsync(new Uri($"tel:{PhoneNumber}"));
+            }
         }
         catch
         {
-            await DisplayAlert("Unavailable", "Phone dialer is not available on this device.", "OK");
+            try
+            {
+                // Last resort fallback via Launcher
+                await Launcher.Default.OpenAsync(new Uri($"tel:{PhoneNumber}"));
+            }
+            catch
+            {
+                await DisplayAlert("Unavailable", "Unable to make a phone call from this device. Please dial " + PhoneNumber + " manually.", "OK");
+            }
         }
     }
 
@@ -184,16 +217,32 @@ public partial class FaqPage : ContentPage
     {
         try
         {
-            var message = new EmailMessage
+            if (Email.Default.IsComposeSupported)
             {
-                To = new List<string> { EmailAddress },
-                Subject = "Support Request",
-            };
-            await Email.Default.ComposeAsync(message);
+                var message = new EmailMessage
+                {
+                    To = new List<string> { EmailAddress },
+                    Subject = "Support Request",
+                };
+                await Email.Default.ComposeAsync(message);
+            }
+            else
+            {
+                // Fallback: use Launcher to open mailto: URI
+                await Launcher.Default.OpenAsync(new Uri($"mailto:{EmailAddress}?subject=Support%20Request"));
+            }
         }
         catch
         {
-            await DisplayAlert("Unavailable", "Email client is not available on this device.", "OK");
+            try
+            {
+                // Last resort fallback via Launcher
+                await Launcher.Default.OpenAsync(new Uri($"mailto:{EmailAddress}?subject=Support%20Request"));
+            }
+            catch
+            {
+                await DisplayAlert("Unavailable", "Unable to open email. Please write to " + EmailAddress + " manually.", "OK");
+            }
         }
     }
 }

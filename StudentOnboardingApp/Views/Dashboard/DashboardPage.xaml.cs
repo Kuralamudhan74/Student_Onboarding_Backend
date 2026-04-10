@@ -21,8 +21,8 @@ public partial class DashboardPage : ContentPage
 
         // Reset elements
         WelcomeCard.Opacity = 0;
-        WelcomeCard.TranslationY = -30;
-        WelcomeCard.Scale = 0.95;
+        WelcomeCard.TranslationY = -15;
+        WelcomeCard.Scale = 0.97;
         ProgressBarControl.Progress = 0;
         PageContent.Opacity = 1;
 
@@ -31,9 +31,9 @@ public partial class DashboardPage : ContentPage
 
         // Welcome card drops in
         await Task.WhenAll(
-            WelcomeCard.FadeTo(1, 450, Easing.CubicOut),
-            WelcomeCard.TranslateTo(0, 0, 500, Easing.SpringOut),
-            WelcomeCard.ScaleTo(1, 500, Easing.SpringOut)
+            WelcomeCard.FadeTo(1, 250, Easing.CubicOut),
+            WelcomeCard.TranslateTo(0, 0, 300, Easing.CubicOut),
+            WelcomeCard.ScaleTo(1, 300, Easing.CubicOut)
         );
 
         // Animate cards
@@ -42,13 +42,13 @@ public partial class DashboardPage : ContentPage
         // Animate progress bar fill with smooth animation
         if (_viewModel.HasCourse && _viewModel.CourseProgress > 0)
         {
-            await Task.Delay(300);
+            await Task.Delay(150);
 
             // Change color to green if completed
             if (_viewModel.IsCompleted)
                 ProgressBarControl.ProgressColor = Color.FromArgb("#22C55E");
 
-            await ProgressBarControl.ProgressTo(_viewModel.CourseProgress, 1200, Easing.CubicOut);
+            await ProgressBarControl.ProgressTo(_viewModel.CourseProgress, 600, Easing.CubicOut);
         }
 
         // Animate the bot avatar
@@ -68,22 +68,22 @@ public partial class DashboardPage : ContentPage
         foreach (var card in cards)
         {
             card.Opacity = 0;
-            card.TranslationY = 25;
-            card.Scale = 0.96;
+            card.TranslationY = 12;
+            card.Scale = 0.98;
         }
 
         for (int i = 0; i < cards.Count; i++)
         {
             var card = cards[i];
-            var delay = i * 80;
+            var delay = i * 40;
 
 #pragma warning disable CS4014
             Task.Delay(delay).ContinueWith(_ => MainThread.BeginInvokeOnMainThread(async () =>
             {
                 await Task.WhenAll(
-                    card.FadeTo(1, 400, Easing.CubicOut),
-                    card.TranslateTo(0, 0, 450, Easing.CubicOut),
-                    card.ScaleTo(1, 400, Easing.SpringOut)
+                    card.FadeTo(1, 220, Easing.CubicOut),
+                    card.TranslateTo(0, 0, 250, Easing.CubicOut),
+                    card.ScaleTo(1, 250, Easing.CubicOut)
                 );
             }));
 #pragma warning restore CS4014
@@ -115,22 +115,22 @@ public partial class DashboardPage : ContentPage
         BotBubble.TranslationX = 30;
 
         // Bot bounces in
-        await Task.Delay(800);
+        await Task.Delay(400);
         await Task.WhenAll(
-            BotAvatar.FadeTo(1, 350, Easing.CubicOut),
-            BotAvatar.ScaleTo(1, 500, Easing.SpringOut)
+            BotAvatar.FadeTo(1, 200, Easing.CubicOut),
+            BotAvatar.ScaleTo(1, 300, Easing.CubicOut)
         );
 
         // Speech bubble slides in
-        await Task.Delay(300);
+        await Task.Delay(150);
         await Task.WhenAll(
-            BotBubble.FadeTo(1, 300, Easing.CubicOut),
-            BotBubble.TranslateTo(0, 0, 400, Easing.CubicOut)
+            BotBubble.FadeTo(1, 200, Easing.CubicOut),
+            BotBubble.TranslateTo(0, 0, 250, Easing.CubicOut)
         );
 
         // Auto-hide the bubble after 4 seconds
         await Task.Delay(4000);
-        await BotBubble.FadeTo(0, 300, Easing.CubicIn);
+        await BotBubble.FadeTo(0, 200, Easing.CubicOut);
     }
 
     private static List<T> GetVisualTreeChildren<T>(IView parent) where T : class

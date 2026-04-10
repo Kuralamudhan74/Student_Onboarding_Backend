@@ -13,12 +13,12 @@
                  RefreshColor="{StaticResource Primary}">
         <CollectionView ItemsSource="{Binding Courses}" SelectionMode="None"
                         x:Name="CoursesCollection">
-            <!-- 3 columns grid layout -->
+            <!-- 2 columns grid layout for better mobile readability -->
             <CollectionView.ItemsLayout>
                 <GridItemsLayout Orientation="Vertical"
-                                 Span="3"
-                                 HorizontalItemSpacing="12"
-                                 VerticalItemSpacing="14" />
+                                 Span="2"
+                                 HorizontalItemSpacing="14"
+                                 VerticalItemSpacing="16" />
             </CollectionView.ItemsLayout>
 
             <CollectionView.Header>
@@ -73,7 +73,7 @@
                     <Border BackgroundColor="White"
                             StrokeShape="RoundRectangle 18"
                             Stroke="{StaticResource BorderLight}"
-                            Padding="0" Margin="0" StrokeThickness="1"
+                            Padding="0" Margin="4,0" StrokeThickness="1"
                             MinimumHeightRequest="260">
                         <Border.Shadow>
                             <Shadow Brush="#145B5BD6" Offset="0,4" Radius="16" Opacity="0.10" />

@@ -46,7 +46,8 @@
       "Bash(npm start:*)",
       "Bash(curl -s -X PUT \"https://student-onboarding-api.onrender.com/api/Admin/course-registrations/00000000-0000-0000-0000-000000000000/payment\" -H \"Content-Type: application/json\" -d '{\"paymentStatus\":\"Partially Paid\",\"paymentAmount\":0,\"notes\":\"test\"}')",
       "Bash(curl -s \"https://student-onboarding-api.onrender.com/api/Auth/login\" -X POST -H \"Content-Type: application/json\" -d '{\"email\":\"kuralamu04@gmail.com\",\"password\":\"Test@123\",\"deviceType\":\"Web\",\"deviceName\":\"Test\"}')",
-      "Bash(python3 -m json.tool)"
+      "Bash(python3 -m json.tool)",
+      "Bash(xargs wc:*)"
     ],
     "additionalDirectories": [
       "d:\\SOP\\Student_Onboarding_Backend\\.git"

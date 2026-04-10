@@ -103,7 +103,7 @@
                             StrokeShape="RoundRectangle 16"
                             Stroke="{StaticResource BorderColor}"
                             Padding="18"
-                            Margin="20,0,20,12"
+                            Margin="20,0,20,14"
                             StrokeThickness="1">
                         <Border.Shadow>
                             <Shadow Brush="#0A5B5BD6" Offset="0,2" Radius="10" Opacity="0.06" />

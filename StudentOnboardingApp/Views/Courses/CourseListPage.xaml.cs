@@ -18,21 +18,21 @@ public partial class CourseListPage : ContentPage
 
         // Reset header for slide-in
         HeaderSection.Opacity = 0;
-        HeaderSection.TranslationX = -30;
-        HeaderSection.Scale = 0.95;
+        HeaderSection.TranslationX = -15;
+        HeaderSection.Scale = 0.98;
 
         // Always reload to reflect admin edits
         await _viewModel.LoadCoursesCommand.ExecuteAsync(null);
 
-        // Header slides in with spring
+        // Header slides in
         await Task.WhenAll(
-            HeaderSection.FadeTo(1, 400, Easing.CubicOut),
-            HeaderSection.TranslateTo(0, 0, 450, Easing.SpringOut),
-            HeaderSection.ScaleTo(1, 400, Easing.CubicOut)
+            HeaderSection.FadeTo(1, 220, Easing.CubicOut),
+            HeaderSection.TranslateTo(0, 0, 250, Easing.CubicOut),
+            HeaderSection.ScaleTo(1, 250, Easing.CubicOut)
         );
 
         // Staggered card animation
-        await Task.Delay(60);
+        await Task.Delay(30);
         await AnimateCardsAsync();
     }
 
@@ -44,7 +44,7 @@ public partial class CourseListPage : ContentPage
 
     private async Task AnimateCardsAsync()
     {
-        await Task.Delay(50);
+        await Task.Delay(20);
 
         var cards = GetVisualTreeChildren<Border>(CoursesCollection)
             .Where(b => b.BackgroundColor == Colors.White && b.MinimumHeightRequest >= 250)
@@ -53,22 +53,22 @@ public partial class CourseListPage : ContentPage
         foreach (var card in cards)
         {
             card.Opacity = 0;
-            card.TranslationY = 40;
-            card.Scale = 0.9;
+            card.TranslationY = 14;
+            card.Scale = 0.97;
         }
 
         for (int i = 0; i < cards.Count; i++)
         {
             var card = cards[i];
-            var delay = i * 80;
+            var delay = i * 35;
 
 #pragma warning disable CS4014
             Task.Delay(delay).ContinueWith(_ => MainThread.BeginInvokeOnMainThread(async () =>
             {
                 await Task.WhenAll(
-                    card.FadeTo(1, 450, Easing.CubicOut),
-                    card.TranslateTo(0, 0, 500, Easing.SpringOut),
-                    card.ScaleTo(1, 450, Easing.SpringOut)
+                    card.FadeTo(1, 200, Easing.CubicOut),
+                    card.TranslateTo(0, 0, 230, Easing.CubicOut),
+                    card.ScaleTo(1, 230, Easing.CubicOut)
                 );
             }));
 #pragma warning restore CS4014
