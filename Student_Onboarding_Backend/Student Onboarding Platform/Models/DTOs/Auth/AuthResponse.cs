@@ -18,4 +18,5 @@ public class UserDto
     public bool EmailVerified { get; set; }
     public string Role { get; set; } = string.Empty;
     public string ApprovalStatus { get; set; } = string.Empty;
+    public string? ProfilePhotoUrl { get; set; }
 }

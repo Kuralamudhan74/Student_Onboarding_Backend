@@ -397,7 +397,8 @@ public class AuthService : IAuthService
             PhoneNumber = user.PhoneNumber,
             EmailVerified = user.EmailVerified,
             Role = user.Role,
-            ApprovalStatus = user.ApprovalStatus
+            ApprovalStatus = user.ApprovalStatus,
+            ProfilePhotoUrl = user.ProfilePhotoUrl
         };
     }
 }
