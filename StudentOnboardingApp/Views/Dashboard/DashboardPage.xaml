@@ -351,7 +351,7 @@
 
     <!-- Floating Bot Avatar with Speech Bubble -->
     <VerticalStackLayout HorizontalOptions="End" VerticalOptions="End"
-                         Margin="0,0,20,20" Spacing="6"
+                         Margin="0,0,18,24" Spacing="8"
                          x:Name="BotContainer" ZIndex="100">
         <!-- Speech Bubble -->
         <Border x:Name="BotBubble"
@@ -365,16 +365,16 @@
             </Border.Shadow>
             <Label x:Name="BotMessage"
                    Text="Hi there! Need help? Tap me!"
-                   FontSize="12" FontFamily="OpenSansSemibold"
+                   FontSize="13" FontFamily="OpenSansSemibold"
                    TextColor="{StaticResource DarkText}"
-                   MaximumWidthRequest="200" />
+                   MaximumWidthRequest="220" />
         </Border>
 
         <!-- Bot Avatar -->
         <Border x:Name="BotAvatar"
                 StrokeThickness="0"
-                StrokeShape="RoundRectangle 30"
-                HeightRequest="60" WidthRequest="60"
+                StrokeShape="RoundRectangle 36"
+                HeightRequest="72" WidthRequest="72"
                 HorizontalOptions="End">
             <Border.Background>
                 <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
@@ -383,12 +383,12 @@
                 </LinearGradientBrush>
             </Border.Background>
             <Border.Shadow>
-                <Shadow Brush="#605B5BD6" Offset="0,4" Radius="16" Opacity="0.45" />
+                <Shadow Brush="#605B5BD6" Offset="0,6" Radius="20" Opacity="0.5" />
             </Border.Shadow>
             <Border.GestureRecognizers>
                 <TapGestureRecognizer Tapped="OnFaqButtonTapped" />
             </Border.GestureRecognizers>
-            <Label Text="&#x1F916;" FontSize="28"
+            <Label Text="&#x1F916;" FontSize="34"
                    HorizontalOptions="Center" VerticalOptions="Center" />
         </Border>
     </VerticalStackLayout>

@@ -85,28 +85,16 @@ public partial class ProfileViewModel : BaseViewModel
 
             System.Diagnostics.Debug.WriteLine($"[ProfilePhoto] Loading from: {url}");
 
-            // Always download bytes first to verify the image actually exists
-            var handler = new HttpClientHandler();
-#if DEBUG
-            handler.ServerCertificateCustomValidationCallback = (_, _, _, _) => true;
-#endif
-            using var client = new HttpClient(handler) { Timeout = TimeSpan.FromSeconds(20) };
-            var response = await client.GetAsync(url);
+            // Use a plain HttpClient — Bytescale CDN is public HTTPS, no custom SSL needed.
+            // Do NOT use HttpClientHandler with ServerCertificateCustomValidationCallback
+            // as it throws PlatformNotSupportedException on Android.
+            using var client = new HttpClient { Timeout = TimeSpan.FromSeconds(20) };
+            var bytes = await client.GetByteArrayAsync(url);
 
-            System.Diagnostics.Debug.WriteLine($"[ProfilePhoto] Status: {response.StatusCode}");
-
-            if (!response.IsSuccessStatusCode)
-            {
-                ProfileImage = null;
-                return;
-            }
-
-            var bytes = await response.Content.ReadAsByteArrayAsync();
             System.Diagnostics.Debug.WriteLine($"[ProfilePhoto] Downloaded {bytes.Length} bytes");
 
             if (bytes.Length > 0)
             {
-                // Create a persistent copy — the lambda must return a fresh stream each call
                 var imageBytes = bytes.ToArray();
                 MainThread.BeginInvokeOnMainThread(() =>
                 {
