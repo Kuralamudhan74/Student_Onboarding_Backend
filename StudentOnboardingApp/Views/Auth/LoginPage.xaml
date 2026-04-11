@@ -16,8 +16,8 @@
     </ContentPage.Background>
 
     <Grid>
-    <ScrollView>
-        <VerticalStackLayout Spacing="16" Padding="24" VerticalOptions="Center">
+    <ScrollView Padding="0" VerticalOptions="Fill">
+        <VerticalStackLayout Spacing="16" Padding="24" VerticalOptions="CenterAndExpand">
 
             <!-- Logo Icon -->
             <Border BackgroundColor="#FFFFFF88"

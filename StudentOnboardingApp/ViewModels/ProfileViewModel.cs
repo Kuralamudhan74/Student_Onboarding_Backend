@@ -78,37 +78,49 @@ public partial class ProfileViewModel : BaseViewModel
     {
         try
         {
-            // If it's already a full URL (Bytescale CDN), use it directly
-            // Otherwise prepend the backend base URL (legacy local storage)
+            // Build the full URL
             var url = photoPath.StartsWith("http", StringComparison.OrdinalIgnoreCase)
                 ? photoPath
-                : $"{Constants.ApiBaseUrl.Replace("/api/", "")}{photoPath}";
+                : $"{Constants.ApiBaseUrl.TrimEnd('/')}/{photoPath.TrimStart('/')}";
 
-            // Try URI-based loading first (works best with CDN URLs and MAUI image caching)
-            try
-            {
-                ProfileImage = ImageSource.FromUri(new Uri(url));
-                return;
-            }
-            catch
-            {
-                // Fallback to manual download if URI loading fails
-            }
+            System.Diagnostics.Debug.WriteLine($"[ProfilePhoto] Loading from: {url}");
 
-            // Manual download fallback
+            // Always download bytes first to verify the image actually exists
             var handler = new HttpClientHandler();
 #if DEBUG
             handler.ServerCertificateCustomValidationCallback = (_, _, _, _) => true;
 #endif
-            using var client = new HttpClient(handler) { Timeout = TimeSpan.FromSeconds(15) };
-            var bytes = await client.GetByteArrayAsync(url);
-            if (bytes != null && bytes.Length > 0)
+            using var client = new HttpClient(handler) { Timeout = TimeSpan.FromSeconds(20) };
+            var response = await client.GetAsync(url);
+
+            System.Diagnostics.Debug.WriteLine($"[ProfilePhoto] Status: {response.StatusCode}");
+
+            if (!response.IsSuccessStatusCode)
             {
-                ProfileImage = ImageSource.FromStream(() => new MemoryStream(bytes));
+                ProfileImage = null;
+                return;
+            }
+
+            var bytes = await response.Content.ReadAsByteArrayAsync();
+            System.Diagnostics.Debug.WriteLine($"[ProfilePhoto] Downloaded {bytes.Length} bytes");
+
+            if (bytes.Length > 0)
+            {
+                // Create a persistent copy — the lambda must return a fresh stream each call
+                var imageBytes = bytes.ToArray();
+                MainThread.BeginInvokeOnMainThread(() =>
+                {
+                    ProfileImage = ImageSource.FromStream(() => new MemoryStream(imageBytes));
+                });
+            }
+            else
+            {
+                ProfileImage = null;
             }
         }
-        catch
+        catch (Exception ex)
         {
+            System.Diagnostics.Debug.WriteLine($"[ProfilePhoto] Error: {ex.Message}");
             ProfileImage = null;
         }
     }

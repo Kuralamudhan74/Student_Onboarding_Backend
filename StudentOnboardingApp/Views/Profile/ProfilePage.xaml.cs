@@ -17,44 +17,23 @@ public partial class ProfilePage : ContentPage
     {
         base.OnAppearing();
 
-        // Reset for entrance
-        PhotoCard.Opacity = 0;
-        PhotoCard.Scale = 0.95;
-        PhotoCard.TranslationY = -10;
-        InfoCard.Opacity = 0;
-        InfoCard.TranslationY = 12;
-        InfoCard.Scale = 0.98;
-        EditCard.Opacity = 0;
-        EditCard.TranslationY = 12;
-        EditCard.Scale = 0.98;
+        // Hide entire page content
+        ProfileContent.Opacity = 0;
+        ProfileContent.TranslationY = 10;
 
+        // Load data
         await _viewModel.LoadProfileCommand.ExecuteAsync(null);
 
-        // Photo card drops in
+        // Fade in the whole page at once
         await Task.WhenAll(
-            PhotoCard.FadeTo(1, 250, Easing.CubicOut),
-            PhotoCard.ScaleTo(1, 280, Easing.CubicOut),
-            PhotoCard.TranslateTo(0, 0, 280, Easing.CubicOut)
-        );
-
-        await Task.Delay(40);
-
-        // Info and edit cards slide up together
-        await Task.WhenAll(
-            InfoCard.FadeTo(1, 220, Easing.CubicOut),
-            InfoCard.TranslateTo(0, 0, 250, Easing.CubicOut),
-            InfoCard.ScaleTo(1, 250, Easing.CubicOut),
-            EditCard.FadeTo(1, 220, Easing.CubicOut),
-            EditCard.TranslateTo(0, 0, 250, Easing.CubicOut),
-            EditCard.ScaleTo(1, 250, Easing.CubicOut)
+            ProfileContent.FadeTo(1, 300, Easing.CubicOut),
+            ProfileContent.TranslateTo(0, 0, 300, Easing.CubicOut)
         );
     }
 
     protected override void OnDisappearing()
     {
         base.OnDisappearing();
-        PhotoCard.Opacity = 0;
-        InfoCard.Opacity = 0;
-        EditCard.Opacity = 0;
+        ProfileContent.Opacity = 0;
     }
 }

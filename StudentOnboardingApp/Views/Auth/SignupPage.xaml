@@ -15,8 +15,8 @@
     </ContentPage.Background>
 
     <Grid>
-    <ScrollView>
-        <VerticalStackLayout Spacing="14" Padding="24" VerticalOptions="Center">
+    <ScrollView Padding="0" VerticalOptions="Fill">
+        <VerticalStackLayout Spacing="14" Padding="24" VerticalOptions="CenterAndExpand">
 
             <Border BackgroundColor="#FFFFFF88"
                     StrokeThickness="0" StrokeShape="RoundRectangle 22"
