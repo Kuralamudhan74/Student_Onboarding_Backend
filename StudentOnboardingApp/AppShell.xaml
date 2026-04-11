@@ -21,7 +21,7 @@
     </TabBar>
 
     <!-- Student Main App with Tab Bar -->
-    <TabBar Route="main">
+    <TabBar Route="main" Shell.NavBarIsVisible="False">
         <ShellContent Title="Dashboard"
                       Icon="dashboard.png"
                       Route="dashboard"
@@ -42,7 +42,7 @@
     </TabBar>
 
     <!-- Admin Main App with Tab Bar -->
-    <TabBar Route="admin">
+    <TabBar Route="admin" Shell.NavBarIsVisible="False">
         <ShellContent Title="Dashboard"
                       Icon="dashboard.png"
                       Route="dashboard"
