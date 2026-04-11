@@ -18,57 +18,33 @@ public partial class LoginPage : ContentPage
     {
         base.OnAppearing();
 
-        // Animate logo icon
-        LogoIcon.Opacity = 0;
-        LogoIcon.Scale = 0.6;
+        // Hide everything
+        LogoIcon.Opacity = 0; LogoIcon.Scale = 0.7;
         HeaderLabel.Opacity = 0;
-        HeaderLabel.TranslationY = -16;
-        FormCard.Opacity = 0;
-        FormCard.TranslationY = 24;
+        FormCard.Opacity = 0; FormCard.TranslationY = 14;
+        BotAvatar.Opacity = 0; BotAvatar.Scale = 0.5;
+        BotBubble.Opacity = 0; BotBubble.TranslationX = 15;
 
-        // Logo bounce in
+        // All main content appears together
         await Task.WhenAll(
-            LogoIcon.FadeTo(1, 350, Easing.CubicOut),
-            LogoIcon.ScaleTo(1, 400, Easing.SpringOut)
-        );
-
-        // Header slide in
-        await Task.WhenAll(
+            LogoIcon.FadeTo(1, 300, Easing.CubicOut),
+            LogoIcon.ScaleTo(1, 300, Easing.CubicOut),
             HeaderLabel.FadeTo(1, 300, Easing.CubicOut),
-            HeaderLabel.TranslateTo(0, 0, 350, Easing.CubicOut)
+            FormCard.FadeTo(1, 300, Easing.CubicOut),
+            FormCard.TranslateTo(0, 0, 300, Easing.CubicOut)
         );
 
-        // Form card fade up
+        // Bot appears after page is settled
         await Task.WhenAll(
-            FormCard.FadeTo(1, 400, Easing.CubicOut),
-            FormCard.TranslateTo(0, 0, 450, Easing.CubicOut)
+            BotAvatar.FadeTo(1, 250, Easing.CubicOut),
+            BotAvatar.ScaleTo(1, 250, Easing.CubicOut),
+            BotBubble.FadeTo(1, 250, Easing.CubicOut),
+            BotBubble.TranslateTo(0, 0, 250, Easing.CubicOut)
         );
 
-        // Animate bot greeting
-        _ = AnimateBotAsync();
-    }
-
-    private async Task AnimateBotAsync()
-    {
-        BotAvatar.Opacity = 0;
-        BotAvatar.Scale = 0.3;
-        BotBubble.Opacity = 0;
-        BotBubble.TranslationX = 30;
-
-        await Task.Delay(1200);
-        await Task.WhenAll(
-            BotAvatar.FadeTo(1, 350, Easing.CubicOut),
-            BotAvatar.ScaleTo(1, 500, Easing.SpringOut)
-        );
-
-        await Task.Delay(300);
-        await Task.WhenAll(
-            BotBubble.FadeTo(1, 300, Easing.CubicOut),
-            BotBubble.TranslateTo(0, 0, 400, Easing.CubicOut)
-        );
-
-        await Task.Delay(5000);
-        await BotBubble.FadeTo(0, 300, Easing.CubicIn);
+        // Auto-hide bubble
+        await Task.Delay(4000);
+        await BotBubble.FadeTo(0, 200, Easing.CubicOut);
     }
 
     private async void OnBotTapped(object sender, TappedEventArgs e)

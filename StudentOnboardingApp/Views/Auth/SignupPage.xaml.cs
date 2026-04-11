@@ -18,33 +18,23 @@ public partial class SignupPage : ContentPage
     protected override async void OnAppearing()
     {
         base.OnAppearing();
+
+        BotAvatar.Opacity = 0; BotAvatar.Scale = 0.5;
+        BotBubble.Opacity = 0; BotBubble.TranslationX = 15;
+
         await _viewModel.LoadCoursesCommand.ExecuteAsync(null);
 
-        // Animate bot welcome
-        _ = AnimateBotAsync();
-    }
-
-    private async Task AnimateBotAsync()
-    {
-        BotAvatar.Opacity = 0;
-        BotAvatar.Scale = 0.3;
-        BotBubble.Opacity = 0;
-        BotBubble.TranslationX = 30;
-
-        await Task.Delay(1000);
+        // Bot appears after page is ready
         await Task.WhenAll(
-            BotAvatar.FadeTo(1, 350, Easing.CubicOut),
-            BotAvatar.ScaleTo(1, 500, Easing.SpringOut)
+            BotAvatar.FadeTo(1, 250, Easing.CubicOut),
+            BotAvatar.ScaleTo(1, 250, Easing.CubicOut),
+            BotBubble.FadeTo(1, 250, Easing.CubicOut),
+            BotBubble.TranslateTo(0, 0, 250, Easing.CubicOut)
         );
 
-        await Task.Delay(300);
-        await Task.WhenAll(
-            BotBubble.FadeTo(1, 300, Easing.CubicOut),
-            BotBubble.TranslateTo(0, 0, 400, Easing.CubicOut)
-        );
-
-        await Task.Delay(5000);
-        await BotBubble.FadeTo(0, 300, Easing.CubicIn);
+        // Auto-hide bubble
+        await Task.Delay(4000);
+        await BotBubble.FadeTo(0, 200, Easing.CubicOut);
     }
 
     private async void OnBotTapped(object sender, TappedEventArgs e)

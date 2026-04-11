@@ -178,26 +178,26 @@
 
     <!-- Bot Avatar with Greeting -->
     <VerticalStackLayout HorizontalOptions="End" VerticalOptions="End"
-                         Margin="0,0,20,20" Spacing="6"
+                         Margin="0,0,18,24" Spacing="8"
                          x:Name="BotContainer" ZIndex="100">
         <Border x:Name="BotBubble"
                 BackgroundColor="White"
                 StrokeThickness="1" Stroke="{StaticResource BorderColor}"
-                StrokeShape="RoundRectangle 14"
-                Padding="14,10" HorizontalOptions="End"
+                StrokeShape="RoundRectangle 16"
+                Padding="16,12" HorizontalOptions="End"
                 Opacity="0">
             <Border.Shadow>
-                <Shadow Brush="#205B5BD6" Offset="0,3" Radius="12" Opacity="0.15" />
+                <Shadow Brush="#205B5BD6" Offset="0,4" Radius="14" Opacity="0.18" />
             </Border.Shadow>
             <Label Text="Hello! Ready to sign in? &#x1F44B;"
-                   FontSize="12" FontFamily="OpenSansSemibold"
+                   FontSize="13" FontFamily="OpenSansSemibold"
                    TextColor="{StaticResource DarkText}"
-                   MaximumWidthRequest="200" />
+                   MaximumWidthRequest="220" />
         </Border>
         <Border x:Name="BotAvatar"
                 StrokeThickness="0"
-                StrokeShape="RoundRectangle 30"
-                HeightRequest="60" WidthRequest="60"
+                StrokeShape="RoundRectangle 36"
+                HeightRequest="72" WidthRequest="72"
                 HorizontalOptions="End" Opacity="0">
             <Border.Background>
                 <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
@@ -206,12 +206,12 @@
                 </LinearGradientBrush>
             </Border.Background>
             <Border.Shadow>
-                <Shadow Brush="#605B5BD6" Offset="0,4" Radius="16" Opacity="0.45" />
+                <Shadow Brush="#605B5BD6" Offset="0,6" Radius="20" Opacity="0.5" />
             </Border.Shadow>
             <Border.GestureRecognizers>
                 <TapGestureRecognizer Tapped="OnBotTapped" />
             </Border.GestureRecognizers>
-            <Label Text="&#x1F916;" FontSize="28"
+            <Label Text="&#x1F916;" FontSize="34"
                    HorizontalOptions="Center" VerticalOptions="Center" />
         </Border>
     </VerticalStackLayout>
