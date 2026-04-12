@@ -8,7 +8,7 @@ var builder = WebApplication.CreateBuilder(new WebApplicationOptions
     ContentRootPath = AppContext.BaseDirectory
 });
 
-// Disable file-watching reloadOnChange to avoid inotify limits on Render
+// Disable file-watching reloadOnChange to avoid inotify limits in containers
 builder.Configuration.Sources.Clear();
 builder.Configuration
     .SetBasePath(AppContext.BaseDirectory)
@@ -16,8 +16,8 @@ builder.Configuration
     .AddJsonFile($"appsettings.{builder.Environment.EnvironmentName}.json", optional: true, reloadOnChange: false)
     .AddEnvironmentVariables();
 
-// Render sets PORT env variable
-var port = Environment.GetEnvironmentVariable("PORT") ?? "10000";
+// Railway / cloud platforms set PORT env variable
+var port = Environment.GetEnvironmentVariable("PORT") ?? "8080";
 builder.WebHost.UseUrls($"http://0.0.0.0:{port}");
 
 // Serilog
@@ -63,9 +63,7 @@ app.UseSwaggerUI();
 app.UseMiddleware<ExceptionHandlingMiddleware>();
 
 app.UseSerilogRequestLogging();
-// Render handles HTTPS at the proxy level
-// HTTPS redirect disabled — Render handles SSL at proxy level,
-// and local dev uses plain HTTP on port 10000
+// HTTPS redirect disabled — Railway/cloud platforms handle SSL at proxy level
 if (!app.Environment.IsProduction())
     app.UseHttpsRedirection();
 app.UseStaticFiles(); // Serve uploaded photos from wwwroot
