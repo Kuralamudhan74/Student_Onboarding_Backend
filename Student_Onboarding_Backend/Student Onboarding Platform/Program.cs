@@ -2,7 +2,19 @@ using Serilog;
 using Student_Onboarding_Platform.Extensions;
 using Student_Onboarding_Platform.Middleware;
 
-var builder = WebApplication.CreateBuilder(args);
+var builder = WebApplication.CreateBuilder(new WebApplicationOptions
+{
+    Args = args,
+    ContentRootPath = AppContext.BaseDirectory
+});
+
+// Disable file-watching reloadOnChange to avoid inotify limits on Render
+builder.Configuration.Sources.Clear();
+builder.Configuration
+    .SetBasePath(AppContext.BaseDirectory)
+    .AddJsonFile("appsettings.json", optional: true, reloadOnChange: false)
+    .AddJsonFile($"appsettings.{builder.Environment.EnvironmentName}.json", optional: true, reloadOnChange: false)
+    .AddEnvironmentVariables();
 
 // Render sets PORT env variable
 var port = Environment.GetEnvironmentVariable("PORT") ?? "10000";
