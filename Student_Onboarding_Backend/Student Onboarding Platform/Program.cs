@@ -16,8 +16,8 @@ builder.Configuration
     .AddJsonFile($"appsettings.{builder.Environment.EnvironmentName}.json", optional: true, reloadOnChange: false)
     .AddEnvironmentVariables();
 
-// Railway / cloud platforms set PORT env variable
-var port = Environment.GetEnvironmentVariable("PORT") ?? "8080";
+// Render sets PORT env variable
+var port = Environment.GetEnvironmentVariable("PORT") ?? "10000";
 builder.WebHost.UseUrls($"http://0.0.0.0:{port}");
 
 // Serilog
@@ -63,9 +63,9 @@ app.UseSwaggerUI();
 app.UseMiddleware<ExceptionHandlingMiddleware>();
 
 app.UseSerilogRequestLogging();
-// HTTPS redirect disabled — Railway/cloud platforms handle SSL at proxy level
-if (!app.Environment.IsProduction())
-    app.UseHttpsRedirection();
+// HTTPS redirect disabled — Render handles SSL at proxy level
+//if (!app.Environment.IsProduction())
+    //app.UseHttpsRedirection();
 app.UseStaticFiles(); // Serve uploaded photos from wwwroot
 app.UseCors("AllowAll");
 app.UseAuthentication();
