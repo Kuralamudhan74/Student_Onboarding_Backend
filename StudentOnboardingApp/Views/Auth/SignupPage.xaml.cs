@@ -22,8 +22,6 @@ public partial class SignupPage : ContentPage
         BotAvatar.Opacity = 0; BotAvatar.Scale = 0.5;
         BotBubble.Opacity = 0; BotBubble.TranslationX = 15;
 
-        await _viewModel.LoadCoursesCommand.ExecuteAsync(null);
-
         // Bot appears after page is ready
         await Task.WhenAll(
             BotAvatar.FadeTo(1, 250, Easing.CubicOut),

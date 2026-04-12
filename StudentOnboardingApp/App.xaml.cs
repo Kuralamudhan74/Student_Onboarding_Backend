@@ -1,5 +1,3 @@
-using CommunityToolkit.Maui.Alerts;
-using CommunityToolkit.Maui.Core;
 using CommunityToolkit.Mvvm.Messaging;
 using StudentOnboardingApp.Handlers;
 using StudentOnboardingApp.Services.Implementations;
@@ -43,7 +41,7 @@ public partial class App : Application
             });
         });
 
-        // Push notifications
+        // Push notifications — show as popup alerts
         WeakReferenceMessenger.Default.Register<NewNotificationsMessage>(this, async (_, msg) =>
         {
             if (_isLoggingOut) return;
@@ -51,34 +49,25 @@ public partial class App : Application
             {
                 try
                 {
-                    var text = $"\ud83d\udd14 {notification.Title}\n{notification.Body}";
-                    var snackbar = Snackbar.Make(
-                        text,
-                        actionButtonText: "View",
-                        action: async () =>
+                    await MainThread.InvokeOnMainThreadAsync(async () =>
+                    {
+                        var page = Shell.Current?.CurrentPage;
+                        if (page == null) return;
+
+                        var viewNotification = await page.DisplayAlert(
+                            $"\ud83d\udd14 {notification.Title}",
+                            notification.Body,
+                            "View", "Dismiss");
+
+                        if (viewNotification)
                         {
-                            try
-                            {
-                                var user = await _tokenStorage.GetUserAsync();
-                                var route = user?.Role?.Equals("Admin", StringComparison.OrdinalIgnoreCase) == true
-                                    ? "//admin/admin-notifications"
-                                    : "//main/notifications";
-                                await Shell.Current.GoToAsync(route);
-                            }
-                            catch { }
-                        },
-                        duration: TimeSpan.FromSeconds(5),
-                        visualOptions: new SnackbarOptions
-                        {
-                            BackgroundColor = Color.FromArgb("#1E1E4A"),
-                            TextColor = Colors.White,
-                            ActionButtonTextColor = Color.FromArgb("#A5B4FC"),
-                            CornerRadius = 16,
-                            Font = Microsoft.Maui.Font.SystemFontOfSize(13, FontWeight.Semibold),
-                            ActionButtonFont = Microsoft.Maui.Font.SystemFontOfSize(13, FontWeight.Bold),
-                        });
-                    await snackbar.Show();
-                    await Task.Delay(800);
+                            var user = await _tokenStorage.GetUserAsync();
+                            var route = user?.Role?.Equals("Admin", StringComparison.OrdinalIgnoreCase) == true
+                                ? "//admin/admin-notifications"
+                                : "//main/notifications";
+                            await Shell.Current.GoToAsync(route);
+                        }
+                    });
                 }
                 catch { }
             }
