@@ -113,13 +113,15 @@ public partial class App : Application
     protected override Window CreateWindow(IActivationState? activationState)
     {
         var shell = new AppShell();
-        var window = new Window(shell);
 
-        // Hide shell when we expect to skip login — prevents login page flash
+        // When a token exists, start Shell on the student dashboard tab directly
+        // so the login page is never created or rendered — no flash at all.
         if (_startAuthenticated)
         {
-            shell.Opacity = 0;
+            shell.CurrentItem = shell.Items[1]; // Items: 0=auth, 1=main, 2=admin
         }
+
+        var window = new Window(shell);
 
         window.Created += async (_, _) =>
         {
@@ -130,24 +132,17 @@ public partial class App : Application
                 if (valid)
                 {
                     var user = await _tokenStorage.GetUserAsync();
-                    var route = user?.Role?.Equals("Admin", StringComparison.OrdinalIgnoreCase) == true
-                        ? "//admin/dashboard"
-                        : "//main/dashboard";
-                    await Shell.Current.GoToAsync(route);
+                    if (user?.Role?.Equals("Admin", StringComparison.OrdinalIgnoreCase) == true)
+                    {
+                        await Shell.Current.GoToAsync("//admin/dashboard");
+                    }
+                    // Student is already on //main/dashboard — no navigation needed
                     _pollingService.Start(TimeSpan.FromSeconds(15));
-                    shell.FadeTo(1, 250, Easing.CubicOut);
                     return;
                 }
-
-                // Token invalid — show login
-                shell.Opacity = 1;
-            }
-            else
-            {
-                await Task.Delay(200);
             }
 
-            // Not authenticated or token invalid — ensure we're on login
+            // Not authenticated or token invalid — go to login
             await _tokenStorage.ClearAllAsync();
             await Shell.Current.GoToAsync("///auth/login");
         };
