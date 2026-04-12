@@ -42,6 +42,7 @@ public static class ServiceCollectionExtensions
         services.AddScoped<IUserService, UserService>();
         services.AddScoped<ITokenService, TokenService>();
         services.AddScoped<IOtpService, OtpService>();
+        services.AddHttpClient("SendGrid");
         services.AddScoped<IEmailService, SmtpEmailService>();
         services.AddScoped<ISessionService, SessionService>();
         services.AddScoped<ILoginAttemptService, LoginAttemptService>();

@@ -1,3 +1,6 @@
+using System.Net.Http.Headers;
+using System.Text;
+using System.Text.Json;
 using MailKit.Net.Smtp;
 using MailKit.Security;
 using Microsoft.Extensions.Options;
@@ -10,11 +13,13 @@ namespace Student_Onboarding_Platform.Services.Implementations;
 public class SmtpEmailService : IEmailService
 {
     private readonly SmtpSettings _settings;
+    private readonly IHttpClientFactory _httpClientFactory;
     private readonly ILogger<SmtpEmailService> _logger;
 
-    public SmtpEmailService(IOptions<SmtpSettings> settings, ILogger<SmtpEmailService> logger)
+    public SmtpEmailService(IOptions<SmtpSettings> settings, IHttpClientFactory httpClientFactory, ILogger<SmtpEmailService> logger)
     {
         _settings = settings.Value;
+        _httpClientFactory = httpClientFactory;
         _logger = logger;
     }
 
@@ -113,6 +118,57 @@ public class SmtpEmailService : IEmailService
 
     private async Task SendEmailAsync(string to, string subject, string htmlBody)
     {
+        // Use SendGrid HTTP API when hosted on SendGrid (Render blocks SMTP port 587)
+        if (_settings.Host.Contains("sendgrid", StringComparison.OrdinalIgnoreCase))
+        {
+            await SendViaSendGridApiAsync(to, subject, htmlBody);
+            return;
+        }
+
+        // Fall back to SMTP for local dev (e.g., Gmail)
+        await SendViaSmtpAsync(to, subject, htmlBody);
+    }
+
+    private async Task SendViaSendGridApiAsync(string to, string subject, string htmlBody)
+    {
+        var client = _httpClientFactory.CreateClient();
+        client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", _settings.Password);
+
+        var payload = new
+        {
+            personalizations = new[] { new { to = new[] { new { email = to } } } },
+            from = new { email = _settings.FromEmail, name = _settings.FromName },
+            subject,
+            content = new[] { new { type = "text/html", value = htmlBody } }
+        };
+
+        var json = JsonSerializer.Serialize(payload);
+        var content = new StringContent(json, Encoding.UTF8, "application/json");
+
+        try
+        {
+            var response = await client.PostAsync("https://api.sendgrid.com/v3/mail/send", content);
+
+            if (response.IsSuccessStatusCode)
+            {
+                _logger.LogInformation("Email sent via SendGrid API to {Email} with subject '{Subject}'", to, subject);
+            }
+            else
+            {
+                var responseBody = await response.Content.ReadAsStringAsync();
+                _logger.LogError("SendGrid API error {StatusCode} for {Email}: {Response}", response.StatusCode, to, responseBody);
+                throw new Exception($"SendGrid API returned {response.StatusCode}: {responseBody}");
+            }
+        }
+        catch (Exception ex) when (ex is not Exception { Message: var m } || !m.StartsWith("SendGrid API returned"))
+        {
+            _logger.LogError(ex, "Failed to send email via SendGrid API to {Email}", to);
+            throw;
+        }
+    }
+
+    private async Task SendViaSmtpAsync(string to, string subject, string htmlBody)
+    {
         var message = new MimeMessage();
         message.From.Add(new MailboxAddress(_settings.FromName, _settings.FromEmail));
         message.To.Add(MailboxAddress.Parse(to));
@@ -126,7 +182,7 @@ public class SmtpEmailService : IEmailService
             await client.ConnectAsync(_settings.Host, _settings.Port, secureOption);
             await client.AuthenticateAsync(_settings.Username, _settings.Password);
             await client.SendAsync(message);
-            _logger.LogInformation("Email sent successfully to {Email} with subject '{Subject}'", to, subject);
+            _logger.LogInformation("Email sent via SMTP to {Email} with subject '{Subject}'", to, subject);
         }
         catch (Exception ex)
         {
