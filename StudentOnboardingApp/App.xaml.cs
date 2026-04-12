@@ -115,10 +115,14 @@ public partial class App : Application
         var shell = new AppShell();
         var window = new Window(shell);
 
+        // Hide shell when we expect to skip login — prevents login page flash
+        if (_startAuthenticated)
+        {
+            shell.Opacity = 0;
+        }
+
         window.Created += async (_, _) =>
         {
-            await Task.Delay(200);
-
             if (_startAuthenticated)
             {
                 // Verify token is still valid
@@ -131,8 +135,16 @@ public partial class App : Application
                         : "//main/dashboard";
                     await Shell.Current.GoToAsync(route);
                     _pollingService.Start(TimeSpan.FromSeconds(15));
+                    shell.FadeTo(1, 250, Easing.CubicOut);
                     return;
                 }
+
+                // Token invalid — show login
+                shell.Opacity = 1;
+            }
+            else
+            {
+                await Task.Delay(200);
             }
 
             // Not authenticated or token invalid — ensure we're on login

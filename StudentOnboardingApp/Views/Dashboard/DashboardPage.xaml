@@ -373,8 +373,8 @@
         <!-- Bot Avatar -->
         <Border x:Name="BotAvatar"
                 StrokeThickness="0"
-                StrokeShape="RoundRectangle 44"
-                HeightRequest="88" WidthRequest="88"
+                StrokeShape="RoundRectangle 48"
+                HeightRequest="96" WidthRequest="96"
                 HorizontalOptions="End">
             <Border.Background>
                 <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
@@ -383,12 +383,12 @@
                 </LinearGradientBrush>
             </Border.Background>
             <Border.Shadow>
-                <Shadow Brush="#605B5BD6" Offset="0,6" Radius="20" Opacity="0.5" />
+                <Shadow Brush="#605B5BD6" Offset="0,8" Radius="24" Opacity="0.5" />
             </Border.Shadow>
             <Border.GestureRecognizers>
                 <TapGestureRecognizer Tapped="OnFaqButtonTapped" />
             </Border.GestureRecognizers>
-            <Label Text="&#x1F916;" FontSize="42"
+            <Label Text="&#x1F916;" FontSize="46"
                    HorizontalOptions="Center" VerticalOptions="Center" />
         </Border>
     </VerticalStackLayout>
