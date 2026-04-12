@@ -13,7 +13,7 @@
                  Command="{Binding LoadDashboardCommand}"
                  RefreshColor="{StaticResource Primary}">
         <ScrollView>
-            <VerticalStackLayout Spacing="0" Padding="20,24,20,32" x:Name="PageContent">
+            <VerticalStackLayout Spacing="0" Padding="20,48,20,32" x:Name="PageContent">
 
                 <!-- Welcome Header Card -->
                 <Border StrokeThickness="0" StrokeShape="RoundRectangle 20"
@@ -373,8 +373,8 @@
         <!-- Bot Avatar -->
         <Border x:Name="BotAvatar"
                 StrokeThickness="0"
-                StrokeShape="RoundRectangle 36"
-                HeightRequest="72" WidthRequest="72"
+                StrokeShape="RoundRectangle 44"
+                HeightRequest="88" WidthRequest="88"
                 HorizontalOptions="End">
             <Border.Background>
                 <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
@@ -388,7 +388,7 @@
             <Border.GestureRecognizers>
                 <TapGestureRecognizer Tapped="OnFaqButtonTapped" />
             </Border.GestureRecognizers>
-            <Label Text="&#x1F916;" FontSize="34"
+            <Label Text="&#x1F916;" FontSize="42"
                    HorizontalOptions="Center" VerticalOptions="Center" />
         </Border>
     </VerticalStackLayout>

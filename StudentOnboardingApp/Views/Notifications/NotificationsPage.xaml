@@ -15,7 +15,7 @@
                         SelectionMode="None"
                         x:Name="NotificationsList">
             <CollectionView.Header>
-                <VerticalStackLayout Padding="20,20,20,12" Spacing="6" x:Name="PageHeader">
+                <VerticalStackLayout Padding="20,44,20,12" Spacing="6" x:Name="PageHeader">
                     <!-- Header with title and mark all read -->
                     <Grid ColumnDefinitions="*, Auto">
                         <Grid ColumnDefinitions="Auto, *" ColumnSpacing="12">

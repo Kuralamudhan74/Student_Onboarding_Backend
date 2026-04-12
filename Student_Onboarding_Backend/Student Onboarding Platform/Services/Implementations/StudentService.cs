@@ -208,7 +208,14 @@ public class StudentService : IStudentService
         await _registrationRepository.CreateAsync(registration);
         _logger.LogInformation("Course registration created: {RegistrationId}", registration.Id);
 
-        await _emailService.SendCourseRegistrationEmailAsync(user.Email, user.FirstName, course.Name);
+        try
+        {
+            await _emailService.SendCourseRegistrationEmailAsync(user.Email, user.FirstName, course.Name);
+        }
+        catch (Exception ex)
+        {
+            _logger.LogWarning(ex, "Failed to send course registration email to {Email}, but registration was successful", user.Email);
+        }
 
         return ApiResponse<string>.Ok("Course registration successful.");
     }

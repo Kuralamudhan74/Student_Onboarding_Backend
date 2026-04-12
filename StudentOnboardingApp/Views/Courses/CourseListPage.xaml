@@ -20,7 +20,7 @@
             </CollectionView.ItemsLayout>
 
             <CollectionView.Header>
-                <VerticalStackLayout Padding="20,20,20,16" Spacing="6">
+                <VerticalStackLayout Padding="20,44,20,16" Spacing="6">
                     <!-- Header with blue accent bar -->
                     <Grid ColumnDefinitions="Auto, *" ColumnSpacing="12" x:Name="HeaderSection">
                         <Border BackgroundColor="{StaticResource Primary}"

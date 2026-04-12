@@ -192,6 +192,7 @@ public partial class ProfileViewModel : BaseViewModel
                 ErrorMessage = null;
                 // Reload profile to get fresh data from server
                 await LoadProfileInternalAsync();
+                _ = ClearSuccessMessageAfterDelayAsync();
             }
             else
             {
@@ -208,6 +209,12 @@ public partial class ProfileViewModel : BaseViewModel
             Profile = result.Data;
             PopulateFieldsFromProfile();
         }
+    }
+
+    private async Task ClearSuccessMessageAfterDelayAsync()
+    {
+        await Task.Delay(5000);
+        SuccessMessage = null;
     }
 
     [RelayCommand]
@@ -231,6 +238,7 @@ public partial class ProfileViewModel : BaseViewModel
                 {
                     SuccessMessage = "Photo uploaded!";
                     await LoadProfileInternalAsync();
+                    _ = ClearSuccessMessageAfterDelayAsync();
                 }
                 else
                 {

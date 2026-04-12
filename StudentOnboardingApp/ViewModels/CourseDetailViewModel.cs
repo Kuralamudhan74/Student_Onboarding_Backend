@@ -155,6 +155,7 @@ public partial class CourseDetailViewModel : BaseViewModel
                 CanReview = false;
                 HasReviewed = true;
                 await LoadReviewsAsync();
+                _ = ClearReviewSuccessAfterDelayAsync();
             }
             else
             {
@@ -169,6 +170,12 @@ public partial class CourseDetailViewModel : BaseViewModel
         {
             IsSubmittingReview = false;
         }
+    }
+
+    private async Task ClearReviewSuccessAfterDelayAsync()
+    {
+        await Task.Delay(5000);
+        ReviewSuccessMessage = null;
     }
 
     [ObservableProperty]

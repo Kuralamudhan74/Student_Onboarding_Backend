@@ -36,10 +36,13 @@
                     <Label Text="Find answers to common questions"
                            FontSize="11" TextColor="#FFFFFFAA" />
                 </VerticalStackLayout>
-                <Border Grid.Column="2" BackgroundColor="#FFFFFF30"
-                        StrokeThickness="0" StrokeShape="RoundRectangle 24"
-                        HeightRequest="44" WidthRequest="44" VerticalOptions="Center">
-                    <Label Text="&#x1F916;" FontSize="22"
+                <Border Grid.Column="2" BackgroundColor="#FFFFFF20"
+                        StrokeThickness="0" StrokeShape="RoundRectangle 12"
+                        HeightRequest="40" WidthRequest="40" VerticalOptions="Center">
+                    <Border.GestureRecognizers>
+                        <TapGestureRecognizer Tapped="OnCloseTapped" />
+                    </Border.GestureRecognizers>
+                    <Label Text="&#x2715;" FontSize="18" TextColor="White"
                            HorizontalOptions="Center" VerticalOptions="Center" />
                 </Border>
             </Grid>
