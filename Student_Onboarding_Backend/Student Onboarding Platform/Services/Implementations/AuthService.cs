@@ -87,7 +87,16 @@ public class AuthService : IAuthService
         _logger.LogInformation("User created: {UserId} ({Email})", user.Id, user.Email);
 
         var otpCode = await _otpService.GenerateAndStoreOtpAsync(user.Id, user.Email, nameof(OtpType.EmailVerification));
-        await _emailService.SendOtpEmailAsync(user.Email, otpCode, "Email Verification");
+
+        try
+        {
+            await _emailService.SendOtpEmailAsync(user.Email, otpCode, "Email Verification");
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "Failed to send OTP email during signup for {Email}. User can use resend OTP.", user.Email);
+            return ApiResponse<string>.Ok("Signup successful. Email delivery delayed — please use 'Resend OTP' to get your verification code.");
+        }
 
         return ApiResponse<string>.Ok("Signup successful. Please verify your email with the OTP sent.");
     }
