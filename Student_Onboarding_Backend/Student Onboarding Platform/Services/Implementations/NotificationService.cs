@@ -102,25 +102,36 @@ public class NotificationService : INotificationService
 
     public async Task<ApiResponse<string>> SendToStudentsAsync(string title, string message, List<Guid>? studentIds = null)
     {
-        IEnumerable<User> students;
+        var count = 0;
 
         if (studentIds != null && studentIds.Count > 0)
         {
-            // Send to selected students
-            var all = await _userService.GetStudentsAsync(0, int.MaxValue, null, null);
-            students = all.Where(s => studentIds.Contains(s.Id));
+            // Send to selected students by ID — no need to load all from DB
+            foreach (var studentId in studentIds)
+            {
+                await CreateStudentNotificationAsync(studentId, "AdminMessage", title, message);
+                count++;
+            }
         }
         else
         {
-            // Send to all approved students
-            students = await _userService.GetStudentsAsync(0, int.MaxValue, "Approved", null);
-        }
+            // Send to all approved students in batches to avoid OOM
+            const int batchSize = 200;
+            int offset = 0;
+            while (true)
+            {
+                var batch = (await _userService.GetStudentsAsync(offset, batchSize, "Approved", null)).ToList();
+                if (batch.Count == 0) break;
 
-        var count = 0;
-        foreach (var student in students)
-        {
-            await CreateStudentNotificationAsync(student.Id, "AdminMessage", title, message);
-            count++;
+                foreach (var student in batch)
+                {
+                    await CreateStudentNotificationAsync(student.Id, "AdminMessage", title, message);
+                    count++;
+                }
+
+                if (batch.Count < batchSize) break;
+                offset += batchSize;
+            }
         }
 
         _logger.LogInformation("Admin notification sent to {Count} student(s): {Title}", count, title);

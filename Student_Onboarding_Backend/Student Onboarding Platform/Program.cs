@@ -55,7 +55,7 @@ app.UseSerilogRequestLogging();
 // HTTPS redirect disabled — Render handles SSL at proxy level,
 // and local dev uses plain HTTP on port 10000
 if (!app.Environment.IsProduction())
-     app.UseHttpsRedirection();
+    app.UseHttpsRedirection();
 app.UseStaticFiles(); // Serve uploaded photos from wwwroot
 app.UseCors("AllowAll");
 app.UseAuthentication();

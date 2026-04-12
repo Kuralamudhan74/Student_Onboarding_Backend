@@ -16,6 +16,11 @@
 ## Logs
 **/logs/
 
+## App settings (contain secrets)
+**/appsettings.Development.json
+**/appsettings.Production.json
+**/appsettings.json
+
 ## OS files
 Thumbs.db
 .DS_Store

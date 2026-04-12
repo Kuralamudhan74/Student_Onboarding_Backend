@@ -130,12 +130,14 @@ public class SmtpEmailService : IEmailService
         }
         catch (Exception ex)
         {
-            _logger.LogError(ex, "Failed to send email to {Email} with subject '{Subject}'", to, subject);
+            _logger.LogError(ex, "Failed to send email to {Email} via {Host}:{Port} with subject '{Subject}'",
+                to, _settings.Host, _settings.Port, subject);
             throw;
         }
         finally
         {
-            await client.DisconnectAsync(true);
+            if (client.IsConnected)
+                await client.DisconnectAsync(true);
         }
     }
 }
