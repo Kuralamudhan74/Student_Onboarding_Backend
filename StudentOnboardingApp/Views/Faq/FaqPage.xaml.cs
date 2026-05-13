@@ -34,7 +34,7 @@ public partial class FaqPage : ContentPage
          "For technical issues, use the contact options below to call or email our support team. We typically respond within 24 hours."),
     };
 
-    private const string PhoneNumber = "+919876543210";
+    private const string PhoneNumber = "+919566112651";
     private const string EmailAddress = "support@eduadmin.com";
 
     public FaqPage(IFaqService faqService)
